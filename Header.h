@@ -2,12 +2,15 @@
 class Character
 {
 public:
-	void HungerLevel(int food);
-	void ThirstLevel(int water);
-	void WarmthLevel(int warmth);
-	void EnergyLevel(int energy);
-	void ConditionLevel(int points);
+	void ChangeHungerLevel(int food);
+	void ChangeThirstLevel(int water);
+	void ChangeWarmthLevel(int warmth);
+	void ChangeEnergyLevel(int energy);
+	void ChangeConditionLevel(int points);
 private:
-	int hunger = 50, thirst = 50,
-		warmth = 50, energy = 50, condition = 50;
+	int hunger = 50,
+		hirst = 50,
+		warmth = 50, 
+		energy = 50, 
+		condition = 50;
 };
