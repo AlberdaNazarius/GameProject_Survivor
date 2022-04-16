@@ -5,7 +5,6 @@
 class Environment
 {
 public:
-	enum Environments {};
 	virtual ~Environment() {}
 	void SetBackground(sf::Sprite &sprite, sf::Texture &texture, std::string picture, int windowWidth, int windowHeight);
 	int GetIndex();
