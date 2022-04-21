@@ -1,10 +1,13 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <list>
 #include "Location.h"
 #include "Game.h"
 #include "Button.h"
+#include "Data.h"
 
 using namespace sf;
+using namespace std;
 
 ///* delete this after test
 void testF()
@@ -19,7 +22,6 @@ int main()
 	const int windowHeight = 720;
 	RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Game"/*, sf::Style::Fullscreen */);
 	Event event;
-
 	Location location;
 	location.SetWindowResolution(windowWidth, windowHeight);
 
@@ -35,13 +37,11 @@ int main()
 	Button testButton(Vector2f(600, 200), IntRect(0, 0, 128, 200), "ABC");
 	testButton.setDelegate(testF);      // test
 	
-	Forest* forest = new Forest();
-	forest->Picture("Pictures/Environment.jpg");
-
-	Lake* lake = new Lake();
-	lake->Picture("Pictures/Lake.jpg");
+	// Attaching pictures to environments
+	Forest::SetPicture("Pictures/Environment.jpg");
+	Lake::SetPicture("Pictures/Lake.jpg");
 	
-	location.CheckWhatEnvironment((Environment*)forest);
+	//Main cycle
 	while (window.isOpen())
 	{
 		// Event
@@ -50,7 +50,7 @@ int main()
 			switch (event.type)
 			{
 			case Event::Closed:
-				window.close(); // need to save game
+				window.close(); // need to save game here
 				break;
 			case Event::MouseButtonPressed:
 				if (event.mouseButton.button == sf::Mouse::Left)
@@ -61,12 +61,9 @@ int main()
 			default:
 				break;
 			}
-			if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
-				location.CheckWhatEnvironment((Environment*)forest);
-			else if (event.mouseWheelScroll.wheel == sf::Mouse::HorizontalWheel)
-				location.CheckWhatEnvironment((Environment*)lake);
+			if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel);
+			else if (event.mouseWheelScroll.wheel == sf::Mouse::HorizontalWheel);
 		}
-
 		// Update
 		testButton.update((Vector2f)Mouse::getPosition(window));
 
