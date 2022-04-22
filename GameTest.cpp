@@ -5,6 +5,7 @@
 #include "Game.h"
 #include "Button.h"
 #include "Data.h"
+#include "Character.h"
 
 using namespace sf;
 using namespace std;
@@ -25,6 +26,7 @@ int main()
 	Location location;
 	location.SetWindowResolution(windowWidth, windowHeight);
 
+
 	Game::errorTexture.setRepeated(true);
 	if (!Game::errorTexture.loadFromFile("Pictures/ErrorTexture.png"))
 		throw std::invalid_argument("Failed to load ErrorTexture.png");
@@ -34,8 +36,13 @@ int main()
 	Game::defClickedBut = Game::errorTexture;
 	Game::defHoverBut = Game::errorTexture;
 
-	Button testButton(Vector2f(600, 200), IntRect(0, 0, 128, 200), "ABC");
+	Button<void(*)()> testButton(Vector2f(600, 200), IntRect(0, 0, 128, 200), "ABC");
 	testButton.setDelegate(testF);      // test
+
+
+	Button<void(*) (int)> StayAtFire(Vector2f(0, 0), IntRect(0, 0, 200, 100), "Stay st fire"); 
+	StayAtFire.setDelegate(Character::ChangeWarmthLevel);
+
 	
 	// Attaching pictures to environments
 	Forest::SetPicture("Pictures/Environment.jpg");
@@ -55,7 +62,8 @@ int main()
 			case Event::MouseButtonPressed:
 				if (event.mouseButton.button == sf::Mouse::Left)
 				{
-					testButton.checkClick((Vector2f)Mouse::getPosition(window));
+					if (testButton.checkClick((Vector2f)Mouse::getPosition(window))) testButton.Action();
+					if (StayAtFire.checkClick((Vector2f)Mouse::getPosition(window))) StayAtFire.Action(10); 
 				}
 				break;
 			default:
@@ -65,13 +73,15 @@ int main()
 			else if (event.mouseWheelScroll.wheel == sf::Mouse::HorizontalWheel);
 		}
 		// Update
-		testButton.update((Vector2f)Mouse::getPosition(window));
+	   testButton.update((Vector2f)Mouse::getPosition(window));
+		StayAtFire.update((Vector2f)Mouse::getPosition(window)); 
 
 		// Draw
 		//window.clear(sf::Color::Black);
 		window.clear();
 		window.draw(location.Sprite);
 		testButton.render(window);
+		StayAtFire.render(window); 
 		window.display();
 	}
 
