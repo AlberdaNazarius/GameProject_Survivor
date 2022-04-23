@@ -8,17 +8,17 @@ using namespace std;
 
 Environment* Location::CurrentLocation;
 std::list<int> Data::EnvironmentsSequence;
+int GeneralTime::minutes;
+int GeneralTime::hours;
 
 void Location::CheckWhatEnvironment(int environmentIndex)
 {
-	
 	if (environmentIndex == 1)
 	{
 		auto forest = (Forest*)Location::CurrentLocation;
 		forest->ExploreArea();
 		forest->Hunt();
 		forest->SetBackground(Sprite, texture, Forest::GetPicture(), windowWidth, windowHeight);
-		//forest->SetBackground(Sprite, texture, Lake::picture, windowWidth, windowHeight);
 	}
 	if (environmentIndex == 2)
 	{
@@ -44,10 +44,36 @@ void Environment::SetBackground(sf::Sprite &sprite, sf::Texture &texture, string
 void Forest::SetPicture(std::string picture) { Forest::picture = picture; }
 std::string Forest::GetPicture() { return Forest::picture;  }
 std::string Forest::picture;
+
 // Getters and setters for Lake picture 
 void Lake::SetPicture(std::string picture) { Lake::picture = picture; }
 std::string Lake::GetPicture() { return Lake::picture;  }
 std::string Lake::picture;
+
+
+#pragma region Time
+
+int GeneralTime::GetHours() { return hours; }
+int GeneralTime::GetMinutes() { return minutes; }
+void GeneralTime::DisplayCurrentTime() { cout << hours << ":" << minutes << std::endl; }
+
+void GeneralTime::AddTime(int hours, int minutes)
+{
+	GeneralTime::hours += hours;
+	GeneralTime::minutes += minutes;
+	// Convert minutes to hours and resets the minutes count
+	if (GeneralTime::minutes >= 60)
+	{
+		int temp = (int)GeneralTime::minutes / 60;
+		GeneralTime::hours += temp;
+		GeneralTime::minutes -= temp * 60;
+	}
+	// Resets the hours count
+	if (GeneralTime::hours >= 24) GeneralTime::hours -= 24;
+}
+
+#pragma endregion
+
 
 void Generator::GenerateEnvironments(int maxIndex, int amount)
 {
@@ -58,7 +84,6 @@ void Generator::GenerateEnvironments(int maxIndex, int amount)
 		Data::EnvironmentsSequence.push_back(randIndex);
 	}
 }
-
 void Generator::PrintGeneratedEnvironments()
 {
 	list<int>::iterator it;
@@ -71,11 +96,6 @@ void Location::SetWindowResolution(int windowWidth, int windowHeight)
 {
 	this->windowWidth = windowWidth;
 	this->windowHeight = windowHeight;
-}
-
-void Location::SavedData()
-{
-	// realisation
 }
 
 void Forest::ExploreArea() // It must be overload method
