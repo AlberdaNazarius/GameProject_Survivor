@@ -6,6 +6,9 @@
 #include "Button.h"
 #include "Data.h"
 #include "Character.h"
+#include "UI.h"
+#include "Container.h"
+#include "Panel.h"
 
 using namespace sf;
 using namespace std;
@@ -35,14 +38,28 @@ int main()
 	Game::defIdleBut = Game::errorTexture;
 	Game::defClickedBut = Game::errorTexture;
 	Game::defHoverBut = Game::errorTexture;
+	if (!Game::defPanel.loadFromFile("Pictures/DefaultPanel.png"))
+	{
+		Game::defPanel = Game::errorTexture;
+		Game::defPanel.setRepeated(true);
+	}
 
-	Button<void(*)()> testButton(Vector2f(600, 200), IntRect(0, 0, 128, 200), "ABC");
-	testButton.setDelegate(testF);      // test
+	Button<void(*)()>* testButton = new Button<void(*)()>(Vector2f(400, 200), IntRect(0, 0, 128, 200), "ABC");
+	testButton->setDelegate(testF);      // test
 
 
-	Button<void(*) (int)> StayAtFire(Vector2f(0, 0), IntRect(0, 0, 200, 100), "Stay st fire"); 
-	StayAtFire.setDelegate(Character::ChangeWarmthLevel);
+	Button<void(*) (int)>* stayAtFire = new Button<void(*) (int)>(Vector2f(40, 40), IntRect(0, 0, 200, 100), "Stay st fire");
+	stayAtFire->setDelegate(Character::ChangeWarmthLevel);
+	
 
+	Container* uiContainer = new Container;
+	Panel* testPanel = new Panel(Vector2f(300,100), IntRect(0, 0, 640, 480));
+
+	uiContainer->addChild(testPanel);
+
+
+	testPanel->addChild(testButton);
+	testPanel->addChild(stayAtFire);
 	
 	// Attaching pictures to environments
 	Forest::SetPicture("Pictures/Environment.jpg");
@@ -62,8 +79,21 @@ int main()
 			case Event::MouseButtonPressed:
 				if (event.mouseButton.button == sf::Mouse::Left)
 				{
-					if (testButton.checkClick((Vector2f)Mouse::getPosition(window))) testButton.Action();
-					if (StayAtFire.checkClick((Vector2f)Mouse::getPosition(window))) StayAtFire.Action(10); 
+					if (testButton->checkClick((Vector2f)Mouse::getPosition(window))) testButton->Action();
+					if (stayAtFire->checkClick((Vector2f)Mouse::getPosition(window))) stayAtFire->Action(10); 
+				}
+				break;
+			case Event::KeyPressed:
+				switch (event.key.code)
+				{
+				case Keyboard::A:
+					uiContainer->setVisible(!uiContainer->getVisible());	// test
+					break;
+				case Keyboard::B:
+					testButton->setVisible(!testButton->getVisible());		// test
+					break;
+				default:
+					break;
 				}
 				break;
 			default:
@@ -73,15 +103,14 @@ int main()
 			else if (event.mouseWheelScroll.wheel == sf::Mouse::HorizontalWheel);
 		}
 		// Update
-	   testButton.update((Vector2f)Mouse::getPosition(window));
-		StayAtFire.update((Vector2f)Mouse::getPosition(window)); 
+		testButton->update((Vector2f)Mouse::getPosition(window));
+		stayAtFire->update((Vector2f)Mouse::getPosition(window)); 
 
 		// Draw
-		//window.clear(sf::Color::Black);
 		window.clear();
 		window.draw(location.Sprite);
-		testButton.render(window);
-		StayAtFire.render(window); 
+
+		uiContainer->render(window, Vector2f(0, 0));    // render themself and all ui that contain
 		window.display();
 	}
 

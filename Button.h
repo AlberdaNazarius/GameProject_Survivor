@@ -1,21 +1,25 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "UI.h"
+
+using namespace sf;
+
 template<typename T>
-class Button
+class Button : public UI
 {
 private:
-	sf::Sprite sprite;
-	sf::Texture* idle;
-	sf::Texture* clicked;
-	sf::Texture* hover;
-	sf::Font* font;
-	sf::Text text;
+	Sprite sprite;
+	Texture* idle;
+	Texture* clicked;
+	Texture* hover;
+	Font* font;
+	Text text;
 public:
         T Action;
-		Button(sf::Vector2f pos, sf::IntRect intRect, std::string text)
+		Button(Vector2f pos, IntRect intRect, std::string text)
 		{
 				this->idle = &Game::defIdleBut;
-				this->sprite.setPosition(pos);
+				this->setPosition(pos);
 				this->sprite.setTexture(*(this->idle));
 				this->sprite.setTextureRect(intRect);
 				this->clicked = &Game::defClickedBut;
@@ -23,7 +27,7 @@ public:
 				this->font = &Game::defFont;
 				this->text.setFont(*(this->font));
 				this->text.setString(text);
-				this->text.setFillColor(sf::Color::White);
+				this->text.setFillColor(Color::White);
 				this->text.setCharacterSize(16);
 				this->text.setPosition(
 					pos.x + (intRect.width / 2) - (this->text.getGlobalBounds().width / 2),
@@ -32,23 +36,18 @@ public:
 		}
 		~Button() {};
 
-		void setPosition(sf::Vector2f pos)
-		{
-			this->sprite.setPosition(pos);
-		}
-
-		void setSize(sf::IntRect intRect)
+		void setSize(IntRect intRect)
 		{
 			this->sprite.setTextureRect(intRect);
 	    }
 
-		void setTexture(sf::Texture* idle, sf::Texture* clicked)
+		void setTexture(Texture* idle, Texture* clicked)
 		{
 			this->idle = idle;
 			this->clicked = clicked;
 	    }
 
-		void setFont(sf::Font* font)
+		void setFont(Font* font)
 		{
 			this->font = font;
 		}
@@ -58,40 +57,53 @@ public:
 			this->Action = func;
 		}
 
-		void update(sf::Vector2f pos) 
+		void update(Vector2f pos) 
 		{
-			if (this->sprite.getGlobalBounds().contains(pos))
+			if (isActive && isVisible)
 			{
-				if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+				if (this->sprite.getGlobalBounds().contains(pos))
 				{
-					this->sprite.setTexture(*(this->clicked));
-					this->sprite.setColor(sf::Color(0, 0, 255)); // test
+					if (Mouse::isButtonPressed(Mouse::Left))
+					{
+						this->sprite.setTexture(*(this->clicked));
+						this->sprite.setColor(Color(0, 0, 255)); // test
+					}
+					else
+					{
+						this->sprite.setTexture(*(this->hover));
+						this->sprite.setColor(Color(255, 0, 0)); // test
+					}
 				}
 				else
 				{
-					this->sprite.setTexture(*(this->hover));
-					this->sprite.setColor(sf::Color(255, 0, 0)); // test
+					this->sprite.setTexture(*(this->idle));
+					this->sprite.setColor(Color(255, 255, 255)); // test
 				}
 			}
-			else
-			{
-				this->sprite.setTexture(*(this->idle));
-				this->sprite.setColor(sf::Color(255, 255, 255)); // test
-			}
 	    }
-		bool checkClick(sf::Vector2f pos) 
+		bool checkClick(Vector2f pos) 
 		{
-			if (this->sprite.getGlobalBounds().contains(pos))
+			if (isActive && isVisible)
 			{
-				if (Action != nullptr)
-					return true;
+				if (this->sprite.getGlobalBounds().contains(pos))
+				{
+					if (Action != nullptr)
+						return true;
+				}
 			}
 			return false;
 	    }
 
-		void render(sf::RenderTarget& target) 
+		void render(RenderTarget& target, Vector2f offset)
 		{
-			target.draw(this->sprite);
-			target.draw(this->text);
+			if (isVisible)
+			{
+				this->sprite.setPosition(offset + relPosition);
+				this->text.setPosition(
+					this->sprite.getGlobalBounds().left + (this->sprite.getTextureRect().width / 2) - (this->text.getGlobalBounds().width / 2),
+					this->sprite.getGlobalBounds().top + (this->sprite.getTextureRect().height / 2) - (this->text.getGlobalBounds().height / 2) - (this->text.getCharacterSize() / 4));
+				target.draw(this->sprite);
+				target.draw(this->text);
+			}
 	    }
 };
