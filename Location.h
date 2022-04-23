@@ -10,7 +10,6 @@ public:
 	virtual ~Environment() {}
 	void SetBackground(sf::Sprite &sprite, sf::Texture &texture, std::string picture, int windowWidth, int windowHeight);
 protected:
-	int time;
 	int index; // every environment has a specific index
 };
 
@@ -46,14 +45,27 @@ public:
 	static Environment* CurrentLocation;
 	void CheckWhatEnvironment(int environmentIndex);
 	void SetWindowResolution(int windowWidth, int windowHeight);
+
 	sf::Sprite Sprite;
 
-	void static SavedData();
+	//void static SavedData();
 private:
 	sf::Texture texture;
 	int data;// not int maybe it will be class Data
 	int windowWidth = 1920;
 	int windowHeight = 1080;
+};
+
+class GeneralTime
+{
+public:
+	static void DisplayCurrentTime();
+	static void AddTime(int hours, int minutes);
+	static int GetHours();
+	static int GetMinutes();
+private:
+	static int hours;
+	static int minutes;
 };
 
 class Generator : public Data
