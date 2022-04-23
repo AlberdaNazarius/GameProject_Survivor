@@ -74,5 +74,8 @@
     <ClInclude Include="Panel.h">
       <Filter>Header Files\UI</Filter>
     </ClInclude>
+    <ClInclude Include="Inventory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

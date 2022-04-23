@@ -158,6 +158,7 @@
     <ClInclude Include="Data.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="Inventory.h" />
     <ClInclude Include="Location.h" />
     <ClInclude Include="Panel.h" />
     <ClInclude Include="UI.h" />
