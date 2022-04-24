@@ -71,6 +71,7 @@ int main()
 	StayAtFire->setDelegate(Character::ChangeWarmthLevel);
 	StayAtFire->setVisible(false);
 	int startedHour = 0;
+	int startedDay = 0;
 
 	Button<void(*)(Button<void(*)(int)>*, bool)>* FireLighter = new Button< void(*)(Button<void(*)(int)>*, bool) >(Vector2f(10, 10), IntRect(0, 0, 150, 100), "Lighter");
 	FireLighter->setDelegate(ButtonSetVisible);
@@ -137,6 +138,7 @@ int main()
 					{
 						StartFire->Action(StartFireContainer, !StartFireContainer->getVisible());
 						startedHour = GeneralTime::GetHours();
+						startedDay = GeneralTime::GetDay();
 					}
 					if (FireLighter->checkClick((Vector2f)Mouse::getPosition(window)))  FireLighter->Action(StayAtFire, true);
 					if (FireStone->checkClick((Vector2f)Mouse::getPosition(window)))  FireStone->Action(StayAtFire, true);
@@ -184,7 +186,7 @@ int main()
 		window.clear();
 		window.draw(location.Sprite);
 #pragma region StartFire
-		if (GeneralTime::DeltaTime(0, startedHour) == 5) StayAtFire->setVisible(false); // an example; it's not necessary must be 5
+		if (GeneralTime::DeltaTime(startedDay, startedHour) == 5) StayAtFire->setVisible(false); // an example; it's not necessary must be 5
 		StartFireContainer->render(window, Vector2f(0, 0));
 #pragma endregion 
 		uiContainer->render(window, Vector2f(0, 0)); // render themself and all ui that contain
