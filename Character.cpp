@@ -20,7 +20,7 @@ void Character::ChangeWarmthLevel(int warmth)
 {
     Character::warmth += warmth;
 	if (Character::warmth > 100) Character::warmth = 100;
-    // std::cout << Character::warmth; // test
+   // std::cout << Character::warmth; // test
 }
 void Character::ChangeEnergyLevel(int energy)
 {
@@ -29,6 +29,7 @@ void Character::ChangeEnergyLevel(int energy)
 }
 void Character::ChangeConditionLevel(int points)
 {
-	Character::condition += points;
+	if (points > 0) Character::condition += points * warmth / 100;
+	if (points < 0) Character::condition += points * 100 / warmth;
 	if (Character::condition > 100) Character::condition = 100;
 }

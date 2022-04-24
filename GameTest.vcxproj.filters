@@ -48,6 +48,9 @@
     <ClCompile Include="Panel.cpp">
       <Filter>Resource Files\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Inventory.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Character.h">
