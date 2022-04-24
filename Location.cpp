@@ -6,10 +6,15 @@
 
 using namespace std;
 
+#pragma region StaticVariables
+
 Environment* Location::CurrentLocation;
 std::list<int> Data::EnvironmentsSequence;
 int GeneralTime::minutes;
 int GeneralTime::hours;
+int GeneralTime::days;
+
+#pragma endregion
 
 void Location::CheckWhatEnvironment(int environmentIndex)
 {
@@ -40,6 +45,14 @@ void Environment::SetBackground(sf::Sprite &sprite, sf::Texture &texture, string
 		throw "Picture isn't set!";
 }
 
+void Location::SetWindowResolution(int windowWidth, int windowHeight)
+{
+	this->windowWidth = windowWidth;
+	this->windowHeight = windowHeight;
+}
+
+#pragma region ForestAndLake 
+
 // Getters and setters for Forest picture 
 void Forest::SetPicture(std::string picture) { Forest::picture = picture; }
 std::string Forest::GetPicture() { return Forest::picture;  }
@@ -50,39 +63,25 @@ void Lake::SetPicture(std::string picture) { Lake::picture = picture; }
 std::string Lake::GetPicture() { return Lake::picture;  }
 std::string Lake::picture;
 
-
-#pragma region Time
-
-int GeneralTime::GetHours() { return hours; }
-int GeneralTime::GetMinutes() { return minutes; }
-void GeneralTime::DisplayCurrentTime() { cout << hours << ":" << minutes << std::endl; }
-
-void GeneralTime::AddTime(int hours, int minutes)
-{
-	GeneralTime::hours += hours;
-	GeneralTime::minutes += minutes;
-	// Convert minutes to hours and resets the minutes count
-	if (GeneralTime::minutes >= 60)
-	{
-		int temp = (int)GeneralTime::minutes / 60;
-		GeneralTime::hours += temp;
-		GeneralTime::minutes -= temp * 60;
-	}
-	// Resets the hours count
-	if (GeneralTime::hours >= 24) GeneralTime::hours -= 24;
-}
-
 #pragma endregion
 
+#pragma region Generator
 
 void Generator::GenerateEnvironments(int maxIndex, int amount)
 {
 	srand(time(0));
+	Data::EnvironmentsSequence.clear();
 	for (int i = 0; i < amount; i++)//make random creation of environments
 	{
 		int randIndex = 1 + rand() % maxIndex;
 		Data::EnvironmentsSequence.push_back(randIndex);
 	}
+}
+int Generator::GenerateTemperature(int minTemperature, int maxTemperature)
+{
+	srand(time(0));
+	int randTemperature = minTemperature + (rand() % (maxTemperature - minTemperature));
+	return randTemperature;
 }
 void Generator::PrintGeneratedEnvironments()
 {
@@ -91,12 +90,42 @@ void Generator::PrintGeneratedEnvironments()
 		std::cout << *it << " ";
 }
 
-#pragma region MyRegion
-void Location::SetWindowResolution(int windowWidth, int windowHeight)
+#pragma endregion
+
+#pragma region Time
+
+int GeneralTime::GetDay() { return days; }
+int GeneralTime::GetHours() { return hours; }
+int GeneralTime::GetMinutes() { return minutes; }
+
+void GeneralTime::DisplayCurrentTime() { cout << hours << ":" << minutes << std::endl; }
+int GeneralTime::DeltaTime(int startedDay, int startedHour) { return ((GeneralTime::days * 24) + hours) - ((startedDay * 24) + startedHour); }
+
+void GeneralTime::AddTime(int hours, int minutes)
 {
-	this->windowWidth = windowWidth;
-	this->windowHeight = windowHeight;
+	if (hours >= 24) throw("You set too much hours!");
+
+	GeneralTime::hours += hours;
+	GeneralTime::minutes += minutes;
+	// Convert minutes to hours and resets the minutes count
+	if (GeneralTime::minutes >= 60)
+	{
+		int deltaHour = (int)GeneralTime::minutes / 60;
+		GeneralTime::hours += deltaHour;
+		GeneralTime::minutes -= deltaHour * 60;
+	}
+
+	// Resets the hours count
+	if (GeneralTime::hours >= 24)
+	{
+		GeneralTime::days++; // Add day
+		GeneralTime::hours -= 24;
+	}
 }
+
+#pragma endregion
+
+#pragma region NeedRealisation
 
 void Forest::ExploreArea() // It must be overload method
 {

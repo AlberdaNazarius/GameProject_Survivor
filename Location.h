@@ -51,7 +51,7 @@ public:
 	//void static SavedData();
 private:
 	sf::Texture texture;
-	int data;// not int maybe it will be class Data
+	int temperature;
 	int windowWidth = 1920;
 	int windowHeight = 1080;
 };
@@ -61,16 +61,20 @@ class GeneralTime
 public:
 	static void DisplayCurrentTime();
 	static void AddTime(int hours, int minutes);
+	static int DeltaTime(int startedDay, int startedHour);
+	static int GetDay();
 	static int GetHours();
 	static int GetMinutes();
 private:
+	static int days;
 	static int hours;
 	static int minutes;
 };
 
-class Generator : public Data
+class Generator : protected Data
 {
 public:
 	static void GenerateEnvironments(int maxIndex, int amount);
 	static void PrintGeneratedEnvironments();
+	static int GenerateTemperature(int minTemperature, int maxTemperature);
 };
