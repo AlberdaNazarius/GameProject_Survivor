@@ -23,15 +23,16 @@ void testF()
 
 #pragma region StartFire
 
-template <typename T>
-void ButtonSetVisible(Button<T>* button, bool value)
-{
-	button->setVisible(value);
-}
-void ContainerSetVisible(Container*  cont, bool value)
-{
-	cont->setVisible(value);
-}
+//template <typename T>
+//void ButtonSetVisible(Button<T>* button, Container* cont, bool value)
+//{
+//	button->setVisible(value);
+//	cont->setVisible(!value); 
+//}
+//void ContainerSetVisible(Container*  cont, bool value)
+//{
+//	cont->setVisible(value);
+//}
 
 #pragma endregion
 
@@ -60,47 +61,55 @@ int main()
 	
 #pragma region StartFire
 
-	Container* StartFireContainer = new Container;
-	Panel* StartFirePanel = new Panel(Vector2f(100, 490), IntRect(0, 0, 1040, 380));
-	StartFireContainer->setVisible(false);
+	//Container* StartFireContainer = new Container;
+	//Panel* StartFirePanel = new Panel(Vector2f(100, 490), IntRect(0, 0, 1040, 380));
+	//StartFireContainer->setVisible(false);
 
-	Button<void(*)(Container*, bool)>* StartFire = new Button<void(*)(Container*, bool)>(Vector2f(40, 40), IntRect(0, 0, 200, 100), "Start fire");
-	StartFire->setDelegate(ContainerSetVisible);
+	//Button<void(*)(Container*, bool)>* StartFire = new Button<void(*)(Container*, bool)>(Vector2f(40, 40), IntRect(0, 0, 200, 100), "Start fire");
+	//StartFire->setDelegate(ContainerSetVisible);
 
-	Button<void(*)(int)>* StayAtFire = new Button<void(*)(int)>(Vector2f(260, 40), IntRect(0, 0, 200, 100), "Stay at fire");
-	StayAtFire->setDelegate(Character::ChangeWarmthLevel);
-	StayAtFire->setVisible(false);
-	int startedHour = 0;
-	int startedDay = 0;
+	//Button<void(*)(int)>* StayAtFire = new Button<void(*)(int)>(Vector2f(260, 40), IntRect(0, 0, 200, 100), "Stay at fire");
+	//StayAtFire->setDelegate(Character::ChangeWarmthLevel);
+	//StayAtFire->setVisible(false);
+	//int startedHour = 0;
+	//int startedDay = 0;
 
-	Button<void(*)(Button<void(*)(int)>*, bool)>* FireLighter = new Button< void(*)(Button<void(*)(int)>*, bool) >(Vector2f(10, 10), IntRect(0, 0, 150, 100), "Lighter");
-	FireLighter->setDelegate(ButtonSetVisible);
 
-	Button<void(*)(Button<void(*)(int)>*, bool)>* FireStone = new Button<void(*)(Button<void(*)(int)>*, bool)>(Vector2f(170, 10), IntRect(0, 0, 150, 100), "Flint and Stone");
-	FireStone->setDelegate(ButtonSetVisible);
+	//Button<void(*)(Button<void(*)(int)>*, Container*, bool)>* FireLighter = new Button<void(*)(Button<void(*)(int)>*, Container*, bool)>(Vector2f(10, 10), IntRect(0, 0, 150, 100), "Lighter");
+	//FireLighter->setDelegate(ButtonSetVisible);
 
-	Button<void(*)(Button<void(*)(int)>*, bool)>* FireMatches = new Button<void(*)(Button<void(*)(int)>*, bool)>(Vector2f(340, 10), IntRect(0, 0, 150, 100), "Matches");
-	FireMatches->setDelegate(ButtonSetVisible);
+	//Button<void(*)(Button<void(*)(int)>*, Container*, bool)>* FireStone = new Button<void(*)(Button<void(*)(int)>*, Container*, bool)>(Vector2f(170, 10), IntRect(0, 0, 150, 100), "Flint and Stone");
+	//FireStone->setDelegate(ButtonSetVisible);
 
-	Button<void(*)(Button<void(*)(int)>*, bool)>* FireBow = new Button<void(*)(Button<void(*)(int)>*, bool)>(Vector2f(490, 10), IntRect(0, 0, 150, 100), "Bow method");
-	FireBow->setDelegate(ButtonSetVisible);
+	//Button<void(*)(Button<void(*)(int)>*, Container*, bool)>* FireMatches = new Button<void(*)(Button<void(*)(int)>*, Container*, bool)>(Vector2f(340, 10), IntRect(0, 0, 150, 100), "Matches");
+	//FireMatches->setDelegate(ButtonSetVisible);
 
-	Button<void(*)(Button<void(*)(int)>*, bool)>* FireLens = new Button<void(*)(Button<void(*)(int)>*, bool)>(Vector2f(660, 510), IntRect(0, 0, 150, 100), "Lens");
-	FireLens->setDelegate(ButtonSetVisible);
+	//Button<void(*)(Button<void(*)(int)>*, Container*, bool)>* FireBow = new Button<void(*)(Button<void(*)(int)>*, Container*, bool) >(Vector2f(490, 10), IntRect(0, 0, 150, 100), "Bow method");
+	//FireBow->setDelegate(ButtonSetVisible);
 
-	StartFireContainer->addChild(StartFirePanel);
+	//Button<void(*)(Button<void(*)(int)>*, Container*, bool)>* FireLens = new Button<void(*)(Button<void(*)(int)>*, Container*, bool)>(Vector2f(660, 510), IntRect(0, 0, 150, 100), "Lens");
+	//FireLens->setDelegate(ButtonSetVisible);
 
-	StartFirePanel->addChild(FireStone);
-	StartFirePanel->addChild(FireBow);
-    StartFirePanel->addChild(FireLighter);
-	StartFirePanel->addChild(FireLens);
-	StartFirePanel->addChild(FireMatches);
+	//StartFireContainer->addChild(StartFirePanel);
 
-	if (!Inventory::Check_Tool("lighter")) FireLighter->setVisible(false);
-	if (!Inventory::Check_Tool("lens")) FireLens->setVisible(false);
-	if (!Inventory::Check_Tool("matches")) FireMatches->setVisible(false);
+	//StartFirePanel->addChild(FireStone);
+	//StartFirePanel->addChild(FireBow);
+ //   StartFirePanel->addChild(FireLighter);
+	//StartFirePanel->addChild(FireLens);
+	//StartFirePanel->addChild(FireMatches);
+
+	//if (!Inventory::Check_Tool("lighter")) FireLighter->setVisible(false);
+	//if (!Inventory::Check_Tool("lens")) FireLens->setVisible(false);
+	//if (!Inventory::Check_Tool("matches")) FireMatches->setVisible(false);
 
 #pragma endregion 
+
+#pragma region ExploreArea
+
+	//Button<void(*)()>* ExploreArea = new Button<void(*)()>(Vector2f(100, 200), IntRect(0, 0, 200, 100), "Explore Area");
+	//ExploreArea->setDelegate(Inventory::ExploreArea);
+
+#pragma endregion
 
 	Button<void(*)()>* testButton = new Button<void(*)()>(Vector2f(400, 200), IntRect(0, 0, 128, 200), "ABC");
 	testButton->setDelegate(testF);      // test
@@ -111,9 +120,18 @@ int main()
 	uiContainer->addChild(testPanel);
 
 	testPanel->addChild(testButton);
-	testPanel->addChild(StayAtFire);
-	testPanel->addChild(StartFire);
-	
+
+#pragma region StartFire
+	//testPanel->addChild(StayAtFire);
+	//testPanel->addChild(StartFire);
+#pragma endregion 
+
+#pragma region ExploreArea
+
+	//testPanel->addChild(ExploreArea);
+
+#pragma endregion
+
 	// Attaching pictures to environments
 	Forest::SetPicture("Pictures/Environment.jpg");
 	Lake::SetPicture("Pictures/Lake.jpg");
@@ -134,19 +152,30 @@ int main()
 				{
 					if (testButton->checkClick((Vector2f)Mouse::getPosition(window))) testButton->Action();
 #pragma region StartFire
-					if (StartFire->checkClick((Vector2f)Mouse::getPosition(window)))
-					{
-						StartFire->Action(StartFireContainer, !StartFireContainer->getVisible());
-						startedHour = GeneralTime::GetHours();
-						startedDay = GeneralTime::GetDay();
-					}
-					if (FireLighter->checkClick((Vector2f)Mouse::getPosition(window)))  FireLighter->Action(StayAtFire, true);
-					if (FireStone->checkClick((Vector2f)Mouse::getPosition(window)))  FireStone->Action(StayAtFire, true);
-					if (FireMatches->checkClick((Vector2f)Mouse::getPosition(window)))  FireMatches->Action(StayAtFire, true);
-					if (FireBow->checkClick((Vector2f)Mouse::getPosition(window)))  FireBow->Action(StayAtFire, true);
-					if (FireLens->checkClick((Vector2f)Mouse::getPosition(window)))  FireLens->Action(StayAtFire, true);
-					if (StayAtFire->checkClick((Vector2f)Mouse::getPosition(window))) StayAtFire->Action(10);
+					//if (StartFire->checkClick((Vector2f)Mouse::getPosition(window)))
+					//{
+					//	StartFire->Action(StartFireContainer, true);
+					//	startedHour = GeneralTime::GetHours();
+					//	startedDay = GeneralTime::GetDay();
+					//}
+					//if (FireLighter->checkClick((Vector2f)Mouse::getPosition(window)))  FireLighter->Action(StayAtFire, StartFireContainer, true);
+					//if (FireStone->checkClick((Vector2f)Mouse::getPosition(window)))  FireStone->Action(StayAtFire, StartFireContainer, true);
+					//if (FireMatches->checkClick((Vector2f)Mouse::getPosition(window)))  FireMatches->Action(StayAtFire, StartFireContainer, true);
+					//if (FireBow->checkClick((Vector2f)Mouse::getPosition(window)))  FireBow->Action(StayAtFire, StartFireContainer, true);
+					//if (FireLens->checkClick((Vector2f)Mouse::getPosition(window)))  FireLens->Action(StayAtFire, StartFireContainer, true);
+					//if (StayAtFire->checkClick((Vector2f)Mouse::getPosition(window))) StayAtFire->Action(10);
 #pragma endregion 
+
+#pragma region ExploreArea
+
+					//if (ExploreArea->checkClick((Vector2f)Mouse::getPosition(window)))
+					//{
+					//	ExploreArea->Action();
+					//	ExploreArea->setActive(false); // it becomes active with changing location;
+					//}
+
+#pragma endregion
+
 				}
 				break;
 			case Event::KeyPressed:
@@ -173,22 +202,33 @@ int main()
 
 #pragma region StartFire
 
-		FireLighter->update((Vector2f)Mouse::getPosition(window));
-		FireBow->update((Vector2f)Mouse::getPosition(window));
-		FireMatches->update((Vector2f)Mouse::getPosition(window));
-		FireLens->update((Vector2f)Mouse::getPosition(window));
-		FireStone->update((Vector2f)Mouse::getPosition(window));
-		StayAtFire->update((Vector2f)Mouse::getPosition(window));
-	 	StartFire->update((Vector2f)Mouse::getPosition(window));
+		//FireLighter->update((Vector2f)Mouse::getPosition(window));
+		//FireBow->update((Vector2f)Mouse::getPosition(window));
+		//FireMatches->update((Vector2f)Mouse::getPosition(window));
+		//FireLens->update((Vector2f)Mouse::getPosition(window));
+		//FireStone->update((Vector2f)Mouse::getPosition(window));
+		//StayAtFire->update((Vector2f)Mouse::getPosition(window));
+	 //	StartFire->update((Vector2f)Mouse::getPosition(window));
+
 #pragma endregion 
+
+#pragma region ExploreArea
+
+		//ExploreArea->update((Vector2f)Mouse::getPosition(window));
+
+#pragma endregion
+
 
 		// Draw
 		window.clear();
 		window.draw(location.Sprite);
+
 #pragma region StartFire
-		if (GeneralTime::DeltaTime(startedDay, startedHour) == 5) StayAtFire->setVisible(false); // an example; it's not necessary must be 5
-		StartFireContainer->render(window, Vector2f(0, 0));
+		//if (GeneralTime::DeltaTime(startedDay, startedHour) == 5) StayAtFire->setVisible(false); // an example; it's not necessary must be 5
+		//if (StayAtFire->getVisible()) StartFire->setActive(false);
+		//StartFireContainer->render(window, Vector2f(0, 0));
 #pragma endregion 
+
 		uiContainer->render(window, Vector2f(0, 0)); // render themself and all ui that contain
 		window.display();
 	}
