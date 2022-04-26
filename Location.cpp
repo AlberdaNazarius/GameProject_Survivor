@@ -15,10 +15,12 @@ int GeneralTime::hours;
 int GeneralTime::days;
 sf::Sprite Location::Sprite;
 sf::Texture Location::texture;
-int Location::windowWidth = 1920;
-int Location::windowHeight = 1080;
 std::string picture;
 int Location::LocationCurrent;
+int Location::temperature;
+bool Location::Shelter;
+int Location::windowWidth = 1920;
+int Location::windowHeight = 1080;
 #pragma endregion
 
 void Location::CheckWhatEnvironment(int environmentIndex)
@@ -54,6 +56,16 @@ void Location::SetWindowResolution(int windowWidth, int windowHeight)
 {
 	this->windowWidth = windowWidth;
 	this->windowHeight = windowHeight;
+}
+
+int Location::GetTemperature() { return temperature;  }
+
+void Location::ChangeTemperature(int gradus)
+{
+	if (temperature > -15 && temperature < 30)
+		temperature += gradus;
+	else
+		Location::ChangeTemperature(Generator::GenerateTemperature(-7, 7));
 }
 
 #pragma region ForestAndLake 

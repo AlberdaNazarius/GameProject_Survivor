@@ -62,14 +62,16 @@ public:
 	static Environment* CurrentLocation;
 	static int LocationCurrent;
 	static void CheckWhatEnvironment(int environmentIndex);
-	void SetWindowResolution(int windowWidth, int windowHeight);
-
 	static sf::Sprite Sprite;
+	static int GetTemperature();
+	static void ChangeTemperature(int gradus);
+	static bool Shelter;
 
+	void SetWindowResolution(int windowWidth, int windowHeight);
 	//void static SavedData();
 private:
 	static sf::Texture texture;
-	int temperature;
+	static int temperature;
 	static int windowWidth;  
 	static int windowHeight;
 };
