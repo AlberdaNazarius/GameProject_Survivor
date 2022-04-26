@@ -225,16 +225,19 @@ int main()
 					//if (FirstVariantToTravel->checkClick((Vector2f)Mouse::getPosition(window)))
 					//{
 					//	FirstVariantToTravel->Action(Data::GetEnvironment(0));
+					//	Location::LocationCurrent = Data::GetEnvironment(0);
 					//	ExploreArea->setActive(true);
 					//}
 					//if (SecondVariantToTravel->checkClick((Vector2f)Mouse::getPosition(window)))
 					//{
 					//	SecondVariantToTravel->Action(Data::GetEnvironment(1));
+					//	Location::LocationCurrent = Data::GetEnvironment(1);
 					//	ExploreArea->setActive(true);
 					//}
 					//if (ThirdVariantToTravel->checkClick((Vector2f)Mouse::getPosition(window)))
 					//{
 					//	ThirdVariantToTravel->Action(Data::GetEnvironment(2));
+					//	Location::LocationCurrent = Data::GetEnvironment(2);
 					//	ExploreArea->setActive(true);
 					//}
 

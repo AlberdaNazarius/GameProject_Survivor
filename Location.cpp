@@ -17,7 +17,8 @@ sf::Sprite Location::Sprite;
 sf::Texture Location::texture;
 int Location::windowWidth = 1920;
 int Location::windowHeight = 1080;
-
+std::string picture;
+int Location::LocationCurrent;
 #pragma endregion
 
 void Location::CheckWhatEnvironment(int environmentIndex)

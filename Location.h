@@ -4,6 +4,8 @@
 #include <map>
 #include "Data.h"
 
+using namespace std;
+
 class Environment
 {
 public:
@@ -12,7 +14,7 @@ public:
 	void SetBackground(sf::Sprite &sprite, sf::Texture &texture, std::string picture, int windowWidth, int windowHeight);
 protected:
 	int index; // every environment has a specific index
-	static map<string, int> animals;
+	map<string, int> animals;
 };
 
 class Forest : public Environment
@@ -58,6 +60,7 @@ class Location
 {
 public:
 	static Environment* CurrentLocation;
+	static int LocationCurrent;
 	static void CheckWhatEnvironment(int environmentIndex);
 	void SetWindowResolution(int windowWidth, int windowHeight);
 
