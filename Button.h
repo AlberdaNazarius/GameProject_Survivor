@@ -52,6 +52,11 @@ public:
 			this->font = font;
 		}
 
+		void setText(std::string text)
+		{
+			this->text.setString(text);
+		}
+
 		void setDelegate(T func) 
 		{
 			this->Action = func;

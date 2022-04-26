@@ -21,6 +21,17 @@ void testF()
 }
 //*/
 
+#pragma region ChooseWhereToGo
+
+//string CaptionOfButton(int index)
+//{
+//	if (Data::GetEnvironment(index) == 1) return "Forest";
+//	if (Data::GetEnvironment(index) == 2) return "Lake";
+//	if (Data::GetEnvironment(index) == 3) return "River";
+//}
+
+#pragma endregion
+
 #pragma region StartFire
 
 //template <typename T>
@@ -105,9 +116,28 @@ int main()
 #pragma endregion 
 
 #pragma region ExploreArea
+    
+	Button<void(*)()>* ExploreArea = new Button<void(*)()>(Vector2f(100, 200), IntRect(0, 0, 200, 100), "Explore Area");
+	ExploreArea->setDelegate(Inventory::ExploreArea);
 
-	//Button<void(*)()>* ExploreArea = new Button<void(*)()>(Vector2f(100, 200), IntRect(0, 0, 200, 100), "Explore Area");
-	//ExploreArea->setDelegate(Inventory::ExploreArea);
+#pragma endregion
+
+
+#pragma region ChooseWhereToGo
+
+	//Generator::GenerateEnvironments(2, 3);
+
+	//Button<void(*)(int)>* FirstVariantToTravel = new Button<void(*)(int)>(Vector2f(20, 20), IntRect(0, 0, 150, 100), CaptionOfButton(0));
+	//FirstVariantToTravel->setDelegate(Location::CheckWhatEnvironment);
+	//FirstVariantToTravel->setVisible(false);
+
+	//Button<void(*)(int)>* SecondVariantToTravel = new Button<void(*)(int)>(Vector2f(190, 20), IntRect(0, 0, 150, 100), CaptionOfButton(1));
+	//SecondVariantToTravel->setDelegate(Location::CheckWhatEnvironment);
+	//SecondVariantToTravel->setVisible(false);
+
+	//Button<void(*)(int)>* ThirdVariantToTravel = new Button<void(*)(int)>(Vector2f(360, 20), IntRect(0, 0, 150, 100), CaptionOfButton(2));
+	//ThirdVariantToTravel->setDelegate(Location::CheckWhatEnvironment);
+	//ThirdVariantToTravel->setVisible(false);
 
 #pragma endregion
 
@@ -129,6 +159,14 @@ int main()
 #pragma region ExploreArea
 
 	//testPanel->addChild(ExploreArea);
+
+#pragma endregion
+
+#pragma region ChooseWhereToGo
+
+	//testPanel->addChild(FirstVariantToTravel);
+	//testPanel->addChild(SecondVariantToTravel);
+	//testPanel->addChild(ThirdVariantToTravel);
 
 #pragma endregion
 
@@ -172,10 +210,35 @@ int main()
 					//{
 					//	ExploreArea->Action();
 					//	ExploreArea->setActive(false); // it becomes active with changing location;
+					//	FirstVariantToTravel->setVisible(true);
+					//	SecondVariantToTravel->setVisible(true);
+					//	ThirdVariantToTravel->setVisible(true);
+					//	FirstVariantToTravel->setText(CaptionOfButton(0));
+					//	SecondVariantToTravel->setText(CaptionOfButton(1));
+					//	ThirdVariantToTravel->setText(CaptionOfButton(2));
 					//}
 
 #pragma endregion
 
+#pragma region ChooseWhereToGo
+
+					//if (FirstVariantToTravel->checkClick((Vector2f)Mouse::getPosition(window)))
+					//{
+					//	FirstVariantToTravel->Action(Data::GetEnvironment(0));
+					//	ExploreArea->setActive(true);
+					//}
+					//if (SecondVariantToTravel->checkClick((Vector2f)Mouse::getPosition(window)))
+					//{
+					//	SecondVariantToTravel->Action(Data::GetEnvironment(1));
+					//	ExploreArea->setActive(true);
+					//}
+					//if (ThirdVariantToTravel->checkClick((Vector2f)Mouse::getPosition(window)))
+					//{
+					//	ThirdVariantToTravel->Action(Data::GetEnvironment(2));
+					//	ExploreArea->setActive(true);
+					//}
+
+#pragma endregion
 				}
 				break;
 			case Event::KeyPressed:
@@ -214,10 +277,17 @@ int main()
 
 #pragma region ExploreArea
 
-		//ExploreArea->update((Vector2f)Mouse::getPosition(window));
+	//	ExploreArea->update((Vector2f)Mouse::getPosition(window));
 
 #pragma endregion
 
+#pragma region ChooseWhereToGo
+
+		//FirstVariantToTravel->update((Vector2f)Mouse::getPosition(window));
+		//SecondVariantToTravel->update((Vector2f)Mouse::getPosition(window));
+		//ThirdVariantToTravel->update((Vector2f)Mouse::getPosition(window));
+
+#pragma endregion
 
 		// Draw
 		window.clear();

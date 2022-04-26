@@ -43,17 +43,17 @@ class Location
 {
 public:
 	static Environment* CurrentLocation;
-	void CheckWhatEnvironment(int environmentIndex);
+	static void CheckWhatEnvironment(int environmentIndex);
 	void SetWindowResolution(int windowWidth, int windowHeight);
 
-	sf::Sprite Sprite;
+	static sf::Sprite Sprite;
 
 	//void static SavedData();
 private:
-	sf::Texture texture;
+	static sf::Texture texture;
 	int temperature;
-	int windowWidth = 1920;
-	int windowHeight = 1080;
+	static int windowWidth;  
+	static int windowHeight;
 };
 
 class GeneralTime

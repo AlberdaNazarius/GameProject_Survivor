@@ -13,6 +13,10 @@ std::list<int> Data::EnvironmentsSequence;
 int GeneralTime::minutes;
 int GeneralTime::hours;
 int GeneralTime::days;
+sf::Sprite Location::Sprite;
+sf::Texture Location::texture;
+int Location::windowWidth = 1920;
+int Location::windowHeight = 1080;
 
 #pragma endregion
 

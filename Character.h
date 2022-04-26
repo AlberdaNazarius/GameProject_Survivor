@@ -7,6 +7,11 @@ public:
     static void ChangeWarmthLevel(int warmth);
     static void ChangeEnergyLevel(int energy);
     static void ChangeConditionLevel(int points);
+    static int GetHungerLevel();
+    static int GetThirstLevel();
+    static int GetWarmthLevel();
+    static int GetEnergyLevel();
+    static int GetConditionLevel();
 private:
     int static hunger,
         thirst,

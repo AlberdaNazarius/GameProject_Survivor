@@ -1,9 +1,9 @@
 #include "Character.h"
-int Character::hunger = 50,
-Character::thirst = 50,
-Character::warmth = 50,
-Character::energy = 50,
-Character::condition = 50;
+int Character::hunger = 100,
+Character::thirst = 100,
+Character::warmth = 100,
+Character::energy = 100,
+Character::condition = 100;
 #include <math.h>
 #include <iostream>
 void Character::ChangeHungerLevel(int food)
@@ -24,7 +24,8 @@ void Character::ChangeWarmthLevel(int warmth)
 }
 void Character::ChangeEnergyLevel(int energy)
 {
-	Character::energy += energy * round(200 / (condition + warmth)); // dependence between energy and warmth, condition
+	if (energy > 0) Character::energy += energy * round((condition + warmth) / 200); // dependence between energy and warmth, condition
+	if (energy < 0) Character::energy += energy * round(200 / (condition + warmth));  
 	if (Character::energy > 100) Character::energy = 100;
 }
 void Character::ChangeConditionLevel(int points)
@@ -33,3 +34,8 @@ void Character::ChangeConditionLevel(int points)
 	if (points < 0) Character::condition += points * 100 / warmth;
 	if (Character::condition > 100) Character::condition = 100;
 }
+int Character::GetHungerLevel() { return hunger; }
+int Character::GetThirstLevel() { return thirst; }
+int Character::GetWarmthLevel() { return warmth; }
+int Character::GetEnergyLevel() { return energy; }
+int Character::GetConditionLevel() { return condition; }
