@@ -34,6 +34,13 @@ void Character::ChangeConditionLevel(int points)
 	if (points < 0) Character::condition += points * 100 / warmth;
 	if (Character::condition > 100) Character::condition = 100;
 }
+void Character::Rest(int hours)
+{
+	Character::energy = hours * 13; // sleeping for 8 hours will fully restore energy
+	if (Character::energy > 100) Character::energy = 100;
+	Character::ChangeThirstLevel(hours * -2);
+	Character::ChangeHungerLevel(hours * -2);
+}
 int Character::GetHungerLevel() { return hunger; }
 int Character::GetThirstLevel() { return thirst; }
 int Character::GetWarmthLevel() { return warmth; }
