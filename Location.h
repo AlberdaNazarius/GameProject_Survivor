@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <map>
 #include "Data.h"
 
 class Environment
@@ -11,12 +12,13 @@ public:
 	void SetBackground(sf::Sprite &sprite, sf::Texture &texture, std::string picture, int windowWidth, int windowHeight);
 protected:
 	int index; // every environment has a specific index
+	static map<string, int> animals;
 };
 
-class Forest : public Environment // also must inherit class Actions
+class Forest : public Environment
 {
 public:
-	Forest() { index = 1; }
+	Forest();
 	~Forest() {}
 	void static ExploreArea(); // It must be override method of class Actions
 	void static Hunt(); // It must be override method of class Actions
@@ -26,12 +28,25 @@ private:
 	static std::string picture; // picture name
 };
 
-class Lake: public Environment // also must inherit class Actions
+class Lake: public Environment 
 {
 public:
-	Lake() { index = 2; }
+	Lake();
 	~Lake() {}
 	void static ExploreArea(); // It must be override method of class Actions
+	void static Hunt(); // It must be override method of class Actions
+	void static SetPicture(std::string picture);
+	std::string static GetPicture();
+private:
+	static std::string picture; // picture name
+};
+
+class River : public Environment 
+{
+public:
+	River();
+	~River() {}
+	void static ExploreArea();
 	void static Hunt(); // It must be override method of class Actions
 	void static SetPicture(std::string picture);
 	std::string static GetPicture();

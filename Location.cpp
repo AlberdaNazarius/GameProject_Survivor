@@ -67,6 +67,45 @@ void Lake::SetPicture(std::string picture) { Lake::picture = picture; }
 std::string Lake::GetPicture() { return Lake::picture;  }
 std::string Lake::picture;
 
+// Getters and setters for River picture 
+void River::SetPicture(std::string picture) { River::picture = picture; }
+std::string River::GetPicture() { return River::picture; }
+std::string River::picture;
+
+Forest::Forest()
+{
+	index = 1;
+	animals =
+	{
+		{ "Deer", 6 },
+		{ "Fox", 4 },
+		{ "Hare", 3 },
+		{ "Squirrel", 2},
+		{ "Bird", 1 },
+	};
+}
+
+Lake::Lake()
+{
+	index = 2;
+	animals =
+	{
+		{ "Duck", 3 },
+		{ "Fish", 2 },
+		{ "Fog", 1 },
+	};
+}
+
+River::River()
+{
+	index = 3;
+	animals =
+	{
+		{ "Beaver", 3},
+		{ "Fish", 2 },
+	};
+}
+
 #pragma endregion
 
 #pragma region Generator
@@ -103,7 +142,7 @@ int GeneralTime::GetHours() { return hours; }
 int GeneralTime::GetMinutes() { return minutes; }
 
 void GeneralTime::DisplayCurrentTime() { cout << hours << ":" << minutes << std::endl; }
-int GeneralTime::DeltaTime(int startedDay, int startedHour) { return ((GeneralTime::days * 24) + hours) - ((startedDay * 24) + startedHour); }
+int GeneralTime::DeltaTime(int startedDay, int startedHour) { return ((days * 24) + hours) - ((startedDay * 24) + startedHour); }
 
 void GeneralTime::AddTime(int hours, int minutes)
 {
