@@ -12,6 +12,7 @@ public:
     static int GetWarmthLevel();
     static int GetEnergyLevel();
     static int GetConditionLevel();
+    static void Rest(int hours);
 private:
     int static hunger,
         thirst,
