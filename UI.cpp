@@ -45,3 +45,8 @@ void UI::setActive(bool isAct)
 {
 	this->isActive = isAct;
 }
+
+bool UI::getActive()
+{
+	return this->isActive;
+}

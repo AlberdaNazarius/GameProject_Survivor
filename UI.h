@@ -20,5 +20,6 @@ public:
 	virtual void setVisible(bool isVis);
 	bool getVisible();
 	virtual void setActive(bool isAct);
+	bool getActive();
 	virtual void render(RenderTarget& target, Vector2f offset) = 0;
 };

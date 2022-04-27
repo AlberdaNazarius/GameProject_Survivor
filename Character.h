@@ -13,6 +13,7 @@ public:
     static int GetEnergyLevel();
     static int GetConditionLevel();
     static void Rest(int hours);
+    static void DisplayCharacteristics();
 private:
     int static hunger,
         thirst,

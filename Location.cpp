@@ -4,7 +4,6 @@
 #include "Location.h"
 #include "Data.h"
 
-using namespace std;
 
 #pragma region StaticVariables
 
@@ -15,6 +14,8 @@ int GeneralTime::hours;
 int GeneralTime::days;
 sf::Sprite Location::Sprite;
 sf::Texture Location::texture;
+
+
 std::string picture;
 int Location::LocationCurrent;
 int Location::temperature;
@@ -29,19 +30,17 @@ void Location::CheckWhatEnvironment(int environmentIndex)
 	{
 		auto forest = (Forest*)Location::CurrentLocation;
 		forest->ExploreArea();
-		forest->Hunt();
 		forest->SetBackground(Sprite, texture, Forest::GetPicture(), windowWidth, windowHeight);
 	}
 	if (environmentIndex == 2)
 	{
 		auto lake = (Lake*)Location::CurrentLocation;
 		lake->ExploreArea();
-		lake->Hunt();
 		lake->SetBackground(Sprite, texture, Lake::GetPicture(), windowWidth, windowHeight);
 	}
 }
 
-void Environment::SetBackground(sf::Sprite &sprite, sf::Texture &texture, string picture, int windowWidth, int windowHeight)
+void Environment::SetBackground(sf::Sprite& sprite, sf::Texture& texture, string picture, int windowWidth, int windowHeight)
 {
 	if (picture.size() >= 1)
 	{
@@ -52,13 +51,43 @@ void Environment::SetBackground(sf::Sprite &sprite, sf::Texture &texture, string
 		throw "Picture isn't set!";
 }
 
+map<int, string>::iterator Environment::Hunt(int maxIndexOfGeneration)
+{
+	auto it = animals.begin();
+	srand(time(0));
+	std::vector<int> random;
+	std::vector<int> probability;
+	int counter = 0;
+	int max = 0;
+	for (int i = 0; i < animals.size(); i++)
+		random.push_back(rand() % maxIndexOfGeneration);
+	do
+	{
+		for (int value : random)
+			if (value == maxIndexOfGeneration - 1)
+				counter++;
+		probability.push_back(counter);
+		counter = 0;
+		maxIndexOfGeneration--;
+	} while (maxIndexOfGeneration);
+	for (int value : probability)
+		if (value > max)
+			max = value;
+	for (int i = 0; i < max - 1; i++)
+	{
+		++it;
+	}
+	cout << it->second << endl;
+	return it;
+}
+
 void Location::SetWindowResolution(int windowWidth, int windowHeight)
 {
 	this->windowWidth = windowWidth;
 	this->windowHeight = windowHeight;
 }
 
-int Location::GetTemperature() { return temperature;  }
+int Location::GetTemperature() { return temperature; }
 
 void Location::ChangeTemperature(int gradus)
 {
@@ -72,12 +101,12 @@ void Location::ChangeTemperature(int gradus)
 
 // Getters and setters for Forest picture 
 void Forest::SetPicture(std::string picture) { Forest::picture = picture; }
-std::string Forest::GetPicture() { return Forest::picture;  }
+std::string Forest::GetPicture() { return Forest::picture; }
 std::string Forest::picture;
 
 // Getters and setters for Lake picture 
 void Lake::SetPicture(std::string picture) { Lake::picture = picture; }
-std::string Lake::GetPicture() { return Lake::picture;  }
+std::string Lake::GetPicture() { return Lake::picture; }
 std::string Lake::picture;
 
 // Getters and setters for River picture 
@@ -85,37 +114,37 @@ void River::SetPicture(std::string picture) { River::picture = picture; }
 std::string River::GetPicture() { return River::picture; }
 std::string River::picture;
 
-Forest::Forest()
+Forest::Forest() : Environment()
 {
 	index = 1;
 	animals =
 	{
-		{ "Deer", 6 },
-		{ "Fox", 4 },
-		{ "Hare", 3 },
-		{ "Squirrel", 2},
-		{ "Bird", 1 },
+		{ 1, "Bird"},
+		{ 2, "Squirrel"},
+		{ 3, "Hare"},
+		{ 4, "Fox"},
+		{ 6, "Deer"},
 	};
 }
 
-Lake::Lake()
+Lake::Lake() : Environment()
 {
 	index = 2;
 	animals =
 	{
-		{ "Duck", 3 },
-		{ "Fish", 2 },
-		{ "Fog", 1 },
+		{ 3, "Duck"},
+		{ 2, "Fish"},
+		{ 1, "Fog"},
 	};
 }
 
-River::River()
+River::River() : Environment()
 {
 	index = 3;
 	animals =
 	{
-		{ "Beaver", 3},
-		{ "Fish", 2 },
+		{ 3, "Beaver"},
+		{ 2, "Fish"},
 	};
 }
 
@@ -142,7 +171,7 @@ int Generator::GenerateTemperature(int minTemperature, int maxTemperature)
 void Generator::PrintGeneratedEnvironments()
 {
 	list<int>::iterator it;
-	for (it = Data::EnvironmentsSequence.begin();it != Data::EnvironmentsSequence.end();it++)
+	for (it = Data::EnvironmentsSequence.begin(); it != Data::EnvironmentsSequence.end(); it++)
 		std::cout << *it << " ";
 }
 
@@ -188,16 +217,6 @@ void Forest::ExploreArea() // It must be overload method
 	// realisation
 }
 void Lake::ExploreArea() // It must be overload method
-{
-	// realisation
-}
-
-void Forest::Hunt() // It must be overload method
-{
-	// realisation
-}
-
-void Lake::Hunt() // It must be overload method
 {
 	// realisation
 }

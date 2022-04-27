@@ -3,18 +3,18 @@
 #include <string>
 #include <map>
 #include "Data.h"
-
 using namespace std;
-
 class Environment
 {
 public:
-	Environment() {}
+	Environment() {	}
 	virtual ~Environment() {}
-	void SetBackground(sf::Sprite &sprite, sf::Texture &texture, std::string picture, int windowWidth, int windowHeight);
+	void SetBackground(sf::Sprite& sprite, sf::Texture& texture, string picture, int windowWidth, int windowHeight);
+	map<int, string>::iterator Hunt(int maxIndexOfGeneration);
+	map<int, string> animals;
 protected:
 	int index; // every environment has a specific index
-	map<string, int> animals;
+
 };
 
 class Forest : public Environment
@@ -23,33 +23,30 @@ public:
 	Forest();
 	~Forest() {}
 	void static ExploreArea(); // It must be override method of class Actions
-	void static Hunt(); // It must be override method of class Actions
 	void static SetPicture(std::string picture);
-	std::string static GetPicture();
+	string static GetPicture();
 private:
-	static std::string picture; // picture name
+	static string picture; // picture name
 };
 
-class Lake: public Environment 
+class Lake : public Environment
 {
 public:
 	Lake();
 	~Lake() {}
 	void static ExploreArea(); // It must be override method of class Actions
-	void static Hunt(); // It must be override method of class Actions
 	void static SetPicture(std::string picture);
 	std::string static GetPicture();
 private:
 	static std::string picture; // picture name
 };
 
-class River : public Environment 
+class River : public Environment
 {
 public:
 	River();
 	~River() {}
 	void static ExploreArea();
-	void static Hunt(); // It must be override method of class Actions
 	void static SetPicture(std::string picture);
 	std::string static GetPicture();
 private:
@@ -62,6 +59,8 @@ public:
 	static Environment* CurrentLocation;
 	static int LocationCurrent;
 	static void CheckWhatEnvironment(int environmentIndex);
+
+
 	static sf::Sprite Sprite;
 	static int GetTemperature();
 	static void ChangeTemperature(int gradus);
@@ -72,7 +71,7 @@ public:
 private:
 	static sf::Texture texture;
 	static int temperature;
-	static int windowWidth;  
+	static int windowWidth;
 	static int windowHeight;
 };
 
