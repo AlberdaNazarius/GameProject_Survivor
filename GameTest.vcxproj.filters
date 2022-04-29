@@ -21,9 +21,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GameTest.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Location.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
@@ -48,11 +45,14 @@
     <ClCompile Include="Panel.cpp">
       <Filter>Resource Files\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Inventory.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
     <ClCompile Include="GameMain.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Inventory.cpp">
+      <Filter>Resource Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -81,6 +81,9 @@
       <Filter>Header Files\UI</Filter>
     </ClInclude>
     <ClInclude Include="Inventory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Interfaces.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

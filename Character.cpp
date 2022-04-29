@@ -64,3 +64,38 @@ int Character::GetThirstLevel() { return thirst; }
 int Character::GetWarmthLevel() { return warmth; }
 int Character::GetEnergyLevel() { return energy; }
 int Character::GetConditionLevel() { return condition; }
+
+#pragma region InterfaceRealisation
+
+void Character::ReloadData(map<string, int> data)
+{
+	hunger = data["Hunger"];
+	thirst = data["Thirst"];
+	warmth = data["Warmth"];
+	energy = data["Energy"];
+	condition = data["Condition"];
+}
+
+std::map<std::string, int> Character::WhatToSave()
+{
+	std::map<std::string, int> Save =
+	{
+		{"Hunger", hunger},
+		{"Thirst", thirst},
+		{"Warmth", warmth},
+		{"Energy", energy},
+		{"Condition", condition}
+	};
+	return Save;
+}
+
+void Character::DisplayStats()
+{
+	cout << "Hunger: " << hunger << endl;
+	cout << "Thirst: " << thirst << endl;
+	cout << "Warmth: " << warmth << endl;
+	cout << "Energy: " << energy << endl;
+	cout << "Condition: " << condition << endl;
+}
+
+#pragma endregion

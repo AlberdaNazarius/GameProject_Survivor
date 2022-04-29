@@ -1,8 +1,10 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <string>
+#include <iostream>
 #include <map>
 #include "Data.h"
+#include "Interfaces.h"
+
 using namespace std;
 class Environment
 {
@@ -22,7 +24,6 @@ class Forest : public Environment
 public:
 	Forest();
 	~Forest() {}
-	void static ExploreArea(); // It must be override method of class Actions
 	void static SetPicture(std::string picture);
 	string static GetPicture();
 private:
@@ -34,7 +35,6 @@ class Lake : public Environment
 public:
 	Lake();
 	~Lake() {}
-	void static ExploreArea(); // It must be override method of class Actions
 	void static SetPicture(std::string picture);
 	std::string static GetPicture();
 private:
@@ -46,20 +46,18 @@ class River : public Environment
 public:
 	River();
 	~River() {}
-	void static ExploreArea();
 	void static SetPicture(std::string picture);
 	std::string static GetPicture();
 private:
 	static std::string picture; // picture name
 };
 
-class Location
+class Location : public IData
 {
 public:
 	static Environment* CurrentLocation;
 	static int LocationCurrent;
 	static void CheckWhatEnvironment(int environmentIndex);
-
 
 	static sf::Sprite Sprite;
 	static int GetTemperature();
@@ -67,7 +65,11 @@ public:
 	static bool Shelter;
 
 	void SetWindowResolution(int windowWidth, int windowHeight);
-	//void static SavedData();
+	
+	void ReloadData(map<std::string, int> data) override;
+	void DisplayStats() override;
+	std::map<std::string, int> WhatToSave() override;
+
 private:
 	static sf::Texture texture;
 	static int temperature;
@@ -75,7 +77,7 @@ private:
 	static int windowHeight;
 };
 
-class GeneralTime
+class GeneralTime : public IData
 {
 public:
 	static void DisplayCurrentTime();
@@ -84,6 +86,10 @@ public:
 	static int GetDay();
 	static int GetHours();
 	static int GetMinutes();
+
+	void ReloadData(map<std::string, int> data) override;
+	void DisplayStats() override;
+	std::map<std::string, int> WhatToSave() override;
 private:
 	static int days;
 	static int hours;

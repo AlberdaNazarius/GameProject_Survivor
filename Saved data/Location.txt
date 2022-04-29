@@ -1,0 +1,3 @@
+LocationCurrent 0
+Shelter 0
+Temperature 0

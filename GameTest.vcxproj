@@ -116,12 +116,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Libraries\SFML\SFML-2.5.1\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Work\Programming\Libraries\SFML-2.5.1\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Libraries\SFML\SFML-2.5.1\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\Work\Programming\Libraries\SFML-2.5.1\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;sfml-system-d.lib;sfml-window-d.lib;sfml-graphics-d.lib;sfml-audio-d.lib;sfml-main-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -147,7 +147,9 @@
     <ClCompile Include="Container.cpp" />
     <ClCompile Include="Data.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameMain.cpp" />
     <ClCompile Include="GameTest.cpp" />
+    <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="Location.cpp" />
     <ClCompile Include="Panel.cpp" />
     <ClCompile Include="UI.cpp" />
@@ -158,6 +160,7 @@
     <ClInclude Include="Data.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="Interfaces.h" />
     <ClInclude Include="Inventory.h" />
     <ClInclude Include="Location.h" />
     <ClInclude Include="Panel.h" />

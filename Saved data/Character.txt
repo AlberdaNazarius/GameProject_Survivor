@@ -1,0 +1,5 @@
+Condition 100
+Energy 100
+Hunger 100
+Thirst 100
+Warmth 100

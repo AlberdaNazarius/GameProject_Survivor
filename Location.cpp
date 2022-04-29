@@ -1,9 +1,5 @@
 #include <SFML/Graphics.hpp>
-#include <iostream>
-#include <string>
 #include "Location.h"
-#include "Data.h"
-
 
 #pragma region StaticVariables
 
@@ -29,13 +25,11 @@ void Location::CheckWhatEnvironment(int environmentIndex)
 	if (environmentIndex == 1)
 	{
 		auto forest = (Forest*)Location::CurrentLocation;
-		forest->ExploreArea();
 		forest->SetBackground(Sprite, texture, Forest::GetPicture(), windowWidth, windowHeight);
 	}
 	if (environmentIndex == 2)
 	{
 		auto lake = (Lake*)Location::CurrentLocation;
-		lake->ExploreArea();
 		lake->SetBackground(Sprite, texture, Lake::GetPicture(), windowWidth, windowHeight);
 	}
 }
@@ -91,11 +85,65 @@ int Location::GetTemperature() { return temperature; }
 
 void Location::ChangeTemperature(int gradus)
 {
-	if (temperature > -15 && temperature < 30)
-		temperature += gradus;
-	else
-		Location::ChangeTemperature(Generator::GenerateTemperature(-7, 7));
+	temperature += gradus;
+	if (temperature > 30)
+		Location::ChangeTemperature(Generator::GenerateTemperature(-10, 5));
+	if (temperature < -15)
+		Location::ChangeTemperature(Generator::GenerateTemperature(5, 10));
 }
+
+
+// Interface realisation
+std::map<std::string, int> Location::WhatToSave()
+{
+	std::map<std::string, int> Save =
+	{
+		{"Temperature", GetTemperature()},
+		{"Shelter", Shelter},
+		{"LocationCurrent", LocationCurrent}
+	};
+	return Save;
+}
+
+void  Location::ReloadData(map<string, int> data)
+{
+	temperature = data["Temperature"];
+	Shelter = data["Shelter"];
+	LocationCurrent = data["LocationCurrent"];
+}
+
+void Location::DisplayStats()
+{
+	cout << "Temperature: " << GetTemperature();
+}
+
+
+std::map<std::string, int> GeneralTime::WhatToSave()
+{
+	std::map<std::string, int> Save =
+	{
+		{"Days", days},
+		{"Hours", hours},
+		{"Minutes", minutes}
+	};
+	return Save;
+}
+
+void  GeneralTime::ReloadData(map<string, int> data)
+{
+	days = data["Days"];
+	hours = data["Hours"];
+	minutes = data["Minutes"];
+}
+
+void GeneralTime::DisplayStats()
+{
+	cout << "Days: " << GetDay() << endl;
+	cout << "Hours: " << GetHours() << endl;
+	cout << "Minutes: " << GetMinutes() << endl;
+}
+//////
+
 
 #pragma region ForestAndLake 
 
@@ -162,12 +210,14 @@ void Generator::GenerateEnvironments(int maxIndex, int amount)
 		Data::EnvironmentsSequence.push_back(randIndex);
 	}
 }
+
 int Generator::GenerateTemperature(int minTemperature, int maxTemperature)
 {
 	srand(time(0));
-	int randTemperature = minTemperature + (rand() % (maxTemperature - minTemperature));
+	int randTemperature = minTemperature + (rand() % maxTemperature);
 	return randTemperature;
 }
+
 void Generator::PrintGeneratedEnvironments()
 {
 	list<int>::iterator it;
@@ -206,19 +256,6 @@ void GeneralTime::AddTime(int hours, int minutes)
 		GeneralTime::days++; // Add day
 		GeneralTime::hours -= 24;
 	}
-}
-
-#pragma endregion
-
-#pragma region NeedRealisation
-
-void Forest::ExploreArea() // It must be overload method
-{
-	// realisation
-}
-void Lake::ExploreArea() // It must be overload method
-{
-	// realisation
 }
 
 #pragma endregion

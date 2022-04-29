@@ -1,5 +1,7 @@
 #include <iostream>
-class Character
+#include "Interfaces.h"
+
+class Character : public IData
 {
 public:
     static void ChangeHungerLevel(int food);
@@ -14,6 +16,10 @@ public:
     static int GetConditionLevel();
     static void Rest(int hours);
     static void DisplayCharacteristics();
+    
+    void ReloadData(std::map<std::string, int> data) override;
+    void DisplayStats() override;
+    std::map<std::string, int> WhatToSave() override;
 private:
     int static hunger,
         thirst,

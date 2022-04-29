@@ -63,7 +63,6 @@ void HuntOveriwrite(int maxIndex, int spentEnergy, int indexOfEnvironment)
 	}
 	else cout << "It's nothing hunted" << endl;
 	Character::DisplayCharacteristics();
-	
 }
 
 #pragma endregion
@@ -96,6 +95,8 @@ int main()
 	Event event;
 	Location location;
 	location.SetWindowResolution(windowWidth, windowHeight);
+	
+	Data::ReloadAllStaticData();
 
 	Game::errorTexture.setRepeated(true);
 	if (!Game::errorTexture.loadFromFile("Pictures/ErrorTexture.png"))
@@ -289,8 +290,10 @@ int main()
 			switch (event.type)
 			{
 			case Event::Closed:
-				window.close(); // need to save game here
+				Data::SaveAllStaticData();
+				window.close();
 				break;
+
 			case Event::MouseButtonPressed:
 				if (event.mouseButton.button == sf::Mouse::Left)
 				{
