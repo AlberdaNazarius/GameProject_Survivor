@@ -9,9 +9,9 @@ class Inventory : public IData
 {
 public:
 	static void Change_Item(string item_name, int number);
-	static int Show_Item(string item_name);
     static bool Check_Tool(string tool_id);
 	static void ExploreArea();
+	static void DisplayCharacteristics();
 
 	void ReloadData(map<std::string, int> data) override;
 	void DisplayStats() override;

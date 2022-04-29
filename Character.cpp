@@ -1,5 +1,6 @@
 #include "Character.h"
 #include "Location.h"
+#include "Inventory.h"
 int Character::hunger = 100,
 Character::thirst = 100,
 Character::warmth = 100,
@@ -58,6 +59,7 @@ void Character::DisplayCharacteristics()
 		<< "Warmth = " << Character::GetWarmthLevel() << endl;
 	GeneralTime::DisplayCurrentTime();
 	cout << "______________________________________________" << endl;
+	Inventory::DisplayCharacteristics();
 }
 int Character::GetHungerLevel() { return hunger; }
 int Character::GetThirstLevel() { return thirst; }

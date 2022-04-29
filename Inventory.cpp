@@ -35,13 +35,11 @@ void Inventory::ExploreArea()
 	srand(time(0));
 	tools["matches"] = rand() % 2;
 	tools["flashlight"] = rand() % 2;
-	cout << "matches = " << tools["matches"] << endl
-		<< "flashlight = " << tools["flashlight"] << endl;
-	food += rand() % 3; cout << "food = " << food << endl; // test
-	water += rand() % 3; cout << "water = " << water << endl; // test
-	wood += rand() % 3; cout << "wood = " << wood << endl; // test
-	tinder += rand() % 3; cout << "tinder = " << tinder << endl; // test
-	medicine += rand() % 3; cout << "medicine = " << medicine << endl; // test
+	food += rand() % 3; 
+	water += rand() % 3; 
+	wood += rand() % 3; 
+	tinder += rand() % 3; 
+	medicine += rand() % 3; 
 	Character::ChangeEnergyLevel(-15);
 	GeneralTime::AddTime(0, 30);
 	Character::ChangeHungerLevel(-5);
@@ -49,7 +47,45 @@ void Inventory::ExploreArea()
 	Generator::GenerateEnvironments(3, 3);
 	Character::DisplayCharacteristics();
 }
-
+void Inventory::Change_Item(string item_name, int number)
+{
+	if (item_name == "food")	food += number;
+	else
+	{
+		tools[item_name] = number;
+	}
+	if (item_name == "water")	water += number;
+	else
+	{
+		tools[item_name] = number;
+	}
+	if (item_name == "wood")	wood += number;
+	else
+	{
+		tools[item_name] = number;
+	}
+	if (item_name == "tinder")	tinder += number;
+	else
+	{
+		tools[item_name] = number;
+	}
+	if (item_name == "medicine")	medicine += number;
+	else
+	{
+		tools[item_name] = number;
+	}
+}
+void Inventory::DisplayCharacteristics()
+{
+	for (auto it = tools.begin(); it != tools.end(); it++)
+		cout << it->first << " = " << it->second << endl;
+	cout << "food = " << food << endl
+		<< "water = " << water << endl
+		<< "wood = " << wood << endl
+		<< "tinder = " << tinder << endl
+		<< "medicine = " << medicine << endl; 
+	cout << "______________________________________________" << endl;
+}
 #pragma region InterfaceRealisation
 
 std::map<std::string, int> Inventory::WhatToSave()
@@ -104,11 +140,11 @@ void  Inventory::ReloadData(map<string, int> data)
 
 void Inventory::DisplayStats()
 {
-	cout << "Food: " << food;
-	cout << "Water: " << water;
-	cout << "Wood: " << wood;
-	cout << "Tinder: " << tinder;
-	cout << "Medicine: " << medicine;
+	cout << "Food = " << food;
+	cout << "Water = " << water;
+	cout << "Wood = " << wood;
+	cout << "Tinder = " << tinder;
+	cout << "Medicine = " << medicine;
 }
 
 #pragma endregion

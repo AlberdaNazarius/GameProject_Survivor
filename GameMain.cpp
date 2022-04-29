@@ -47,18 +47,17 @@ void HuntOveriwrite(int maxIndex, int spentEnergy, int indexOfEnvironment)
 		if (indexOfEnvironment == 1)
 		{
 			Forest forest;
-			forest.Hunt(maxIndex);
-			// need to add amount of food to Inventory 
+			Inventory::Change_Item("food", forest.Hunt(maxIndex)->first);
 		}
 		if (indexOfEnvironment == 2)
 		{
 			Lake lake;
-			lake.Hunt(maxIndex);
+			Inventory::Change_Item("food", lake.Hunt(maxIndex)->first);
 		}
 		if (indexOfEnvironment == 3)
 		{
 			River river;
-			river.Hunt(maxIndex);
+			Inventory::Change_Item("food", river.Hunt(maxIndex)->first);
 		}
 	}
 	else cout << "It's nothing hunted" << endl;
@@ -302,6 +301,7 @@ int main()
 					if (StartFire->checkClick((Vector2f)Mouse::getPosition(window)))
 					{
 						StartFire->Action(StartFireContainer, true);
+						Inventory::Change_Item("wood", -5);
 						startedHour = GeneralTime::GetHours();
 						startedDay = GeneralTime::GetDay();
 					}
@@ -406,17 +406,19 @@ int main()
 					}
 					if (FallTrap->checkClick((Vector2f)Mouse::getPosition(window)))
 					{
+						Inventory::Change_Item("fall trap", 0);
 						FallTrap->Action(3, -5, Location::LocationCurrent);
 						HuntContainer->setVisible(false);
-						// add value 'false' to all traps
 					}
 					if (SpringTrap->checkClick((Vector2f)Mouse::getPosition(window)))
 					{
+						Inventory::Change_Item("spring trap", 0);
 						SpringTrap->Action(3, -5, Location::LocationCurrent);
 						HuntContainer->setVisible(false);
 					}
 					if (BirdTrap->checkClick((Vector2f)Mouse::getPosition(window)))
 					{
+						Inventory::Change_Item("bird trap", 0);
 						BirdTrap->Action(15, -5, Location::LocationCurrent);
 						HuntContainer->setVisible(false);
 					}
