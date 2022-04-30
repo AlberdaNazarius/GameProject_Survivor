@@ -20,6 +20,7 @@ public:
 
 	static void SaveAllStaticData();
 	static void ReloadAllStaticData();
+	static void SaveGamePerSomeTime(int someHour);
 
 	static void AvailDataReloading();
 	static void ForbidDataReloading();
@@ -29,6 +30,8 @@ protected:
 	static bool canSaveData;
 	static void ReloadPossibilityDataSave();
 	static void ChangePossibilityDataSave();
+	static int startedHour;
+	static int stardedDay;
 };
 
 template<typename T>

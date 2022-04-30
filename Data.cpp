@@ -4,6 +4,8 @@
 #include "Character.h"
 
 bool Data::canSaveData = false;
+int Data::startedHour = GeneralTime::GetHours();
+int Data::stardedDay = GeneralTime::GetDay();
 
 int Data::GetEnvironment(int index)
 {
@@ -21,6 +23,16 @@ void Data::ReloadPossibilityDataSave()
 	getline(fs, str);
 	istringstream(str) >> canSaveData;
 	fs.close();
+}
+
+void Data::SaveGamePerSomeTime(int someHour)
+{
+	if (GeneralTime::DeltaTime(stardedDay, startedHour) >= someHour)
+	{
+		stardedDay = GeneralTime::GetDay();
+		startedHour = GeneralTime::GetHours();
+		SaveAllStaticData();
+	}
 }
 
 void Data::ChangePossibilityDataSave()

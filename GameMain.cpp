@@ -539,6 +539,8 @@ int main()
 			FishButton->setVisible(false);
 			HuntButton->setVisible(true);
 		}
+		// Save data per some time
+		Data::SaveGamePerSomeTime(6);
 
 		MainContainer->render(window, Vector2f(0, 0)); // render themself and all ui that contain
 		HuntContainer->render(window, Vector2f(0, 0));
