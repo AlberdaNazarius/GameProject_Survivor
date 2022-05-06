@@ -86,15 +86,27 @@ void ContainerSetVisible(Container* cont, bool value)
 
 #pragma endregion
 
+#pragma region OpenInventory
+
+void InventorySetVisible(Container* cont, bool value)
+{
+	cont->setVisible(value);
+}
+
+#pragma endregion
+
 int main()
 {
-	const int windowWidth = 1280;
-	const int windowHeight = 920;
-	RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Game"/*, sf::Style::Fullscreen */);
+	const int windowWidth = VideoMode::getDesktopMode().width;
+	const int windowHeight = VideoMode::getDesktopMode().height;
+	//const int windowWidth = 800;
+	//const int windowHeight = 600;
+	RenderWindow window(sf::VideoMode(VideoMode::getDesktopMode().width, VideoMode::getDesktopMode().height), "Game", sf::Style::Fullscreen);
+	//RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Game" /*, sf::Style::Fullscreen*/);
 	Event event;
 	Location location;
 	location.SetWindowResolution(windowWidth, windowHeight);
-	
+
 	Data::ReloadAllStaticData();
 
 	Game::errorTexture.setRepeated(true);
@@ -145,7 +157,7 @@ int main()
 
 	StartFirePanel->addChild(FireStone);
 	StartFirePanel->addChild(FireBow);
-    StartFirePanel->addChild(FireLighter);
+	StartFirePanel->addChild(FireLighter);
 	StartFirePanel->addChild(FireLens);
 	StartFirePanel->addChild(FireMatches);
 
@@ -234,7 +246,25 @@ int main()
 #pragma region Rest
 
 	Button<void(*)(int)>* RestButton = new Button<void(*)(int)>(Vector2f(400, 310), IntRect(0, 0, 200, 100), "Rest");
-	RestButton->setDelegate(Character::Rest);    
+	RestButton->setDelegate(Character::Rest);
+
+#pragma endregion
+
+#pragma region OpenInventory
+
+	Container* OpenInventoryContainer = new Container;
+	Panel* OpenInventoryPanel = new Panel(Vector2f(windowWidth / 10, windowHeight / 10), IntRect(0, 0, windowWidth * 0.8, windowHeight * 0.8));
+	OpenInventoryContainer->setVisible(false);
+
+	Button<void(*)(Container*, bool)>* OpenInventory = new Button<void(*)(Container*, bool)>(Vector2f(170, 80), IntRect(0, 0, 300, 100), "OpenInventory");
+	OpenInventory->setDelegate(InventorySetVisible);
+
+	Button<void(*)(Container*, bool)>* CloseInventory = new Button<void(*)(Container*, bool)>(Vector2f(windowWidth * 0.55, windowHeight * 0.65), IntRect(0, 0, windowWidth * 0.2, windowHeight * 0.1), "CloseInventory");
+	CloseInventory->setDelegate(InventorySetVisible);
+	CloseInventory->setVisible(false);
+
+	OpenInventoryContainer->addChild(OpenInventoryPanel);
+	OpenInventoryPanel->addChild(CloseInventory);
 
 #pragma endregion
 
@@ -276,6 +306,13 @@ int main()
 	MainPanel->addChild(RestButton);
 
 #pragma endregion
+
+#pragma region OpenInventory
+
+	MainPanel->addChild(OpenInventory);
+
+#pragma endregion
+
 	// Attaching pictures to environments
 	Forest::SetPicture("Pictures/Environment.jpg");
 	Lake::SetPicture("Pictures/Lake.jpg");
@@ -316,10 +353,9 @@ int main()
 						GeneralTime::AddTime(0, minutes);
 						Character::ChangeHungerLevel(minutes / 60 * -10);
 						Character::ChangeThirstLevel(minutes / 60 * -15);
-						StayAtFire->Action(minutes*2);
+						StayAtFire->Action(minutes * 2);
 						Character::DisplayCharacteristics();
 					}
-
 #pragma endregion 
 
 #pragma region ExploreArea
@@ -446,6 +482,23 @@ int main()
 
 #pragma endregion 
 
+#pragma region OpenInventory
+
+					if (OpenInventory->checkClick((Vector2f)Mouse::getPosition(window)))
+					{
+						OpenInventory->Action(OpenInventoryContainer, true);
+						CloseInventory->setVisible(true);
+						OpenInventory->setVisible(false);
+					}
+					if (CloseInventory->checkClick((Vector2f)Mouse::getPosition(window)))
+					{
+						OpenInventory->Action(OpenInventoryContainer, false);
+						CloseInventory->setVisible(false);
+						OpenInventory->setVisible(true);
+					}
+
+#pragma endregion
+
 #pragma endregion
 				}
 				break;
@@ -463,7 +516,7 @@ int main()
 		FireLens->update((Vector2f)Mouse::getPosition(window));
 		FireStone->update((Vector2f)Mouse::getPosition(window));
 		StayAtFire->update((Vector2f)Mouse::getPosition(window));
-	 	StartFire->update((Vector2f)Mouse::getPosition(window));
+		StartFire->update((Vector2f)Mouse::getPosition(window));
 
 #pragma endregion 
 
@@ -499,6 +552,13 @@ int main()
 
 #pragma endregion
 
+#pragma region OpenInventory
+
+		OpenInventory->update((Vector2f)Mouse::getPosition(window));
+		CloseInventory->update((Vector2f)Mouse::getPosition(window));
+
+#pragma endregion
+
 		// Draw
 		window.clear();
 		window.draw(location.Sprite);
@@ -529,6 +589,8 @@ int main()
 
 #pragma endregion
 
+#pragma region Hunt
+
 		if (Location::LocationCurrent != 1)
 		{
 			HuntButton->setVisible(false);
@@ -539,12 +601,93 @@ int main()
 			FishButton->setVisible(false);
 			HuntButton->setVisible(true);
 		}
+
+#pragma endregion
+
+#pragma region OpenInventory
+
+		OpenInventoryContainer->render(window, Vector2f(0, 0));
+
+#pragma endregion
+
 		// Save data per some time
 		Data::SaveGamePerSomeTime(6);
 
 		MainContainer->render(window, Vector2f(0, 0)); // render themself and all ui that contain
 		HuntContainer->render(window, Vector2f(0, 0));
 		FishContainer->render(window, Vector2f(0, 0));
+		OpenInventoryContainer->render(window, Vector2f(0, 0));
+
+#pragma region OpenInventory
+
+		if (OpenInventoryContainer->getVisible())
+		{
+			Font font;
+			font.loadFromFile("CALIBRI.TTF");
+			Text Items, Items_Title, Items_Values, Tools, Tools_Title, Tools_Values;
+
+			Items.setFont(font);
+			Items_Title.setFont(font);
+			Items_Values.setFont(font);
+			Tools.setFont(font);
+			Tools_Title.setFont(font);
+			Tools_Values.setFont(font);
+
+			Items_Title.setString("Items");
+			Items.setString("Wood\nFood\nWater\nTinder\nMedicine");
+			Items_Values.setString(to_string(Inventory::ReturnNumberOfItems("wood")) + "\n" + 
+								   to_string(Inventory::ReturnNumberOfItems("food")) + "\n" + 
+								   to_string(Inventory::ReturnNumberOfItems("water")) + "\n" + 
+								   to_string(Inventory::ReturnNumberOfItems("tinder")) + "\n" +
+								   to_string(Inventory::ReturnNumberOfItems("medicine")));
+			Tools_Title.setString("Tools");
+			Tools.setString("Axe\nFlashlight\nLighter\nFishing rod\nCompass\nMap\nMatches\nLens\nKnife\nRope\nSpear\nSpring trap\nBird trap\nFall trap");
+			Tools_Values.setString(to_string(Inventory::Check_Tool("axe")) + "\n" +
+								   to_string(Inventory::Check_Tool("flashlight")) + "\n" +
+								   to_string(Inventory::Check_Tool("lighter")) + "\n" +
+								   to_string(Inventory::Check_Tool("fishing rod")) + "\n" +
+								   to_string(Inventory::Check_Tool("compass")) + "\n" +
+								   to_string(Inventory::Check_Tool("map")) + "\n" +
+								   to_string(Inventory::Check_Tool("matches")) + "\n" +
+								   to_string(Inventory::Check_Tool("lens")) + "\n" +
+								   to_string(Inventory::Check_Tool("knife")) + "\n" +
+								   to_string(Inventory::Check_Tool("rope")) + "\n" +
+								   to_string(Inventory::Check_Tool("spear")) + "\n" +
+								   to_string(Inventory::Check_Tool("spring trap")) + "\n" +
+								   to_string(Inventory::Check_Tool("bird trap")) + "\n" +
+								   to_string(Inventory::Check_Tool("fall trap")));
+
+			Items_Title.setCharacterSize(windowHeight / 15);
+			Items.setCharacterSize(windowHeight / 30);
+			Items_Values.setCharacterSize(windowHeight / 30);
+			Tools_Title.setCharacterSize(windowHeight / 15);
+			Tools.setCharacterSize(windowHeight / 30);
+			Tools_Values.setCharacterSize(windowHeight / 30);
+
+			Items_Title.setPosition(windowWidth * 0.5, windowHeight * 1.2 / 10);
+			Items.setPosition(windowWidth * 0.5, windowHeight * 2.1 / 10);
+			Items_Values.setPosition(windowWidth * 0.65, windowHeight * 2.1 / 10);
+			Tools_Title.setPosition(windowWidth * 0.15, windowHeight * 1.2 / 10);
+			Tools.setPosition(windowWidth * 0.15, windowHeight * 2.1 / 10);
+			Tools_Values.setPosition(windowWidth * 0.3, windowHeight * 2.1 / 10);
+
+			Items_Title.setFillColor(Color::Black);
+			Items.setFillColor(Color::Black);
+			Items_Values.setFillColor(Color::Black);
+			Tools_Title.setFillColor(Color::Black);
+			Tools.setFillColor(Color::Black);
+			Tools_Values.setFillColor(Color::Black);
+
+			window.draw(Items_Title);
+			window.draw(Items);
+			window.draw(Items_Values);
+			window.draw(Tools_Title);
+			window.draw(Tools);
+			window.draw(Tools_Values);
+		}
+
+#pragma endregion
+
 		window.display();
 	}
 

@@ -12,6 +12,7 @@ public:
     static bool Check_Tool(string tool_id);
 	static void ExploreArea();
 	static void DisplayCharacteristics();
+	static int ReturnNumberOfItems(string item_name);
 
 	void ReloadData(map<std::string, int> data) override;
 	void DisplayStats() override;

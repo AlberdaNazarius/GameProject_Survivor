@@ -147,4 +147,18 @@ void Inventory::DisplayStats()
 	cout << "Medicine = " << medicine;
 }
 
+int Inventory::ReturnNumberOfItems(string item_name)
+{
+	if (item_name == "food")
+		return food;
+	if (item_name == "water")
+		return water;
+	if (item_name == "wood")
+		return wood;
+	if (item_name == "tinder")
+		return tinder;
+	if (item_name == "medicine")
+		return medicine;
+}
+
 #pragma endregion
