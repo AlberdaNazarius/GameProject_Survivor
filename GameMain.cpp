@@ -126,15 +126,16 @@ int main()
 #pragma region StartFire
 
 	Container* StartFireContainer = new Container;
-	Panel* StartFirePanel = new Panel(Vector2f(100, 490), IntRect(0, 0, 1040, 380));
+	Panel* StartFirePanel = new Panel(Vector2f(windowWidth / 10, windowHeight / 10), IntRect(0, 0, windowWidth * 0.8, windowHeight * 0.6));
 	StartFireContainer->setVisible(false);
 
-	Button<void(*)(Container*, bool)>* StartFire = new Button<void(*)(Container*, bool)>(Vector2f(40, 200), IntRect(0, 0, 200, 100), "Start fire");
+	Button<void(*)(Container*, bool)>* StartFire = new Button<void(*)(Container*, bool)>(Vector2f(windowWidth * 0.18, windowHeight * 0.02), IntRect(0, 0, windowWidth * 0.14, windowHeight * 0.07), "Start fire");
 	StartFire->setDelegate(ContainerSetVisible);
 
-	Button<void(*)(int)>* StayAtFire = new Button<void(*)(int)>(Vector2f(260, 200), IntRect(0, 0, 128, 200), "Stay at fire");
+	Button<void(*)(int)>* StayAtFire = new Button<void(*)(int)>(Vector2f(windowWidth * 0.18, windowHeight * 0.11), IntRect(0, 0, windowWidth * 0.14, windowHeight * 0.07), "Stay at fire");
 	StayAtFire->setDelegate(Character::ChangeWarmthLevel);
 	StayAtFire->setVisible(false);
+	StayAtFire->setActive(false);
 	int startedHour = 0;
 	int startedDay = 0;
 
@@ -169,7 +170,7 @@ int main()
 
 #pragma region ExploreArea
 
-	Button<void(*)()>* ExploreArea = new Button<void(*)()>(Vector2f(400, 200), IntRect(0, 0, 200, 100), "Explore Area");
+	Button<void(*)()>* ExploreArea = new Button<void(*)()>(Vector2f(windowWidth * 0.34, windowHeight * 0.02), IntRect(0, 0, windowWidth * 0.14, windowHeight * 0.16), "Explore Area");
 	ExploreArea->setDelegate(Inventory::ExploreArea);
 
 #pragma endregion
@@ -245,7 +246,7 @@ int main()
 
 #pragma region Rest
 
-	Button<void(*)(int)>* RestButton = new Button<void(*)(int)>(Vector2f(400, 310), IntRect(0, 0, 200, 100), "Rest");
+	Button<void(*)(int)>* RestButton = new Button<void(*)(int)>(Vector2f(windowWidth * 0.5, windowHeight * 0.02), IntRect(0, 0, windowWidth * 0.14, windowHeight * 0.16), "Rest");
 	RestButton->setDelegate(Character::Rest);
 
 #pragma endregion
@@ -253,13 +254,13 @@ int main()
 #pragma region OpenInventory
 
 	Container* OpenInventoryContainer = new Container;
-	Panel* OpenInventoryPanel = new Panel(Vector2f(windowWidth / 10, windowHeight / 10), IntRect(0, 0, windowWidth * 0.8, windowHeight * 0.8));
+	Panel* OpenInventoryPanel = new Panel(Vector2f(windowWidth / 10, windowHeight / 10), IntRect(0, 0, windowWidth * 0.8, windowHeight * 0.6));
 	OpenInventoryContainer->setVisible(false);
 
-	Button<void(*)(Container*, bool)>* OpenInventory = new Button<void(*)(Container*, bool)>(Vector2f(170, 80), IntRect(0, 0, 300, 100), "OpenInventory");
+	Button<void(*)(Container*, bool)>* OpenInventory = new Button<void(*)(Container*, bool)>(Vector2f(windowWidth * 0.02, windowHeight * 0.02), IntRect(0, 0, windowWidth * 0.14, windowHeight * 0.16), "OpenInventory");
 	OpenInventory->setDelegate(InventorySetVisible);
 
-	Button<void(*)(Container*, bool)>* CloseInventory = new Button<void(*)(Container*, bool)>(Vector2f(windowWidth * 0.55, windowHeight * 0.65), IntRect(0, 0, windowWidth * 0.2, windowHeight * 0.1), "CloseInventory");
+	Button<void(*)(Container*, bool)>* CloseInventory = new Button<void(*)(Container*, bool)>(Vector2f(windowWidth * 0.63, windowHeight * 0.47), IntRect(0, 0, windowWidth * 0.15, windowHeight * 0.1), "CloseInventory");
 	CloseInventory->setDelegate(InventorySetVisible);
 	CloseInventory->setVisible(false);
 
@@ -269,7 +270,7 @@ int main()
 #pragma endregion
 
 	Container* MainContainer = new Container;
-	Panel* MainPanel = new Panel(Vector2f(300, 10), IntRect(0, 0, 640, 480));
+	Panel* MainPanel = new Panel(Vector2f(0, windowHeight * 0.8), IntRect(0, 0, windowWidth, windowHeight * 0.2));
 
 	MainContainer->addChild(MainPanel);
 
@@ -486,15 +487,13 @@ int main()
 
 					if (OpenInventory->checkClick((Vector2f)Mouse::getPosition(window)))
 					{
-						OpenInventory->Action(OpenInventoryContainer, true);
-						CloseInventory->setVisible(true);
-						OpenInventory->setVisible(false);
+						OpenInventory->Action(OpenInventoryContainer, !OpenInventoryContainer->getVisible());
+						CloseInventory->setVisible(!CloseInventory->getVisible());
 					}
 					if (CloseInventory->checkClick((Vector2f)Mouse::getPosition(window)))
 					{
 						OpenInventory->Action(OpenInventoryContainer, false);
 						CloseInventory->setVisible(false);
-						OpenInventory->setVisible(true);
 					}
 
 #pragma endregion
@@ -568,6 +567,7 @@ int main()
 		if (GeneralTime::DeltaTime(startedDay, startedHour) == 12) StayAtFire->setVisible(false); // an example; it's not necessary must be 5
 		if (StayAtFire->getVisible()) StartFire->setActive(false);
 		else StartFire->setActive(true);
+		StayAtFire->setActive(true);
 		StartFireContainer->render(window, Vector2f(0, 0));
 
 #pragma endregion 
@@ -657,19 +657,19 @@ int main()
 								   to_string(Inventory::Check_Tool("bird trap")) + "\n" +
 								   to_string(Inventory::Check_Tool("fall trap")));
 
-			Items_Title.setCharacterSize(windowHeight / 15);
-			Items.setCharacterSize(windowHeight / 30);
-			Items_Values.setCharacterSize(windowHeight / 30);
-			Tools_Title.setCharacterSize(windowHeight / 15);
-			Tools.setCharacterSize(windowHeight / 30);
-			Tools_Values.setCharacterSize(windowHeight / 30);
+			Items_Title.setCharacterSize(windowHeight / 20);
+			Items.setCharacterSize(windowHeight / 40);
+			Items_Values.setCharacterSize(windowHeight / 40);
+			Tools_Title.setCharacterSize(windowHeight / 20);
+			Tools.setCharacterSize(windowHeight / 40);
+			Tools_Values.setCharacterSize(windowHeight / 40);
 
 			Items_Title.setPosition(windowWidth * 0.5, windowHeight * 1.2 / 10);
 			Items.setPosition(windowWidth * 0.5, windowHeight * 2.1 / 10);
-			Items_Values.setPosition(windowWidth * 0.65, windowHeight * 2.1 / 10);
+			Items_Values.setPosition(windowWidth * 0.6, windowHeight * 2.1 / 10);
 			Tools_Title.setPosition(windowWidth * 0.15, windowHeight * 1.2 / 10);
 			Tools.setPosition(windowWidth * 0.15, windowHeight * 2.1 / 10);
-			Tools_Values.setPosition(windowWidth * 0.3, windowHeight * 2.1 / 10);
+			Tools_Values.setPosition(windowWidth * 0.27, windowHeight * 2.1 / 10);
 
 			Items_Title.setFillColor(Color::Black);
 			Items.setFillColor(Color::Black);
