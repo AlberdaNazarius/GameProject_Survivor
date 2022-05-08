@@ -3,7 +3,6 @@ RenderWindow Menu::MenuWindow(sf::VideoMode(VideoMode::getDesktopMode().width, V
 bool Menu::openMainWindow = false;
 void ForButtonPlay(bool value)
 {
-	Data::ReloadAllStaticData();
 	Menu::openMainWindow = value;
 	Menu::MenuWindow.close();
 }
@@ -77,11 +76,14 @@ void Menu::Draw()
 			case Event::MouseButtonPressed:
 				if (event.mouseButton.button == sf::Mouse::Left)
 				{
-					if (LoadSavedGame->checkClick((Vector2f)Mouse::getPosition(MenuWindow)))	LoadSavedGame->Action(true);
+					if (LoadSavedGame->checkClick((Vector2f)Mouse::getPosition(MenuWindow)))
+					{
+						Data::ReloadAllStaticData();
+						LoadSavedGame->Action(true);
+					}
 					if (NewGame->checkClick((Vector2f)Mouse::getPosition(MenuWindow)))
 					{
-						Data::ForbidDataReloading();
-						NewGame->setActive(false);
+						Data::SetDeffaultCharacteristics();
 						NewGame->Action(true);
 					}
 					if (Options->checkClick((Vector2f)Mouse::getPosition(MenuWindow))) Options->Action(OptionsContainer, !OptionsContainer->getVisible());
