@@ -75,11 +75,6 @@ map<int, string>::iterator Environment::Hunt(int maxIndexOfGeneration)
 	return it;
 }
 
-void Location::SetWindowResolution(int windowWidth, int windowHeight)
-{
-	this->windowWidth = windowWidth;
-	this->windowHeight = windowHeight;
-}
 
 int Location::GetTemperature() { return temperature; }
 
@@ -117,6 +112,12 @@ void Location::DisplayStats()
 	cout << "Temperature: " << GetTemperature();
 }
 
+void Location::SetDeffaultCharacteristics()
+{
+	temperature = 18;
+	Shelter = 0;
+	LocationCurrent = 1;
+}
 
 std::map<std::string, int> GeneralTime::WhatToSave()
 {
@@ -141,6 +142,13 @@ void GeneralTime::DisplayStats()
 	cout << "Days: " << GetDay() << endl;
 	cout << "Hours: " << GetHours() << endl;
 	cout << "Minutes: " << GetMinutes() << endl;
+}
+
+void GeneralTime::SetDeffaultCharacteristics()
+{
+	days = 0;
+	hours = 6;
+	minutes = 30;
 }
 //////
 

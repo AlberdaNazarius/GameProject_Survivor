@@ -110,8 +110,8 @@ int main()
 {
 	const int windowWidth = VideoMode::getDesktopMode().width;
 	const int windowHeight = VideoMode::getDesktopMode().height;
-	//const int windowWidth = 800;
-	//const int windowHeight = 600;
+	//const int windowWidth = 700;
+	//const int windowHeight = 700;
 
 	Menu menuObj;
 	menuObj.Draw();
@@ -123,7 +123,6 @@ int main()
 		//RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Game" /*, sf::Style::Fullscreen*/);
 		Event event;
 		Location location;
-		location.SetWindowResolution(windowWidth, windowHeight);
 
 		Game::errorTexture.setRepeated(true);
 		if (!Game::errorTexture.loadFromFile("Pictures/ErrorTexture.png"))
@@ -295,6 +294,22 @@ int main()
 
 		MainContainer->addChild(MainPanel);
 
+#pragma region LostTheGame
+
+		Container* FailMenu = new Container;
+		Panel* FailPanel = new Panel(Vector2f(windowWidth / 10, windowHeight / 5), IntRect(0, 0, windowWidth * 0.8, windowHeight * 0.3));
+
+		Button<void(*)()>* Restart = new Button<void(*)()>(Vector2f(40, windowHeight / 7), IntRect(0, 0, 200, 100), "Restart");
+		Restart->setDelegate(Data::SetDeffaultCharacteristics);
+
+		Button<void(*)(RenderWindow&, Menu&)>* OpenMainMenu = new Button<void(*)(RenderWindow&, Menu&)>(Vector2f(320, windowHeight / 7), IntRect(0, 0, 200, 100), "Menu");
+		OpenMainMenu->setDelegate(CallMenu);
+
+		FailMenu->addChild(FailPanel);
+		FailPanel->addChild(Restart);
+		FailPanel->addChild(OpenMainMenu);
+#pragma endregion
+
 #pragma region StartFire
 
 		MainPanel->addChild(StayAtFire);
@@ -354,6 +369,7 @@ int main()
 				switch (event.type)
 				{
 				case Event::Closed:
+					Data::SaveAllStaticData();
 					window.close();
 					break;
 
@@ -524,9 +540,16 @@ int main()
 
 #pragma endregion
 
+#pragma region LostTheGame
+
+						if (Restart->checkClick((Vector2f)Mouse::getPosition(window))) Restart->Action();
+
+#pragma endregion
+
+
 #pragma region Menu
 
-						if (OpenMenu->checkClick((Vector2f)Mouse::getPosition(window)))
+						if (OpenMenu->checkClick((Vector2f)Mouse::getPosition(window)) || OpenMainMenu->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
 							Data::SaveAllStaticData();
 							window.close();
@@ -653,14 +676,18 @@ int main()
 			OpenInventoryContainer->render(window, Vector2f(0, 0));
 
 #pragma endregion
-
-			// Save data per some time
-			Data::SaveGamePerSomeTime(6);
+	
+			Data::SaveGamePerSomeTime(23); // Save data per some time (in hours)
 
 			MainContainer->render(window, Vector2f(0, 0)); // render themself and all ui that contain
 			HuntContainer->render(window, Vector2f(0, 0));
 			FishContainer->render(window, Vector2f(0, 0));
 			OpenInventoryContainer->render(window, Vector2f(0, 0));
+
+			if (Character::CheckIFCharacteristicsBelowZero() == 0)
+			{
+				FailMenu->render(window, Vector2f(0, 0));
+			}
 
 #pragma region OpenInventory
 

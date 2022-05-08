@@ -5,10 +5,10 @@
 #include <iostream> // for testing
 
 int  Inventory::food = 1,
-Inventory::water = 1,
-Inventory::wood = 0,
-Inventory::tinder = 0,
-Inventory::medicine = 0;
+	 Inventory::water = 1,
+	 Inventory::wood = 0,
+	 Inventory::tinder = 0,
+	 Inventory::medicine = 0;
 
 map<string, bool> Inventory::tools = {
 		{"axe", false},
@@ -147,6 +147,31 @@ void Inventory::DisplayStats()
 	cout << "Medicine = " << medicine;
 }
 
+void Inventory::SetDeffaultCharacteristics()
+{
+	food = 1;
+	water = 1;
+	wood = 0;
+	tinder = 0;
+	medicine = 0;
+	Inventory::tools["axe"] = 0;
+	Inventory::tools["flashlight"] = 0;
+	Inventory::tools["lighter"] = 1;
+	Inventory::tools["fishing rod"] = 1;
+	Inventory::tools["compass"] = 0;
+	Inventory::tools["map"] = 1;
+	Inventory::tools["matches"] = 0;
+	Inventory::tools["lens"] = 0;
+	Inventory::tools["knife"] = 0;
+	Inventory::tools["rope"] = 0;
+	Inventory::tools["spear"] = 1;
+	Inventory::tools["spring trap"] = 1;
+	Inventory::tools["bird trap"] = 1;
+	Inventory::tools["fall trap"] = 1;
+}
+
+#pragma endregion
+
 int Inventory::ReturnNumberOfItems(string item_name)
 {
 	if (item_name == "food")
@@ -160,5 +185,3 @@ int Inventory::ReturnNumberOfItems(string item_name)
 	if (item_name == "medicine")
 		return medicine;
 }
-
-#pragma endregion

@@ -22,6 +22,7 @@ public:
 	static void ReloadAllStaticData();
 	static void SaveGamePerSomeTime(int someHour);
 
+	static void SetDeffaultCharacteristics();
 	static void AvailDataReloading();
 	static void ForbidDataReloading();
 	static bool CanSaveData();

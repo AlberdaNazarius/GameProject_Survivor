@@ -64,12 +64,12 @@ public:
 	static void ChangeTemperature(int gradus);
 	static bool Shelter;
 
-	void SetWindowResolution(int windowWidth, int windowHeight);
-	
 	void ReloadData(map<std::string, int> data) override;
 	void DisplayStats() override;
+	void SetDeffaultCharacteristics() override;
 	std::map<std::string, int> WhatToSave() override;
 
+	~Location() { delete[] CurrentLocation; }
 private:
 	static sf::Texture texture;
 	static int temperature;
@@ -89,6 +89,7 @@ public:
 
 	void ReloadData(map<std::string, int> data) override;
 	void DisplayStats() override;
+	void SetDeffaultCharacteristics() override;
 	std::map<std::string, int> WhatToSave() override;
 private:
 	static int days;

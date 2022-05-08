@@ -67,6 +67,13 @@ int Character::GetWarmthLevel() { return warmth; }
 int Character::GetEnergyLevel() { return energy; }
 int Character::GetConditionLevel() { return condition; }
 
+int Character::CheckIFCharacteristicsBelowZero()
+{
+	if ((hunger * thirst * warmth * energy * condition) == 0)
+		return 0;
+	else return 1;
+}
+
 #pragma region InterfaceRealisation
 
 void Character::ReloadData(map<string, int> data)
@@ -98,6 +105,15 @@ void Character::DisplayStats()
 	cout << "Warmth: " << warmth << endl;
 	cout << "Energy: " << energy << endl;
 	cout << "Condition: " << condition << endl;
+}
+
+void Character::SetDeffaultCharacteristics()
+{
+	hunger = 100;
+	thirst = 100;
+	warmth = 100;
+	energy = 100;
+	condition = 100;
 }
 
 #pragma endregion

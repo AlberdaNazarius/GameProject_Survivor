@@ -136,3 +136,16 @@ void Data::ForbidDataReloading()
 	fs.close();
 }
 bool Data::CanSaveData() { return canSaveData; }
+
+void Data::SetDeffaultCharacteristics()
+{
+	Location location;
+	GeneralTime time;
+	Character character;
+	Inventory inventory;
+
+	location.SetDeffaultCharacteristics();
+	character.SetDeffaultCharacteristics();
+	inventory.SetDeffaultCharacteristics();
+	time.SetDeffaultCharacteristics();
+}

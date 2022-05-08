@@ -16,6 +16,7 @@ public:
 
 	void ReloadData(map<std::string, int> data) override;
 	void DisplayStats() override;
+	void SetDeffaultCharacteristics() override;
 	std::map<std::string, int> WhatToSave() override;
 private:
 	static int food, water, wood, tinder, medicine;
