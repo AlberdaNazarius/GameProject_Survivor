@@ -122,5 +122,17 @@ std::map<std::string, int> Data::ReadData(string fileLocation)
 }
 
 void Data::AvailDataReloading() { canSaveData = true; }
-void Data::ForbidDataReloading() { canSaveData = false; }
+void Data::ForbidDataReloading()
+{
+	canSaveData = false;
+	fstream fs;
+	fs.open("Saved data/CanReloadData.txt", fstream::out);
+
+	if (fs.is_open())
+		fs >> canSaveData;
+	else
+		cout << "File can't open";
+
+	fs.close();
+}
 bool Data::CanSaveData() { return canSaveData; }
