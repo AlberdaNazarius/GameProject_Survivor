@@ -54,6 +54,12 @@
     <ClCompile Include="Inventory.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="Label.cpp">
+      <Filter>Resource Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Craft.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
     <ClCompile Include="Menu.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
@@ -87,6 +93,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Interfaces.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Label.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Craft.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Menu.h">

@@ -15,5 +15,7 @@ public:
 	Panel();
 	void setTexture(Texture* texture);
 	void setSize(IntRect intRect);
+	float getHeight();
+	float getWidth();
 	void render(RenderTarget& target, Vector2f offset);
 };

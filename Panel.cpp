@@ -29,6 +29,16 @@ void Panel::setSize(IntRect intRect)
 	this->sprite.setTextureRect(intRect);
 }
 
+float Panel::getHeight()
+{
+	return this->sprite.getLocalBounds().height;
+}
+
+float Panel::getWidth()
+{
+	return this->sprite.getLocalBounds().width;
+}
+
 void Panel::render(RenderTarget& target, Vector2f offset)
 {
 

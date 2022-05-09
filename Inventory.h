@@ -18,7 +18,7 @@ public:
 	void DisplayStats() override;
 	void SetDeffaultCharacteristics() override;
 	std::map<std::string, int> WhatToSave() override;
-private:
+
 	static int food, water, wood, tinder, medicine;
 	static map<string, bool> tools;
 };
