@@ -71,11 +71,9 @@ void HuntOveriwrite(int maxIndex, int spentEnergy, int indexOfEnvironment)
 
 #pragma region StartFire
 
-template <typename T>
-void ButtonSetVisible(Button<T>* button, Container* cont, bool value, int minutes, int takenEnergy)
+void StayAtFireSetVisible(Container* cont, bool value, int minutes, int takenEnergy)
 {
-	button->setVisible(value);
-	cont->setVisible(!value);
+	cont->setVisible(value);
 	GeneralTime::AddTime(0, minutes);
 	Character::ChangeEnergyLevel(takenEnergy);
 	Character::ChangeHungerLevel(-10 * minutes / 60);
@@ -115,6 +113,9 @@ int main()
 	//const int windowWidth = 700;
 	//const int windowHeight = 700;
 
+	Texture* panelTexture = new Texture;
+	panelTexture->loadFromFile("Pictures/transparent.png");
+
 	Menu menuObj;
 	menuObj.Draw();
 
@@ -142,33 +143,35 @@ int main()
 #pragma region StartFire
 
 		Container* StartFireContainer = new Container;
-		Panel* StartFirePanel = new Panel(Vector2f(windowWidth / 10, windowHeight / 10), IntRect(0, 0, windowWidth * 0.8, windowHeight * 0.6));
+		Panel* StartFirePanel = new Panel(Vector2f((float)windowWidth / 10, (float)windowHeight / 10), IntRect(0, 0, windowWidth * 0.8, windowHeight * 0.6));
 		StartFireContainer->setVisible(false);
 
-		Button<void(*)(Container*, bool)>* StartFire = new Button<void(*)(Container*, bool)>(Vector2f(windowWidth * 0.18, windowHeight * 0.02), IntRect(0, 0, windowWidth * 0.14, windowHeight * 0.07), "Start fire");
+		Button<void(*)(Container*, bool)>* StartFire = new Button<void(*)(Container*, bool)>(Vector2f((float)windowWidth * 0.18, (float)windowHeight * 0.02), IntRect(0, 0, windowWidth * 0.14, windowHeight * 0.07), "Start fire");
 		StartFire->setDelegate(ContainerSetVisible);
 
-		Button<void(*)(int)>* StayAtFire = new Button<void(*)(int)>(Vector2f(windowWidth * 0.18, windowHeight * 0.11), IntRect(0, 0, windowWidth * 0.14, windowHeight * 0.07), "Stay at fire");
+		Container* StayAtFireContainer = new Container;
+		Panel* StayAtFirePanel = new Panel(Vector2f((float)windowWidth / 2.5, (float)windowHeight / 2), IntRect(0, 0, windowWidth * 0.08, windowHeight * 0.15));
+		StayAtFireContainer->setVisible(false);
+
+		Button<void(*)(int)>* StayAtFire = new Button<void(*)(int)>(Vector2f((float)StayAtFirePanel->getWidth() * 0, (float)StayAtFirePanel->getHeight() * 0), IntRect(0, 0, StayAtFirePanel->getWidth(), StayAtFirePanel->getHeight()), "Stay at fire");
 		StayAtFire->setDelegate(Character::ChangeWarmthLevel);
-		StayAtFire->setVisible(false);
-		StayAtFire->setActive(false);
 		int startedHour = 0;
 		int startedDay = 0;
 
-		Button<void(*)(Button<void(*)(int)>*, Container*, bool, int, int)>* FireLighter = new Button<void(*)(Button<void(*)(int)>*, Container*, bool, int, int)>(Vector2f(10, 10), IntRect(0, 0, 150, 100), "Lighter");
-		FireLighter->setDelegate(ButtonSetVisible);
+		Button<void(*)(Container*, bool, int, int)>* FireLighter = new Button<void(*)(Container*, bool, int, int)>(Vector2f((float)10, (float)10), IntRect(0, 0, 150, 100), "Lighter");
+		FireLighter->setDelegate(StayAtFireSetVisible);
 
-		Button<void(*)(Button<void(*)(int)>*, Container*, bool, int, int)>* FireStone = new Button<void(*)(Button<void(*)(int)>*, Container*, bool, int, int)>(Vector2f(170, 10), IntRect(0, 0, 150, 100), "Flint and Stone");
-		FireStone->setDelegate(ButtonSetVisible);
+		Button<void(*)(Container*, bool, int, int)>* FireStone = new Button<void(*)(Container*, bool, int, int)>(Vector2f((float)170, (float)10), IntRect(0, 0, 150, 100), "Flint and Stone");
+		FireStone->setDelegate(StayAtFireSetVisible);
 
-		Button<void(*)(Button<void(*)(int)>*, Container*, bool, int, int)>* FireMatches = new Button<void(*)(Button<void(*)(int)>*, Container*, bool, int, int)>(Vector2f(340, 10), IntRect(0, 0, 150, 100), "Matches");
-		FireMatches->setDelegate(ButtonSetVisible);
+		Button<void(*)(Container*, bool, int, int)>* FireMatches = new Button<void(*)(Container*, bool, int, int)>(Vector2f((float)340, (float)10), IntRect(0, 0, 150, 100), "Matches");
+		FireMatches->setDelegate(StayAtFireSetVisible);
 
-		Button<void(*)(Button<void(*)(int)>*, Container*, bool, int, int)>* FireBow = new Button<void(*)(Button<void(*)(int)>*, Container*, bool, int, int) >(Vector2f(490, 10), IntRect(0, 0, 150, 100), "Bow method");
-		FireBow->setDelegate(ButtonSetVisible);
+		Button<void(*)(Container*, bool, int, int)>* FireBow = new Button<void(*)(Container*, bool, int, int)>(Vector2f((float)490, (float)10), IntRect(0, 0, 150, 100), "Bow method");
+		FireBow->setDelegate(StayAtFireSetVisible);
 
-		Button<void(*)(Button<void(*)(int)>*, Container*, bool, int, int)>* FireLens = new Button<void(*)(Button<void(*)(int)>*, Container*, bool, int, int)>(Vector2f(660, 510), IntRect(0, 0, 150, 100), "Lens");
-		FireLens->setDelegate(ButtonSetVisible);
+		Button<void(*)(Container*, bool, int, int)>* FireLens = new Button<void(*)(Container*, bool, int, int)>(Vector2f((float)660, (float)510), IntRect(0, 0, 150, 100), "Lens");
+		FireLens->setDelegate(StayAtFireSetVisible);
 
 		StartFireContainer->addChild(StartFirePanel);
 
@@ -182,11 +185,15 @@ int main()
 		if (!Inventory::Check_Tool("lens")) FireLens->setVisible(false);
 		if (!Inventory::Check_Tool("matches")) FireMatches->setVisible(false);
 
+		StayAtFireContainer->addChild(StayAtFirePanel);
+
+		StayAtFirePanel->addChild(StayAtFire);
+
 #pragma endregion 
 
 #pragma region ExploreArea
 
-		Button<void(*)()>* ExploreArea = new Button<void(*)()>(Vector2f(windowWidth * 0.34, windowHeight * 0.02), IntRect(0, 0, windowWidth * 0.14, windowHeight * 0.16), "Explore Area");
+		Button<void(*)()>* ExploreArea = new Button<void(*)()>(Vector2f((float)windowWidth * 0.34, (float)windowHeight * 0.02), IntRect(0, 0, windowWidth * 0.14, windowHeight * 0.16), "Explore Area");
 		ExploreArea->setDelegate(Inventory::ExploreArea);
 
 #pragma endregion
@@ -195,36 +202,45 @@ int main()
 
 		Generator::GenerateEnvironments(3, 3);
 
-		Button<void(*)(int)>* FirstVariantToTravel = new Button<void(*)(int)>(Vector2f(1570, 20), IntRect(0, 0, 100, 100), "Forest");
+		Container* ChooseWhereToGoContainer = new Container;
+		Panel* ChooseWhereToGoPanel = new Panel (panelTexture, Vector2f((float)windowWidth * 0, (float)windowHeight / 7), IntRect(0, 0, windowWidth, windowHeight * 0.07));
+
+		Button<void(*)(int)>* FirstVariantToTravel = new Button<void(*)(int)>(Vector2f((float)ChooseWhereToGoPanel->getWidth() /100, (float)0), IntRect(0, 0, ChooseWhereToGoPanel->getWidth() * 0.1, ChooseWhereToGoPanel->getHeight()), "Forest");
 		FirstVariantToTravel->setDelegate(Location::CheckWhatEnvironment);
 		FirstVariantToTravel->setVisible(true);
 
-		Button<void(*)(int)>* SecondVariantToTravel = new Button<void(*)(int)>(Vector2f(1690, 20), IntRect(0, 0, 100, 100), "Lake");
+		Button<void(*)(int)>* SecondVariantToTravel = new Button<void(*)(int)>(Vector2f((float)ChooseWhereToGoPanel->getWidth() / 2.3, (float)0), IntRect(0, 0, ChooseWhereToGoPanel->getWidth() * 0.1, ChooseWhereToGoPanel->getHeight()), "Lake");
 		SecondVariantToTravel->setDelegate(Location::CheckWhatEnvironment);
 		SecondVariantToTravel->setVisible(true);
 
-		Button<void(*)(int)>* ThirdVariantToTravel = new Button<void(*)(int)>(Vector2f(1810, 20), IntRect(0, 0, 100, 100), "River");
+		Button<void(*)(int)>* ThirdVariantToTravel = new Button<void(*)(int)>(Vector2f((float)ChooseWhereToGoPanel->getWidth() / 1.12, (float)0), IntRect(0, 0, ChooseWhereToGoPanel->getWidth() * 0.1, ChooseWhereToGoPanel->getHeight()), "River");
 		ThirdVariantToTravel->setDelegate(Location::CheckWhatEnvironment);
 		ThirdVariantToTravel->setVisible(true);
+
+		ChooseWhereToGoContainer->addChild(ChooseWhereToGoPanel);
+
+		ChooseWhereToGoPanel->addChild(FirstVariantToTravel);
+		ChooseWhereToGoPanel->addChild(SecondVariantToTravel);
+		ChooseWhereToGoPanel->addChild(ThirdVariantToTravel);
 
 #pragma endregion
 
 #pragma region Hunt
 
 		Container* HuntContainer = new Container;
-		Panel* HuntPanel = new Panel(Vector2f(100, 490), IntRect(0, 0, 1040, 380));
+		Panel* HuntPanel = new Panel(Vector2f((float)100, (float)490), IntRect(0, 0, 1040, 380));
 		HuntContainer->setVisible(false);
 
-		Button<void(*)(Container*, bool)>* HuntButton = new Button<void(*)(Container*, bool)>(Vector2f(windowWidth * 0.66, windowHeight * 0.02), IntRect(0, 0, windowWidth * 0.14, windowHeight * 0.16), "Hunt");
+		Button<void(*)(Container*, bool)>* HuntButton = new Button<void(*)(Container*, bool)>(Vector2f((float)windowWidth * 0.66, (float)windowHeight * 0.02), IntRect(0, 0, windowWidth * 0.14, windowHeight * 0.16), "Hunt");
 		HuntButton->setDelegate(ContainerSetVisible);
 
-		Button<void(*)(int, int, int)>* FallTrap = new Button<void(*)(int, int, int)>(Vector2f(40, 40), IntRect(0, 0, 200, 100), "Fall Trap");
+		Button<void(*)(int, int, int)>* FallTrap = new Button<void(*)(int, int, int)>(Vector2f((float)40, (float)40), IntRect(0, 0, 200, 100), "Fall Trap");
 		FallTrap->setDelegate(HuntOveriwrite);
 
-		Button<void(*)(int, int, int)>* SpringTrap = new Button<void(*)(int, int, int)>(Vector2f(250, 40), IntRect(0, 0, 200, 100), "Spring Trap");
+		Button<void(*)(int, int, int)>* SpringTrap = new Button<void(*)(int, int, int)>(Vector2f((float)250, (float)40), IntRect(0, 0, 200, 100), "Spring Trap");
 		SpringTrap->setDelegate(HuntOveriwrite);
 
-		Button<void(*)(int, int, int)>* BirdTrap = new Button<void(*)(int, int, int)>(Vector2f(460, 40), IntRect(0, 0, 200, 100), "Birs Trap");
+		Button<void(*)(int, int, int)>* BirdTrap = new Button<void(*)(int, int, int)>(Vector2f((float)460, (float)40), IntRect(0, 0, 200, 100), "Birs Trap");
 		BirdTrap->setDelegate(HuntOveriwrite);
 
 		HuntContainer->addChild(HuntPanel);
@@ -238,16 +254,16 @@ int main()
 		if (!Inventory::Check_Tool("bird trap")) BirdTrap->setVisible(false);
 
 		Container* FishContainer = new Container;
-		Panel* FishPanel = new Panel(Vector2f(100, 490), IntRect(0, 0, 1040, 380));
+		Panel* FishPanel = new Panel(Vector2f((float)100, (float)490), IntRect(0, 0, 1040, 380));
 		FishContainer->setVisible(false);
 
-		Button<void(*)(Container*, bool)>* FishButton = new Button<void(*)(Container*, bool)>(Vector2f(windowWidth * 0.66, windowHeight * 0.02), IntRect(0, 0, windowWidth * 0.14, windowHeight * 0.16), "Fish");
+		Button<void(*)(Container*, bool)>* FishButton = new Button<void(*)(Container*, bool)>(Vector2f((float)windowWidth * 0.66, (float)windowHeight * 0.02), IntRect(0, 0, windowWidth * 0.14, windowHeight * 0.16), "Fish");
 		FishButton->setDelegate(ContainerSetVisible);
 
-		Button<void(*)(int, int, int)>* FishingRod = new Button<void(*)(int, int, int)>(Vector2f(40, 40), IntRect(0, 0, 200, 100), "Fishing Rod");
+		Button<void(*)(int, int, int)>* FishingRod = new Button<void(*)(int, int, int)>(Vector2f((float)40, (float)40), IntRect(0, 0, 200, 100), "Fishing Rod");
 		FishingRod->setDelegate(HuntOveriwrite);
 
-		Button<void(*)(int, int, int)>* SpearFishing = new Button<void(*)(int, int, int)>(Vector2f(250, 40), IntRect(0, 0, 200, 100), "Spear Fishing");
+		Button<void(*)(int, int, int)>* SpearFishing = new Button<void(*)(int, int, int)>(Vector2f((float)250, (float)40), IntRect(0, 0, 200, 100), "Spear Fishing");
 		SpearFishing->setDelegate(HuntOveriwrite);
 
 		FishContainer->addChild(FishPanel);
@@ -262,7 +278,7 @@ int main()
 
 #pragma region Rest
 
-		Button<void(*)(int)>* RestButton = new Button<void(*)(int)>(Vector2f(windowWidth * 0.5, windowHeight * 0.02), IntRect(0, 0, windowWidth * 0.14, windowHeight * 0.16), "Rest");
+		Button<void(*)(int)>* RestButton = new Button<void(*)(int)>(Vector2f((float)windowWidth * 0.5, (float)windowHeight * 0.02), IntRect(0, 0, windowWidth * 0.14, windowHeight * 0.16), "Rest");
 		RestButton->setDelegate(Character::Rest);
 
 #pragma endregion
@@ -270,13 +286,13 @@ int main()
 #pragma region OpenInventory
 
 		Container* OpenInventoryContainer = new Container;
-		Panel* OpenInventoryPanel = new Panel(Vector2f(windowWidth / 10, windowHeight / 10), IntRect(0, 0, windowWidth * 0.8, windowHeight * 0.6));
+		Panel* OpenInventoryPanel = new Panel(Vector2f((float)windowWidth / 10, (float)windowHeight / 10), IntRect(0, 0, windowWidth * 0.8, windowHeight * 0.6));
 		OpenInventoryContainer->setVisible(false);
 
-		Button<void(*)(Container*, bool)>* OpenInventory = new Button<void(*)(Container*, bool)>(Vector2f(windowWidth * 0.02, windowHeight * 0.02), IntRect(0, 0, windowWidth * 0.14, windowHeight * 0.16), "OpenInventory");
+		Button<void(*)(Container*, bool)>* OpenInventory = new Button<void(*)(Container*, bool)>(Vector2f((float)windowWidth * 0.02, (float)windowHeight * 0.02), IntRect(0, 0, windowWidth * 0.14, windowHeight * 0.16), "OpenInventory");
 		OpenInventory->setDelegate(InventorySetVisible);
 
-		Button<void(*)(Container*, bool)>* CloseInventory = new Button<void(*)(Container*, bool)>(Vector2f(windowWidth * 0.63, windowHeight * 0.47), IntRect(0, 0, windowWidth * 0.15, windowHeight * 0.1), "CloseInventory");
+		Button<void(*)(Container*, bool)>* CloseInventory = new Button<void(*)(Container*, bool)>(Vector2f((float)windowWidth * 0.63, (float)windowHeight * 0.47), IntRect(0, 0, windowWidth * 0.15, windowHeight * 0.1), "CloseInventory");
 		CloseInventory->setDelegate(InventorySetVisible);
 		CloseInventory->setVisible(false);
 
@@ -287,24 +303,31 @@ int main()
 
 #pragma region Menu
 
-		Button<void(*)(RenderWindow&, Menu&)>* OpenMenu = new Button<void(*)(RenderWindow&, Menu&)>(Vector2f(1810, 130), IntRect(0, 0, 100, 80), "Open Menu");
+		Container* OpenMenuContainer = new Container;
+		Panel* OpenMenuPanel = new Panel(Vector2f((float)windowWidth / 1.07, (float)windowHeight * 0), IntRect(0, 0, windowWidth * 0.07, windowHeight * 0.07));
+
+		Button<void(*)(RenderWindow&, Menu&)>* OpenMenu = new Button<void(*)(RenderWindow&, Menu&)>(Vector2f((float)0, (float)0), IntRect(0, 0, OpenMenuPanel->getWidth(), OpenMenuPanel->getHeight()), "Open Menu");
 		OpenMenu->setDelegate(CallMenu);
 
+		OpenMenuContainer->addChild(OpenMenuPanel);
+		OpenMenuPanel->addChild(OpenMenu);
+
 #pragma endregion
+
 		Container* MainContainer = new Container;
-		Panel* MainPanel = new Panel(Vector2f(0, windowHeight * 0.8), IntRect(0, 0, windowWidth, windowHeight * 0.2));
+		Panel* MainPanel = new Panel(Vector2f((float)0, (float)windowHeight * 0.8), IntRect(0, 0, windowWidth, windowHeight * 0.2));
 
 		MainContainer->addChild(MainPanel);
 
 #pragma region LostTheGame
 
 		Container* FailMenu = new Container;
-		Panel* FailPanel = new Panel(Vector2f(windowWidth / 10, windowHeight / 5), IntRect(0, 0, windowWidth * 0.8, windowHeight * 0.3));
+		Panel* FailPanel = new Panel(Vector2f((float)windowWidth / 10, (float)windowHeight / 5), IntRect(0, 0, windowWidth * 0.8, windowHeight * 0.3));
 
-		Button<void(*)()>* Restart = new Button<void(*)()>(Vector2f(40, windowHeight / 7), IntRect(0, 0, 200, 100), "Restart");
+		Button<void(*)()>* Restart = new Button<void(*)()>(Vector2f((float)40, (float)windowHeight / 7), IntRect(0, 0, 200, 100), "Restart");
 		Restart->setDelegate(Data::SetDeffaultCharacteristics);
 
-		Button<void(*)(RenderWindow&, Menu&)>* OpenMainMenu = new Button<void(*)(RenderWindow&, Menu&)>(Vector2f(320, windowHeight / 7), IntRect(0, 0, 200, 100), "Menu");
+		Button<void(*)(RenderWindow&, Menu&)>* OpenMainMenu = new Button<void(*)(RenderWindow&, Menu&)>(Vector2f((float)320, (float)windowHeight / 7), IntRect(0, 0, 200, 100), "Menu");
 		OpenMainMenu->setDelegate(CallMenu);
 
 		FailMenu->addChild(FailPanel);
@@ -319,16 +342,15 @@ int main()
 		map<Button<bool(*)(string)>*, string> craftBut;
 		vector<Button<void(*)(vector<Panel*>*, Panel*)>*> closeCraftBut;
 		map<Button<void(*)(vector<Panel*>*, Panel*)>*, Panel*> switchCraftBut;
-		Button<void(*)(vector<Panel*>*, Panel*)>* openCraftBut = new Button<void(*)(vector<Panel*>*, Panel*)>(Vector2f(windowWidth * 0.18, windowHeight * 0.11), IntRect(0, 0, windowWidth * 0.14, windowHeight * 0.07), "Open craft menu");
+		Button<void(*)(vector<Panel*>*, Panel*)>* openCraftBut = new Button<void(*)(vector<Panel*>*, Panel*)>(Vector2f((float)windowWidth * 0.18, (float)windowHeight * 0.11), IntRect(0, 0, windowWidth * 0.14, windowHeight * 0.07), "Open craft menu");
 		openCraftBut->setDelegate(Craft::changeCraftMenu);
-		Craft::InitializeCraftMenus(&craftMenus, &craftBut, &closeCraftBut, &switchCraftBut, MainContainer, Vector2f(windowWidth * 0.35, windowHeight * 0.3));
+		Craft::InitializeCraftMenus(&craftMenus, &craftBut, &closeCraftBut, &switchCraftBut, MainContainer, Vector2f((float)windowWidth * 0.35, (float)windowHeight * 0.3));
 		MainPanel->addChild(openCraftBut);
 
 #pragma endregion 
 
 #pragma region StartFire
 
-		MainPanel->addChild(StayAtFire);
 		MainPanel->addChild(StartFire);
 
 #pragma endregion 
@@ -336,14 +358,6 @@ int main()
 #pragma region ExploreArea
 
 		MainPanel->addChild(ExploreArea);
-
-#pragma endregion
-
-#pragma region ChooseWhereToGo
-
-		MainPanel->addChild(FirstVariantToTravel);
-		MainPanel->addChild(SecondVariantToTravel);
-		MainPanel->addChild(ThirdVariantToTravel);
 
 #pragma endregion
 
@@ -366,11 +380,6 @@ int main()
 
 #pragma endregion
 
-#pragma region Menu
-
-		MainPanel->addChild(OpenMenu);
-
-#pragma endregion
 
 		// Attaching pictures to environments
 		Forest::SetPicture("Pictures/Environment.jpg");
@@ -392,20 +401,47 @@ int main()
 				case Event::MouseButtonPressed:
 					if (event.mouseButton.button == sf::Mouse::Left)
 					{
+
 #pragma region StartFire
 
 						if (StartFire->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
 							StartFire->Action(StartFireContainer, true);
-							Inventory::Change_Item("wood", -5);
 							startedHour = GeneralTime::GetHours();
 							startedDay = GeneralTime::GetDay();
+							HuntContainer->setVisible(false);
+							FishContainer->setVisible(false);
 						}
-						if (FireLighter->checkClick((Vector2f)Mouse::getPosition(window))) FireLighter->Action(StayAtFire, StartFireContainer, true, 5, -3);
-						if (FireStone->checkClick((Vector2f)Mouse::getPosition(window)))  FireStone->Action(StayAtFire, StartFireContainer, true, 40, -20);
-						if (FireMatches->checkClick((Vector2f)Mouse::getPosition(window)))  FireMatches->Action(StayAtFire, StartFireContainer, true, 5, -5);
-						if (FireBow->checkClick((Vector2f)Mouse::getPosition(window)))  FireBow->Action(StayAtFire, StartFireContainer, true, 60, -25);
-						if (FireLens->checkClick((Vector2f)Mouse::getPosition(window)))  FireLens->Action(StayAtFire, StartFireContainer, true, 30, -15);
+						if (FireLighter->checkClick((Vector2f)Mouse::getPosition(window)))
+						{
+							FireLighter->Action(StayAtFireContainer, true, 5, -3);
+							Inventory::Change_Item("wood", -5);
+							StartFireContainer->setVisible(false);
+						}
+						if (FireStone->checkClick((Vector2f)Mouse::getPosition(window)))
+						{
+							FireStone->Action(StayAtFireContainer, true, 40, -20);
+							Inventory::Change_Item("wood", -5);
+							StartFireContainer->setVisible(false);
+						}
+						if (FireMatches->checkClick((Vector2f)Mouse::getPosition(window)))
+						{
+							FireMatches->Action(StayAtFireContainer, true, 5, -5);
+							Inventory::Change_Item("wood", -5);
+							StartFireContainer->setVisible(false);
+						}
+						if (FireBow->checkClick((Vector2f)Mouse::getPosition(window)))
+						{
+							FireBow->Action(StayAtFireContainer, true, 60, -25);
+							Inventory::Change_Item("wood", -5);
+							StartFireContainer->setVisible(false);
+						}
+						if (FireLens->checkClick((Vector2f)Mouse::getPosition(window)))
+						{
+							FireLens->Action(StayAtFireContainer, true, 30, -15);
+							Inventory::Change_Item("wood", -5);
+							StartFireContainer->setVisible(false);
+						}
 						if (StayAtFire->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
 							int minutes = 60;
@@ -426,6 +462,9 @@ int main()
 							FirstVariantToTravel->setText(CaptionOfButton(0));
 							SecondVariantToTravel->setText(CaptionOfButton(1));
 							ThirdVariantToTravel->setText(CaptionOfButton(2));
+							StartFireContainer->setVisible(false);
+							HuntContainer->setVisible(false);
+							FishContainer->setVisible(false);
 						}
 
 #pragma endregion
@@ -449,7 +488,7 @@ int main()
 							}
 							Character::DisplayCharacteristics();
 							ExploreArea->setActive(true);
-							StayAtFire->setVisible(false);
+							StayAtFireContainer->setVisible(false);
 						}
 						if (SecondVariantToTravel->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
@@ -468,7 +507,7 @@ int main()
 							}
 							Character::DisplayCharacteristics();
 							ExploreArea->setActive(true);
-							StayAtFire->setVisible(false);
+							StayAtFireContainer->setVisible(false);
 						}
 						if (ThirdVariantToTravel->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
@@ -487,18 +526,14 @@ int main()
 							}
 							Character::DisplayCharacteristics();
 							ExploreArea->setActive(true);
-							StayAtFire->setVisible(false);
+							StayAtFireContainer->setVisible(false);
 						}
 
 #pragma endregion
 
 #pragma region Hunt
 
-						if (HuntButton->checkClick((Vector2f)Mouse::getPosition(window)))
-						{
-							HuntButton->Action(HuntContainer, true);
-							FishButton->Action(FishContainer, false);
-						}
+						if (HuntButton->checkClick((Vector2f)Mouse::getPosition(window))) HuntButton->Action(HuntContainer, true);
 						if (FallTrap->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
 							Inventory::Change_Item("fall trap", 0);
@@ -517,11 +552,7 @@ int main()
 							BirdTrap->Action(15, -5, Location::LocationCurrent);
 							HuntContainer->setVisible(false);
 						}
-						if (FishButton->checkClick((Vector2f)Mouse::getPosition(window)))
-						{
-							FishButton->Action(FishContainer, true);
-							HuntButton->Action(HuntContainer, false);
-						}
+						if (FishButton->checkClick((Vector2f)Mouse::getPosition(window))) FishButton->Action(FishContainer, true);
 						if (FishingRod->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
 							FishingRod->Action(5, -7, Location::LocationCurrent);
@@ -537,7 +568,13 @@ int main()
 
 #pragma region Rest
 
-						if (RestButton->checkClick((Vector2f)Mouse::getPosition(window))) RestButton->Action(4);
+						if (RestButton->checkClick((Vector2f)Mouse::getPosition(window)))
+						{
+							RestButton->Action(4);
+							StartFireContainer->setVisible(false);
+							HuntContainer->setVisible(false);
+							FishContainer->setVisible(false);
+						}
 
 #pragma endregion 
 
@@ -547,6 +584,9 @@ int main()
 						{
 							OpenInventory->Action(OpenInventoryContainer, !OpenInventoryContainer->getVisible());
 							CloseInventory->setVisible(!CloseInventory->getVisible());
+							StartFireContainer->setVisible(false);
+							HuntContainer->setVisible(false);
+							FishContainer->setVisible(false);
 						}
 						if (CloseInventory->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
@@ -571,7 +611,6 @@ int main()
 
 #pragma endregion
 
-
 #pragma region Menu
 
 						if (OpenMenu->checkClick((Vector2f)Mouse::getPosition(window)) || OpenMainMenu->checkClick((Vector2f)Mouse::getPosition(window)))
@@ -588,6 +627,9 @@ int main()
 						if (openCraftBut->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
 							openCraftBut->Action(&craftMenus, craftMenus[0]);
+							StartFireContainer->setVisible(false);
+							HuntContainer->setVisible(false);
+							FishContainer->setVisible(false);
 						}
 						for (map<Button<bool(*)(string)>*, string>::iterator it = craftBut.begin(); it != craftBut.end(); ++it)
 						{
@@ -614,7 +656,6 @@ int main()
 						}
 #pragma endregion
 
-#pragma endregion
 					}
 					break;
 				}
@@ -710,28 +751,18 @@ int main()
 
 #pragma region StartFire
 
-			if (GeneralTime::DeltaTime(startedDay, startedHour) >= 12) StayAtFire->setVisible(false); // an example; it's not necessary must be 5
-			if (StayAtFire->getVisible()) StartFire->setActive(false);
+			if (GeneralTime::DeltaTime(startedDay, startedHour) >= 12) StayAtFireContainer->setVisible(false); // an example; it's not necessary must be 5
+			if (StayAtFireContainer->getVisible()) StartFire->setActive(false);
 			else StartFire->setActive(true);
-			StayAtFire->setActive(true);
 			StartFireContainer->render(window, Vector2f(0, 0));
+			StayAtFireContainer->render(window, Vector2f(0, 0));
 
 #pragma endregion 
 
 #pragma region ExploreArea
 
-			if (ExploreArea->getActive())
-			{
-				FirstVariantToTravel->setVisible(false);
-				SecondVariantToTravel->setVisible(false);
-				ThirdVariantToTravel->setVisible(false);
-			}
-			else
-			{
-				FirstVariantToTravel->setVisible(true);
-				SecondVariantToTravel->setVisible(true);
-				ThirdVariantToTravel->setVisible(true);
-			}
+			if (ExploreArea->getActive()) ChooseWhereToGoContainer->setVisible(false);
+			else ChooseWhereToGoContainer->setVisible(true);
 
 #pragma endregion
 
@@ -755,7 +786,7 @@ int main()
 			OpenInventoryContainer->render(window, Vector2f(0, 0));
 
 #pragma endregion
-	
+
 			if (Character::CheckIFCharacteristicsBelowZero())
 			{
 				MainContainer->setActive(false);
@@ -777,9 +808,28 @@ int main()
 			Data::SaveGamePerSomeTime(23); // Save data per some time (in hours)
 
 			MainContainer->render(window, Vector2f(0, 0)); // render themself and all ui that contain
+
+
+#pragma region ChooseWhereToGo
+
+			ChooseWhereToGoContainer->render(window, Vector2f(0, 0));
+
+#pragma endregion
+
+#pragma region Hunt	
+
 			HuntContainer->render(window, Vector2f(0, 0));
 			FishContainer->render(window, Vector2f(0, 0));
+
+#pragma endregion
+
 			OpenInventoryContainer->render(window, Vector2f(0, 0));
+
+#pragma region Menu
+
+			OpenMenuContainer->render(window, Vector2f(0, 0));
+
+#pragma endregion
 
 #pragma region OpenInventory
 
@@ -827,12 +877,12 @@ int main()
 				Tools.setCharacterSize(windowHeight / 40);
 				Tools_Values.setCharacterSize(windowHeight / 40);
 
-				Items_Title.setPosition(windowWidth * 0.5, windowHeight * 1.2 / 10);
-				Items.setPosition(windowWidth * 0.5, windowHeight * 2.1 / 10);
-				Items_Values.setPosition(windowWidth * 0.6, windowHeight * 2.1 / 10);
-				Tools_Title.setPosition(windowWidth * 0.15, windowHeight * 1.2 / 10);
-				Tools.setPosition(windowWidth * 0.15, windowHeight * 2.1 / 10);
-				Tools_Values.setPosition(windowWidth * 0.27, windowHeight * 2.1 / 10);
+				Items_Title.setPosition((float)windowWidth * 0.5, (float)windowHeight * 0.12);
+				Items.setPosition((float)windowWidth * 0.5, (float)windowHeight * 0.21);
+				Items_Values.setPosition((float)windowWidth * 0.6, (float)windowHeight * 0.21);
+				Tools_Title.setPosition((float)windowWidth * 0.15, (float)windowHeight * 0.12);
+				Tools.setPosition((float)windowWidth * 0.15, (float) windowHeight * 0.21);
+				Tools_Values.setPosition((float)windowWidth * 0.27, (float)windowHeight * 0.21);
 
 				Items_Title.setFillColor(Color::Black);
 				Items.setFillColor(Color::Black);

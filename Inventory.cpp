@@ -35,7 +35,7 @@ void Inventory::ExploreArea()
 	srand(time(0));
 	tools["matches"] = rand() % 2;
 	tools["flashlight"] = rand() % 2;
-	food += rand() % 3; 
+	food += rand() % 1;
 	water += rand() % 3; 
 	wood += rand() % 3; 
 	tinder += rand() % 3; 
