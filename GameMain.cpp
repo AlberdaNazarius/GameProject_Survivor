@@ -127,7 +127,7 @@ int main()
 		Location location;
 
 		Game::errorTexture.setRepeated(true);
-		if (!Game::errorTexture.loadFromFile("Pictures/ErrorTexture.png"))
+		if (!Game::errorTexture.loadFromFile("Pictures/Button.png"))
 			throw std::invalid_argument("Failed to load ErrorTexture.png");
 		if (!Game::defFont.loadFromFile("Fonts/Roboto-Regular.ttf"))
 			throw std::invalid_argument("Failed to load Roboto-Light.ttf");
@@ -558,7 +558,16 @@ int main()
 
 #pragma region LostTheGame
 
-						if (Restart->checkClick((Vector2f)Mouse::getPosition(window))) Restart->Action();
+						if (Restart->checkClick((Vector2f)Mouse::getPosition(window)))
+						{
+							MainContainer->setActive(true);
+							HuntContainer->setActive(true);
+							FishContainer->setActive(true);
+							OpenInventoryContainer->setActive(true);
+							StartFireContainer->setActive(true);
+
+							Restart->Action();
+						}
 
 #pragma endregion
 
@@ -665,6 +674,13 @@ int main()
 
 #pragma endregion
 
+#pragma region LostTheGame
+
+			Restart->update((Vector2f)Mouse::getPosition(window));
+			OpenMainMenu->update((Vector2f)Mouse::getPosition(window));
+
+#pragma endregion		
+
 #pragma region Menu
 
 			OpenMenu->update((Vector2f)Mouse::getPosition(window));
@@ -740,17 +756,30 @@ int main()
 
 #pragma endregion
 	
+			if (Character::CheckIFCharacteristicsBelowZero())
+			{
+				MainContainer->setActive(false);
+				HuntContainer->setActive(false);
+				FishContainer->setActive(false);
+				OpenInventoryContainer->setActive(false);
+				StartFireContainer->setActive(false);
+				StayAtFire->setActive(false);
+
+				StayAtFire->setVisible(false);
+				Craft::changeCraftMenu(&craftMenus, NULL);
+				HuntContainer->setVisible(false);
+				OpenInventoryContainer->setVisible(false);
+				StartFireContainer->setVisible(false);
+
+				FailMenu->render(window, Vector2f(0, 0));
+			}
+
 			Data::SaveGamePerSomeTime(23); // Save data per some time (in hours)
 
 			MainContainer->render(window, Vector2f(0, 0)); // render themself and all ui that contain
 			HuntContainer->render(window, Vector2f(0, 0));
 			FishContainer->render(window, Vector2f(0, 0));
 			OpenInventoryContainer->render(window, Vector2f(0, 0));
-
-			if (Character::CheckIFCharacteristicsBelowZero() == 0)
-			{
-				FailMenu->render(window, Vector2f(0, 0));
-			}
 
 #pragma region OpenInventory
 

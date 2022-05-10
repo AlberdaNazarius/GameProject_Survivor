@@ -16,7 +16,7 @@ public:
 	static int GetConditionLevel();
 	static void Rest(int hours);
 	static void DisplayCharacteristics();
-	static int CheckIFCharacteristicsBelowZero();
+	static bool CheckIFCharacteristicsBelowZero();
 
 	void ReloadData(std::map<std::string, int> data) override;
 	void DisplayStats() override;

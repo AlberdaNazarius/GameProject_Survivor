@@ -67,11 +67,11 @@ int Character::GetWarmthLevel() { return warmth; }
 int Character::GetEnergyLevel() { return energy; }
 int Character::GetConditionLevel() { return condition; }
 
-int Character::CheckIFCharacteristicsBelowZero()
+bool Character::CheckIFCharacteristicsBelowZero()
 {
 	if ((hunger * thirst * warmth * energy * condition) == 0)
-		return 0;
-	else return 1;
+		return true;
+	else return false;
 }
 
 #pragma region InterfaceRealisation

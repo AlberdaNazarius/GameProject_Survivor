@@ -19,7 +19,7 @@ void ForButtonQuit(RenderWindow& window)
 Menu::Menu()
 {
 	Game::errorTexture.setRepeated(true);
-	if (!Game::errorTexture.loadFromFile("Pictures/ErrorTexture.png"))
+	if (!Game::errorTexture.loadFromFile("Pictures/Button.png"))
 		throw std::invalid_argument("Failed to load ErrorTexture.png");
 	if (!Game::defFont.loadFromFile("Fonts/Roboto-Regular.ttf"))
 		throw std::invalid_argument("Failed to load Roboto-Light.ttf");

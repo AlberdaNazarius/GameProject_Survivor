@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "UI.h"
-
+#include <iostream>
 using namespace sf;
 
 template<typename T>
@@ -98,6 +98,16 @@ public:
 			}
 			return false;
 	    }
+
+		void setActive(bool isAct)
+		{
+			if (!isAct)
+			{
+				this->sprite.setTexture(*(this->idle));
+				this->sprite.setColor(Color(255, 255, 255)); // test
+			}
+			this->isActive = isAct;
+		}
 
 		void render(RenderTarget& target, Vector2f offset)
 		{
