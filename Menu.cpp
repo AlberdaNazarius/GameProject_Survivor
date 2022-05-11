@@ -1,4 +1,5 @@
 #include "Menu.h"
+
 RenderWindow Menu::MenuWindow(sf::VideoMode(VideoMode::getDesktopMode().width, VideoMode::getDesktopMode().height), "Menu", sf::Style::Fullscreen);
 bool Menu::openMainWindow = false;
 void ForButtonPlay(bool value)
@@ -6,9 +7,13 @@ void ForButtonPlay(bool value)
 	Menu::openMainWindow = value;
 	Menu::MenuWindow.close();
 }
-void ForButtonOptions(Container* contObj, bool value)
+void ForButtonOptions(Container* optionContainer, Container* menuContainer, bool value)
 {
-	contObj->setVisible(value);
+	optionContainer->setVisible(value);
+	optionContainer->setActive(value);
+
+	menuContainer->setVisible(!value);
+	menuContainer->setActive(!value);
 }
 void ForButtonQuit(RenderWindow& window)
 {
@@ -32,35 +37,35 @@ Menu::Menu()
 		Game::defPanel.setRepeated(true);
 	}
 	MenuContainer = new Container;
-	MenuPanel = new Panel(Vector2f(600, 300), IntRect(0, 0, 640, 480));
+	MenuPanel = new Panel(Vector2f(600, 300), 640, 480);
 
 	OptionsContainer = new Container;
-	OptionsPanel = new Panel(Vector2f(600, 300), IntRect(0, 0, 640, 480));
+	OptionsPanel = new Panel(Vector2f(600, 300), 640, 480);
 	OptionsContainer->setVisible(false);
 
-	LoadSavedGame = new Button<void(*)(bool)>(Vector2f(200, 130), IntRect(0, 0, 200, 100), "Load Saved Game");
+	LoadSavedGame = new Button<void(*)(bool)>(Vector2f(200, 130), Vector2f(200, 100), "Load Saved Game");
 	LoadSavedGame->setDelegate(ForButtonPlay);
 
-	NewGame = new Button<void(*)(bool)>(Vector2f(200, 10), IntRect(0, 0, 200, 100), "New Game");
+	NewGame = new Button<void(*)(bool)>(Vector2f(200, 10), Vector2f(200, 100), "New Game");
 	NewGame->setDelegate(ForButtonPlay);
 
-	Options = new Button<void(*)(Container*, bool)>(Vector2f(200, 250), IntRect(0, 0, 200, 100), "Options");
-	Options->setDelegate(ForButtonOptions);
+	OpenOptions = new Button<void(*)(Container*, Container*, bool)>(Vector2f(200, 250), Vector2f(200, 100), "Options");
+	OpenOptions->setDelegate(ForButtonOptions);
 
-	Quit = new Button<void(*)(RenderWindow&)>(Vector2f(200, 370), IntRect(0, 0, 200, 100), "Quit");
+	Quit = new Button<void(*)(RenderWindow&)>(Vector2f(200, 370), Vector2f(200, 100), "Quit");
 	Quit->setDelegate(ForButtonQuit);
 
-	CloseButton = new Button<void(*)(Container*, bool)>(Vector2f(300, 300), IntRect(0, 0, 200, 100), "Close Options");
-	CloseButton->setDelegate(ForButtonOptions);
+	CloseOptions = new Button<void(*)(Container*, Container*, bool)>(Vector2f(300, 300), Vector2f(200, 100), "Close Options");
+	CloseOptions->setDelegate(ForButtonOptions);
 
 	MenuContainer->addChild(MenuPanel);
 	MenuPanel->addChild(LoadSavedGame);
 	MenuPanel->addChild(NewGame);
-	MenuPanel->addChild(Options);
+	MenuPanel->addChild(OpenOptions);
 	MenuPanel->addChild(Quit);
 
 	OptionsContainer->addChild(OptionsPanel);
-	OptionsPanel->addChild(CloseButton);
+	OptionsPanel->addChild(CloseOptions);
 }
 void Menu::Draw()
 {
@@ -86,18 +91,20 @@ void Menu::Draw()
 						Data::SetDeffaultCharacteristics();
 						NewGame->Action(true);
 					}
-					if (Options->checkClick((Vector2f)Mouse::getPosition(MenuWindow))) Options->Action(OptionsContainer, !OptionsContainer->getVisible());
 					if (Quit->checkClick((Vector2f)Mouse::getPosition(MenuWindow))) Quit->Action(MenuWindow);
-					if (CloseButton->checkClick((Vector2f)Mouse::getPosition(MenuWindow))) CloseButton->Action(OptionsContainer, false);
+					if (OpenOptions->checkClick((Vector2f)Mouse::getPosition(MenuWindow))) OpenOptions->Action(OptionsContainer, MenuContainer, true);
+					else if (CloseOptions->checkClick((Vector2f)Mouse::getPosition(MenuWindow))) CloseOptions->Action(OptionsContainer, MenuContainer, false);
 
-				}break;
+				}
+				break;
 			}
 			if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel);
 			else if (event.mouseWheelScroll.wheel == sf::Mouse::HorizontalWheel);
 		}
 		LoadSavedGame->update((Vector2f)Mouse::getPosition(MenuWindow));
 		NewGame->update((Vector2f)Mouse::getPosition(MenuWindow));
-		Options->update((Vector2f)Mouse::getPosition(MenuWindow));
+		OpenOptions->update((Vector2f)Mouse::getPosition(MenuWindow));
+		CloseOptions->update((Vector2f)Mouse::getPosition(MenuWindow));
 		Quit->update((Vector2f)Mouse::getPosition(MenuWindow));
 
 		MenuWindow.clear();

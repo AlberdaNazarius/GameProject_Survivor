@@ -14,6 +14,7 @@ private:
 	Texture* hover;
 	Font* font;
 	Text text;
+	Vector2f size;
 public:
         T Action;
 		Button(Vector2f pos, IntRect intRect, std::string text)
@@ -25,6 +26,7 @@ public:
 				this->clicked = &Game::defClickedBut;
 				this->hover = &Game::defHoverBut;
 				this->font = &Game::defFont;
+
 				this->text.setFont(*(this->font));
 				this->text.setString(text);
 				this->text.setFillColor(Color::White);
@@ -32,8 +34,33 @@ public:
 				this->text.setPosition(
 					pos.x + (intRect.width / 2) - (this->text.getGlobalBounds().width / 2),
 					pos.y + (intRect.height / 2) - (this->text.getGlobalBounds().height / 2) - (this->text.getCharacterSize() / 4));
+
 				this->Action= nullptr;
 		}
+		Button(Vector2f position, Vector2f size, std::string text)
+		{
+			this->size = size;
+			this->idle = &Game::defIdleBut;
+			this->setPosition(position);
+			this->sprite.setTexture(*(this->idle));
+			this->clicked = &Game::defClickedBut;
+			this->hover = &Game::defHoverBut;
+			this->font = &Game::defFont;
+
+			this->text.setFont(*(this->font));
+			this->text.setString(text);
+			this->text.setFillColor(Color::White);
+			this->text.setCharacterSize(16);
+
+			this->text.setPosition(
+				this->sprite.getGlobalBounds().left + (this->size.x / 2) - (this->text.getGlobalBounds().width / 2),
+				this->sprite.getGlobalBounds().top + (this->size.y / 2) - (this->text.getGlobalBounds().height / 2) - (this->text.getCharacterSize() / 4));
+
+			sprite.scale(size.x / idle->getSize().x, size.y / idle->getSize().y);
+
+			this->Action = nullptr;
+		}
+
 		~Button() {};
 
 		void setSize(IntRect intRect)
@@ -115,8 +142,8 @@ public:
 			{
 				this->sprite.setPosition(offset + relPosition);
 				this->text.setPosition(
-					this->sprite.getGlobalBounds().left + (this->sprite.getTextureRect().width / 2) - (this->text.getGlobalBounds().width / 2),
-					this->sprite.getGlobalBounds().top + (this->sprite.getTextureRect().height / 2) - (this->text.getGlobalBounds().height / 2) - (this->text.getCharacterSize() / 4));
+					this->sprite.getGlobalBounds().left + (this->size.x / 2) - (this->text.getGlobalBounds().width / 2),
+					this->sprite.getGlobalBounds().top + (this->size.y / 2) - (this->text.getGlobalBounds().height / 2) - (this->text.getCharacterSize() / 4));
 				target.draw(this->sprite);
 				target.draw(this->text);
 			}

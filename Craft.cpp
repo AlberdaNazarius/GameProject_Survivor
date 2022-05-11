@@ -68,12 +68,12 @@ void Craft::InitializeCraftMenus(vector<Panel*>* craftMenus, map<Button<bool(*)(
 		{
 			return;
 		}
-		(*craftMenus).push_back(new Panel(craftMenuPos, IntRect(0, 0, 640, 480)));
+		(*craftMenus).push_back(new Panel(craftMenuPos, 640, 480));
 		if (i != 0)   // next button delegate set
 		{
 			(*switchBut).insert({ tempSwiBut, (*craftMenus)[i] });
 		}
-		tempSwiBut = new Button<void(*)(vector<Panel*>*, Panel*)>(Vector2f(550, 0), IntRect(0, 0, 90, 32), "Exit");
+		tempSwiBut = new Button<void(*)(vector<Panel*>*, Panel*)>(Vector2f(550, 0), Vector2f(90, 32), "Exit");
 		tempSwiBut->setDelegate(changeCraftMenu); // set delegate
 		(*closeBut).push_back(tempSwiBut);
 		(*craftMenus)[i]->addChild(tempSwiBut);
@@ -92,14 +92,14 @@ void Craft::InitializeCraftMenus(vector<Panel*>* craftMenus, map<Button<bool(*)(
 				tempLabel = new Label(Vector2f(20 + (100 * (k + 1)), 40 + (40 * j)), tempStrVec[k], 14);   // recipe name
 				(*craftMenus)[i]->addChild(tempLabel);
 			}
-			tempBut = new Button<bool(*)(string)>(Vector2f(20 + (100 * (tempStrVec.size() + 1)), 40 + (40 * j) - 8), IntRect(0, 0, 90, 32), "Craft");
+			tempBut = new Button<bool(*)(string)>(Vector2f(20 + (100 * (tempStrVec.size() + 1)), 40 + (40 * j) - 8), Vector2f(90, 32), "Craft");
 			tempBut->setDelegate(Craft::craftItem); // set delegate
 			(*craftBut).insert({ tempBut, tempStr });
 			(*craftMenus)[i]->addChild(tempBut);
 		}
 		if (i != 0)
 		{
-			tempSwiBut = new Button<void(*)(vector<Panel*>*, Panel*)>(Vector2f(330, 448), IntRect(0, 0, 90, 32), "Previous");
+			tempSwiBut = new Button<void(*)(vector<Panel*>*, Panel*)>(Vector2f(330, 448), Vector2f(90, 32), "Previous");
 			tempSwiBut->setDelegate(changeCraftMenu); // set delegate
 			(*switchBut).insert({ tempSwiBut, (*craftMenus)[i - 1] });
 			(*craftMenus)[i]->addChild(tempSwiBut);
@@ -107,7 +107,7 @@ void Craft::InitializeCraftMenus(vector<Panel*>* craftMenus, map<Button<bool(*)(
 
 		if ((i + 1) * colPerMenu < recQuant)
 		{
-			tempSwiBut = new Button<void(*)(vector<Panel*>*, Panel*)>(Vector2f(220, 448), IntRect(0, 0, 90, 32), "Next");
+			tempSwiBut = new Button<void(*)(vector<Panel*>*, Panel*)>(Vector2f(220, 448), Vector2f(90, 32), "Next");
 			tempSwiBut->setDelegate(changeCraftMenu); // set delegate
 			(*craftMenus)[i]->addChild(tempSwiBut);
 		}

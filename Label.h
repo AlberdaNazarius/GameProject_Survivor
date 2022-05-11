@@ -13,6 +13,9 @@ private:
 	Text text;
 public:
 	Label(Vector2f pos, std::string text, int fontSize);
+	Label(Vector2f pos, std::string text, int fontSize, Color color);
 	Label(Vector2f pos, std::string text, int fontSize, Font* font);
+	void setText(std::string text);
+	void setText(int text);
 	void render(RenderTarget& target, Vector2f offset);
 };

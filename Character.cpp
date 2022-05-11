@@ -1,13 +1,19 @@
+#include <math.h>
+#include <iostream>
 #include "Character.h"
 #include "Location.h"
 #include "Inventory.h"
-int Character::hunger = 100,
-Character::thirst = 100,
-Character::warmth = 100,
-Character::energy = 100,
-Character::condition = 100;
-#include <math.h>
-#include <iostream>
+
+int Character::hunger = 100;
+int	Character::thirst = 100;
+int	Character::warmth = 100;
+int	Character::energy = 100;
+int	Character::condition = 100;
+bool Character::isStayAtFire = 0;
+int Character::startedHour = 0;
+int Character::startedDay = 0;
+
+
 void Character::ChangeHungerLevel(int food)
 {
 	Character::hunger += food;
@@ -74,6 +80,16 @@ bool Character::CheckIFCharacteristicsBelowZero()
 	else return false;
 }
 
+bool Character::IsStayAtFire()
+{
+	return isStayAtFire;
+}
+
+void Character::SetStayAtFire(bool value)
+{
+	isStayAtFire = value;
+}
+
 #pragma region InterfaceRealisation
 
 void Character::ReloadData(map<string, int> data)
@@ -83,6 +99,9 @@ void Character::ReloadData(map<string, int> data)
 	warmth = data["Warmth"];
 	energy = data["Energy"];
 	condition = data["Condition"];
+	isStayAtFire = data["IsStayAtFire"];
+	startedHour = data["StartedHour"];
+	startedDay = data["StartedDay"];
 }
 
 std::map<std::string, int> Character::WhatToSave()
@@ -93,7 +112,10 @@ std::map<std::string, int> Character::WhatToSave()
 		{"Thirst", thirst},
 		{"Warmth", warmth},
 		{"Energy", energy},
-		{"Condition", condition}
+		{"Condition", condition},
+		{"IsStayAtFire", isStayAtFire},
+		{"StartedHour", startedHour},
+		{"StartedDay", startedDay}
 	};
 	return Save;
 }
@@ -105,6 +127,8 @@ void Character::DisplayStats()
 	cout << "Warmth: " << warmth << endl;
 	cout << "Energy: " << energy << endl;
 	cout << "Condition: " << condition << endl;
+	cout << "SsStayAtFire: " << isStayAtFire << endl;
+
 }
 
 void Character::SetDeffaultCharacteristics()
@@ -114,6 +138,9 @@ void Character::SetDeffaultCharacteristics()
 	warmth = 100;
 	energy = 100;
 	condition = 100;
+	isStayAtFire = 0;
+	startedHour = 0;
+	startedDay = 0;
 }
 
 #pragma endregion

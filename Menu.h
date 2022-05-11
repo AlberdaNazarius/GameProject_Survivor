@@ -25,8 +25,8 @@ private:
 	Location location;
 	Button<void(*)(bool)>* LoadSavedGame;
 	Button<void(*)(bool)>* NewGame;
-	Button<void(*)(Container*, bool)>* Options;
+	Button<void(*)(Container*, Container*, bool)>* OpenOptions;
 	Button<void(*)(RenderWindow&)>* Quit;
-	Button<void(*)(Container*, bool)>* CloseButton;
+	Button<void(*)(Container*, Container*, bool)>* CloseOptions;
 };
 

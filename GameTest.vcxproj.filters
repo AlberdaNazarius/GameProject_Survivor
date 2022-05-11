@@ -48,9 +48,6 @@
     <ClCompile Include="GameMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameTest.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Inventory.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
@@ -62,6 +59,9 @@
     </ClCompile>
     <ClCompile Include="Menu.cpp">
       <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Bar.cpp">
+      <Filter>Resource Files\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -103,6 +103,9 @@
     </ClInclude>
     <ClInclude Include="Menu.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bar.h">
+      <Filter>Header Files\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

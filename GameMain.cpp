@@ -13,9 +13,19 @@
 #include "Menu.h"
 #include "Craft.h"
 #include "Label.h"
+#include "Bar.h"
 
 using namespace sf;
 using namespace std;
+
+enum Bars
+{
+	HungerBar,
+	ThirstBar,
+	WarmthBar,
+	EnergyBar,
+	ConditionBar
+};
 
 #pragma region ChooseWhereToGo
 
@@ -79,6 +89,7 @@ void StayAtFireSetVisible(Container* cont, bool value, int minutes, int takenEne
 	Character::ChangeHungerLevel(-10 * minutes / 60);
 	Character::ChangeThirstLevel(-15 * minutes / 60);
 	Character::DisplayCharacteristics();
+	Character::SetStayAtFire(true);
 }
 void ContainerSetVisible(Container* cont, bool value)
 {
@@ -113,9 +124,6 @@ int main()
 	//const int windowWidth = 700;
 	//const int windowHeight = 700;
 
-	Texture* panelTexture = new Texture;
-	panelTexture->loadFromFile("Pictures/transparent.png");
-
 	Menu menuObj;
 	menuObj.Draw();
 
@@ -143,34 +151,39 @@ int main()
 #pragma region StartFire
 
 		Container* StartFireContainer = new Container;
-		Panel* StartFirePanel = new Panel(Vector2f((float)windowWidth / 10, (float)windowHeight / 10), IntRect(0, 0, windowWidth * 0.8, windowHeight * 0.6));
+		Panel* StartFirePanel = new Panel(Vector2f((float)windowWidth / 10, (float)windowHeight / 10), windowWidth * 0.8, windowHeight * 0.6);
 		StartFireContainer->setVisible(false);
 
-		Button<void(*)(Container*, bool)>* StartFire = new Button<void(*)(Container*, bool)>(Vector2f((float)windowWidth * 0.18, (float)windowHeight * 0.02), IntRect(0, 0, windowWidth * 0.14, windowHeight * 0.07), "Start fire");
+		Button<void(*)(Container*, bool)>* StartFire = new Button<void(*)(Container*, bool)>(Vector2f((float)windowWidth * 0.18, (float)windowHeight * 0.02), Vector2f(windowWidth * 0.14, windowHeight * 0.07), "Start fire");
 		StartFire->setDelegate(ContainerSetVisible);
 
 		Container* StayAtFireContainer = new Container;
-		Panel* StayAtFirePanel = new Panel(Vector2f((float)windowWidth / 2.5, (float)windowHeight / 2), IntRect(0, 0, windowWidth * 0.08, windowHeight * 0.15));
-		StayAtFireContainer->setVisible(false);
+		Panel* StayAtFirePanel = new Panel(Vector2f((float)windowWidth / 2.5, (float)windowHeight / 2), windowWidth * 0.08, windowHeight * 0.15);
+		
+		if (Character::IsStayAtFire())
+		{
+			StayAtFireContainer->setVisible(true);
+			StayAtFireContainer->setActive(true);
+		}
+		else
+			StayAtFireContainer->setVisible(false);
 
-		Button<void(*)(int)>* StayAtFire = new Button<void(*)(int)>(Vector2f((float)StayAtFirePanel->getWidth() * 0, (float)StayAtFirePanel->getHeight() * 0), IntRect(0, 0, StayAtFirePanel->getWidth(), StayAtFirePanel->getHeight()), "Stay at fire");
+		Button<void(*)(int)>* StayAtFire = new Button<void(*)(int)>(Vector2f((float)StayAtFirePanel->getWidth() * 0, (float)StayAtFirePanel->getHeight() * 0), Vector2f(StayAtFirePanel->getWidth(), StayAtFirePanel->getHeight()), "Stay at fire");
 		StayAtFire->setDelegate(Character::ChangeWarmthLevel);
-		int startedHour = 0;
-		int startedDay = 0;
 
-		Button<void(*)(Container*, bool, int, int)>* FireLighter = new Button<void(*)(Container*, bool, int, int)>(Vector2f((float)10, (float)10), IntRect(0, 0, 150, 100), "Lighter");
+		Button<void(*)(Container*, bool, int, int)>* FireLighter = new Button<void(*)(Container*, bool, int, int)>(Vector2f((float)10, (float)10), Vector2f(150, 100), "Lighter");
 		FireLighter->setDelegate(StayAtFireSetVisible);
 
-		Button<void(*)(Container*, bool, int, int)>* FireStone = new Button<void(*)(Container*, bool, int, int)>(Vector2f((float)170, (float)10), IntRect(0, 0, 150, 100), "Flint and Stone");
+		Button<void(*)(Container*, bool, int, int)>* FireStone = new Button<void(*)(Container*, bool, int, int)>(Vector2f((float)170, (float)10), Vector2f(150, 100), "Flint and Stone");
 		FireStone->setDelegate(StayAtFireSetVisible);
 
-		Button<void(*)(Container*, bool, int, int)>* FireMatches = new Button<void(*)(Container*, bool, int, int)>(Vector2f((float)340, (float)10), IntRect(0, 0, 150, 100), "Matches");
+		Button<void(*)(Container*, bool, int, int)>* FireMatches = new Button<void(*)(Container*, bool, int, int)>(Vector2f((float)340, (float)10), Vector2f(150, 100), "Matches");
 		FireMatches->setDelegate(StayAtFireSetVisible);
 
-		Button<void(*)(Container*, bool, int, int)>* FireBow = new Button<void(*)(Container*, bool, int, int)>(Vector2f((float)490, (float)10), IntRect(0, 0, 150, 100), "Bow method");
+		Button<void(*)(Container*, bool, int, int)>* FireBow = new Button<void(*)(Container*, bool, int, int)>(Vector2f((float)490, (float)10), Vector2f(150, 100), "Bow method");
 		FireBow->setDelegate(StayAtFireSetVisible);
 
-		Button<void(*)(Container*, bool, int, int)>* FireLens = new Button<void(*)(Container*, bool, int, int)>(Vector2f((float)660, (float)510), IntRect(0, 0, 150, 100), "Lens");
+		Button<void(*)(Container*, bool, int, int)>* FireLens = new Button<void(*)(Container*, bool, int, int)>(Vector2f((float)660, (float)510), Vector2f(150, 100), "Lens");
 		FireLens->setDelegate(StayAtFireSetVisible);
 
 		StartFireContainer->addChild(StartFirePanel);
@@ -193,7 +206,7 @@ int main()
 
 #pragma region ExploreArea
 
-		Button<void(*)()>* ExploreArea = new Button<void(*)()>(Vector2f((float)windowWidth * 0.34, (float)windowHeight * 0.02), IntRect(0, 0, windowWidth * 0.14, windowHeight * 0.16), "Explore Area");
+		Button<void(*)()>* ExploreArea = new Button<void(*)()>(Vector2f((float)windowWidth * 0.34, (float)windowHeight * 0.02), Vector2f(windowWidth * 0.14, windowHeight * 0.16), "Explore Area");
 		ExploreArea->setDelegate(Inventory::ExploreArea);
 
 #pragma endregion
@@ -203,17 +216,17 @@ int main()
 		Generator::GenerateEnvironments(3, 3);
 
 		Container* ChooseWhereToGoContainer = new Container;
-		Panel* ChooseWhereToGoPanel = new Panel (panelTexture, Vector2f((float)windowWidth * 0, (float)windowHeight / 7), IntRect(0, 0, windowWidth, windowHeight * 0.07));
+		Panel* ChooseWhereToGoPanel = new Panel ("Pictures/transparent.png", Vector2f(0, (float)windowHeight / 7), windowWidth, windowHeight * 0.07);
 
-		Button<void(*)(int)>* FirstVariantToTravel = new Button<void(*)(int)>(Vector2f((float)ChooseWhereToGoPanel->getWidth() /100, (float)0), IntRect(0, 0, ChooseWhereToGoPanel->getWidth() * 0.1, ChooseWhereToGoPanel->getHeight()), "Forest");
+		Button<void(*)(int)>* FirstVariantToTravel = new Button<void(*)(int)>(Vector2f((float)ChooseWhereToGoPanel->getWidth() /100, (float)0), Vector2f(ChooseWhereToGoPanel->getWidth() * 0.1, ChooseWhereToGoPanel->getHeight()), "Forest");
 		FirstVariantToTravel->setDelegate(Location::CheckWhatEnvironment);
 		FirstVariantToTravel->setVisible(true);
 
-		Button<void(*)(int)>* SecondVariantToTravel = new Button<void(*)(int)>(Vector2f((float)ChooseWhereToGoPanel->getWidth() / 2.3, (float)0), IntRect(0, 0, ChooseWhereToGoPanel->getWidth() * 0.1, ChooseWhereToGoPanel->getHeight()), "Lake");
+		Button<void(*)(int)>* SecondVariantToTravel = new Button<void(*)(int)>(Vector2f((float)ChooseWhereToGoPanel->getWidth() / 2.3, (float)0), Vector2f(ChooseWhereToGoPanel->getWidth() * 0.1, ChooseWhereToGoPanel->getHeight()), "Lake");
 		SecondVariantToTravel->setDelegate(Location::CheckWhatEnvironment);
 		SecondVariantToTravel->setVisible(true);
 
-		Button<void(*)(int)>* ThirdVariantToTravel = new Button<void(*)(int)>(Vector2f((float)ChooseWhereToGoPanel->getWidth() / 1.12, (float)0), IntRect(0, 0, ChooseWhereToGoPanel->getWidth() * 0.1, ChooseWhereToGoPanel->getHeight()), "River");
+		Button<void(*)(int)>* ThirdVariantToTravel = new Button<void(*)(int)>(Vector2f((float)ChooseWhereToGoPanel->getWidth() / 1.12, (float)0), Vector2f(ChooseWhereToGoPanel->getWidth() * 0.1, ChooseWhereToGoPanel->getHeight()), "River");
 		ThirdVariantToTravel->setDelegate(Location::CheckWhatEnvironment);
 		ThirdVariantToTravel->setVisible(true);
 
@@ -228,19 +241,19 @@ int main()
 #pragma region Hunt
 
 		Container* HuntContainer = new Container;
-		Panel* HuntPanel = new Panel(Vector2f((float)100, (float)490), IntRect(0, 0, 1040, 380));
+		Panel* HuntPanel = new Panel(Vector2f((float)100, (float)490), 1040, 380);
 		HuntContainer->setVisible(false);
 
-		Button<void(*)(Container*, bool)>* HuntButton = new Button<void(*)(Container*, bool)>(Vector2f((float)windowWidth * 0.66, (float)windowHeight * 0.02), IntRect(0, 0, windowWidth * 0.14, windowHeight * 0.16), "Hunt");
+		Button<void(*)(Container*, bool)>* HuntButton = new Button<void(*)(Container*, bool)>(Vector2f((float)windowWidth * 0.66, (float)windowHeight * 0.02), Vector2f(windowWidth * 0.14, windowHeight * 0.16), "Hunt");
 		HuntButton->setDelegate(ContainerSetVisible);
 
-		Button<void(*)(int, int, int)>* FallTrap = new Button<void(*)(int, int, int)>(Vector2f((float)40, (float)40), IntRect(0, 0, 200, 100), "Fall Trap");
+		Button<void(*)(int, int, int)>* FallTrap = new Button<void(*)(int, int, int)>(Vector2f((float)40, (float)40), Vector2f(200, 100), "Fall Trap");
 		FallTrap->setDelegate(HuntOveriwrite);
 
-		Button<void(*)(int, int, int)>* SpringTrap = new Button<void(*)(int, int, int)>(Vector2f((float)250, (float)40), IntRect(0, 0, 200, 100), "Spring Trap");
+		Button<void(*)(int, int, int)>* SpringTrap = new Button<void(*)(int, int, int)>(Vector2f((float)250, (float)40), Vector2f(200, 100), "Spring Trap");
 		SpringTrap->setDelegate(HuntOveriwrite);
 
-		Button<void(*)(int, int, int)>* BirdTrap = new Button<void(*)(int, int, int)>(Vector2f((float)460, (float)40), IntRect(0, 0, 200, 100), "Birs Trap");
+		Button<void(*)(int, int, int)>* BirdTrap = new Button<void(*)(int, int, int)>(Vector2f((float)460, (float)40), Vector2f(200, 100), "Birs Trap");
 		BirdTrap->setDelegate(HuntOveriwrite);
 
 		HuntContainer->addChild(HuntPanel);
@@ -254,16 +267,16 @@ int main()
 		if (!Inventory::Check_Tool("bird trap")) BirdTrap->setVisible(false);
 
 		Container* FishContainer = new Container;
-		Panel* FishPanel = new Panel(Vector2f((float)100, (float)490), IntRect(0, 0, 1040, 380));
+		Panel* FishPanel = new Panel(Vector2f((float)100, (float)490), 1040, 380);
 		FishContainer->setVisible(false);
 
-		Button<void(*)(Container*, bool)>* FishButton = new Button<void(*)(Container*, bool)>(Vector2f((float)windowWidth * 0.66, (float)windowHeight * 0.02), IntRect(0, 0, windowWidth * 0.14, windowHeight * 0.16), "Fish");
+		Button<void(*)(Container*, bool)>* FishButton = new Button<void(*)(Container*, bool)>(Vector2f((float)windowWidth * 0.66, (float)windowHeight * 0.02), Vector2f(windowWidth * 0.14, windowHeight * 0.16), "Fish");
 		FishButton->setDelegate(ContainerSetVisible);
 
-		Button<void(*)(int, int, int)>* FishingRod = new Button<void(*)(int, int, int)>(Vector2f((float)40, (float)40), IntRect(0, 0, 200, 100), "Fishing Rod");
+		Button<void(*)(int, int, int)>* FishingRod = new Button<void(*)(int, int, int)>(Vector2f((float)40, (float)40), Vector2f(200, 100), "Fishing Rod");
 		FishingRod->setDelegate(HuntOveriwrite);
 
-		Button<void(*)(int, int, int)>* SpearFishing = new Button<void(*)(int, int, int)>(Vector2f((float)250, (float)40), IntRect(0, 0, 200, 100), "Spear Fishing");
+		Button<void(*)(int, int, int)>* SpearFishing = new Button<void(*)(int, int, int)>(Vector2f((float)250, (float)40), Vector2f(200, 100), "Spear Fishing");
 		SpearFishing->setDelegate(HuntOveriwrite);
 
 		FishContainer->addChild(FishPanel);
@@ -278,7 +291,7 @@ int main()
 
 #pragma region Rest
 
-		Button<void(*)(int)>* RestButton = new Button<void(*)(int)>(Vector2f((float)windowWidth * 0.5, (float)windowHeight * 0.02), IntRect(0, 0, windowWidth * 0.14, windowHeight * 0.16), "Rest");
+		Button<void(*)(int)>* RestButton = new Button<void(*)(int)>(Vector2f((float)windowWidth * 0.5, (float)windowHeight * 0.02), Vector2f(windowWidth * 0.14, windowHeight * 0.16), "Rest");
 		RestButton->setDelegate(Character::Rest);
 
 #pragma endregion
@@ -286,13 +299,13 @@ int main()
 #pragma region OpenInventory
 
 		Container* OpenInventoryContainer = new Container;
-		Panel* OpenInventoryPanel = new Panel(Vector2f((float)windowWidth / 10, (float)windowHeight / 10), IntRect(0, 0, windowWidth * 0.8, windowHeight * 0.6));
+		Panel* OpenInventoryPanel = new Panel(Vector2f((float)windowWidth / 10, (float)windowHeight / 10), windowWidth * 0.8, windowHeight * 0.6);
 		OpenInventoryContainer->setVisible(false);
 
-		Button<void(*)(Container*, bool)>* OpenInventory = new Button<void(*)(Container*, bool)>(Vector2f((float)windowWidth * 0.02, (float)windowHeight * 0.02), IntRect(0, 0, windowWidth * 0.14, windowHeight * 0.16), "OpenInventory");
+		Button<void(*)(Container*, bool)>* OpenInventory = new Button<void(*)(Container*, bool)>(Vector2f((float)windowWidth * 0.02, (float)windowHeight * 0.02), Vector2f(windowWidth * 0.14, windowHeight * 0.16), "OpenInventory");
 		OpenInventory->setDelegate(InventorySetVisible);
 
-		Button<void(*)(Container*, bool)>* CloseInventory = new Button<void(*)(Container*, bool)>(Vector2f((float)windowWidth * 0.63, (float)windowHeight * 0.47), IntRect(0, 0, windowWidth * 0.15, windowHeight * 0.1), "CloseInventory");
+		Button<void(*)(Container*, bool)>* CloseInventory = new Button<void(*)(Container*, bool)>(Vector2f((float)windowWidth * 0.63, (float)windowHeight * 0.47), Vector2f(windowWidth * 0.15, windowHeight * 0.1), "CloseInventory");
 		CloseInventory->setDelegate(InventorySetVisible);
 		CloseInventory->setVisible(false);
 
@@ -304,9 +317,9 @@ int main()
 #pragma region Menu
 
 		Container* OpenMenuContainer = new Container;
-		Panel* OpenMenuPanel = new Panel(Vector2f((float)windowWidth / 1.07, (float)windowHeight * 0), IntRect(0, 0, windowWidth * 0.07, windowHeight * 0.07));
+		Panel* OpenMenuPanel = new Panel("Pictutes/transparent.png", Vector2f((float)windowWidth / 1.07, 0), windowWidth * 0.07, windowHeight * 0.07);
 
-		Button<void(*)(RenderWindow&, Menu&)>* OpenMenu = new Button<void(*)(RenderWindow&, Menu&)>(Vector2f((float)0, (float)0), IntRect(0, 0, OpenMenuPanel->getWidth(), OpenMenuPanel->getHeight()), "Open Menu");
+		Button<void(*)(RenderWindow&, Menu&)>* OpenMenu = new Button<void(*)(RenderWindow&, Menu&)>(Vector2f(0, 0), Vector2f(OpenMenuPanel->getWidth(), OpenMenuPanel->getHeight()), "Open Menu");
 		OpenMenu->setDelegate(CallMenu);
 
 		OpenMenuContainer->addChild(OpenMenuPanel);
@@ -315,19 +328,18 @@ int main()
 #pragma endregion
 
 		Container* MainContainer = new Container;
-		Panel* MainPanel = new Panel(Vector2f((float)0, (float)windowHeight * 0.8), IntRect(0, 0, windowWidth, windowHeight * 0.2));
+		Panel* MainPanel = new Panel(Vector2f((float)0, (float)windowHeight * 0.8), windowWidth, windowHeight * 0.2);
 
 		MainContainer->addChild(MainPanel);
 
 #pragma region LostTheGame
-
 		Container* FailMenu = new Container;
-		Panel* FailPanel = new Panel(Vector2f((float)windowWidth / 10, (float)windowHeight / 5), IntRect(0, 0, windowWidth * 0.8, windowHeight * 0.3));
+		Panel* FailPanel = new Panel(Vector2f((float)windowWidth / 4, (float)windowHeight / 4), windowWidth / 1.92, windowHeight / 2.7);
 
-		Button<void(*)()>* Restart = new Button<void(*)()>(Vector2f((float)40, (float)windowHeight / 7), IntRect(0, 0, 200, 100), "Restart");
+		Button<void(*)()>* Restart = new Button<void(*)()>(Vector2f((float)FailPanel->getWidth() / 10, (float)FailPanel->getHeight() / 4), Vector2f((float)FailPanel->getWidth() / 5, (float)FailPanel->getHeight() / 4), "Restart");
 		Restart->setDelegate(Data::SetDeffaultCharacteristics);
 
-		Button<void(*)(RenderWindow&, Menu&)>* OpenMainMenu = new Button<void(*)(RenderWindow&, Menu&)>(Vector2f((float)320, (float)windowHeight / 7), IntRect(0, 0, 200, 100), "Menu");
+		Button<void(*)(RenderWindow&, Menu&)>* OpenMainMenu = new Button<void(*)(RenderWindow&, Menu&)>(Vector2f((float)FailPanel->getWidth() / 1.4, (float)FailPanel->getHeight() / 4), Vector2f((float)FailPanel->getWidth() / 5, (float)FailPanel->getHeight() / 4), "Menu");
 		OpenMainMenu->setDelegate(CallMenu);
 
 		FailMenu->addChild(FailPanel);
@@ -342,7 +354,7 @@ int main()
 		map<Button<bool(*)(string)>*, string> craftBut;
 		vector<Button<void(*)(vector<Panel*>*, Panel*)>*> closeCraftBut;
 		map<Button<void(*)(vector<Panel*>*, Panel*)>*, Panel*> switchCraftBut;
-		Button<void(*)(vector<Panel*>*, Panel*)>* openCraftBut = new Button<void(*)(vector<Panel*>*, Panel*)>(Vector2f((float)windowWidth * 0.18, (float)windowHeight * 0.11), IntRect(0, 0, windowWidth * 0.14, windowHeight * 0.07), "Open craft menu");
+		Button<void(*)(vector<Panel*>*, Panel*)>* openCraftBut = new Button<void(*)(vector<Panel*>*, Panel*)>(Vector2f((float)windowWidth * 0.18, (float)windowHeight * 0.11), Vector2f(windowWidth * 0.14, windowHeight * 0.07), "Open craft menu");
 		openCraftBut->setDelegate(Craft::changeCraftMenu);
 		Craft::InitializeCraftMenus(&craftMenus, &craftBut, &closeCraftBut, &switchCraftBut, MainContainer, Vector2f((float)windowWidth * 0.35, (float)windowHeight * 0.3));
 		MainPanel->addChild(openCraftBut);
@@ -372,6 +384,37 @@ int main()
 
 		MainPanel->addChild(RestButton);
 
+#pragma endregion
+
+#pragma region DisplayStats
+		Container* DisplayContainer = new Container;
+
+		double timeCoefficient[] = {20, 20};
+		double temperatureCoefficient[] = {6, 20};
+		double characteristicsCoefficient[] = {50, 2.5};
+
+		int barWidth = 150;
+		int barHeitght = 50; 
+		int distance = 60;
+
+		Label* TimeLabel = new Label(Vector2f(windowWidth / timeCoefficient[0], windowHeight / timeCoefficient[1]), GeneralTime::GetTime(), 30, Color::Red);
+		Label* TemperatureLabel = new Label(Vector2f(windowWidth / temperatureCoefficient[0], windowHeight / temperatureCoefficient[1]), to_string(Location::GetTemperature()) + "°t", 30, Color::Red);
+
+		Bar bars[] = 
+		{
+			Bar("Pictures/ButtonOutline.png", "Pictures/Scale.png", barWidth, barHeitght, "Hunger", Color::White),
+			Bar("Pictures/ButtonOutline.png", "Pictures/Scale.png", barWidth, barHeitght, "Thirst", Color::White),
+			Bar("Pictures/ButtonOutline.png", "Pictures/Scale.png", barWidth, barHeitght, "Warmth", Color::White), 
+			Bar("Pictures/ButtonOutline.png", "Pictures/Scale.png", barWidth, barHeitght, "Energy", Color::White), 
+			Bar("Pictures/ButtonOutline.png", "Pictures/Scale.png", barWidth, barHeitght, "Condition", Color::White) 
+		};
+
+		for (int i = 0; i < 5; i++)
+			bars[i].SetPosition(windowWidth / characteristicsCoefficient[0], windowHeight / characteristicsCoefficient[1] + i * distance);
+
+		DisplayContainer->addChild(TimeLabel);
+		DisplayContainer->addChild(TemperatureLabel);
+		MainContainer->addChild(DisplayContainer);
 #pragma endregion
 
 #pragma region OpenInventory
@@ -407,8 +450,8 @@ int main()
 						if (StartFire->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
 							StartFire->Action(StartFireContainer, true);
-							startedHour = GeneralTime::GetHours();
-							startedDay = GeneralTime::GetDay();
+							Character::startedHour = GeneralTime::GetHours();
+							Character::startedDay = GeneralTime::GetDay();
 							HuntContainer->setVisible(false);
 							FishContainer->setVisible(false);
 						}
@@ -605,6 +648,7 @@ int main()
 							FishContainer->setActive(true);
 							OpenInventoryContainer->setActive(true);
 							StartFireContainer->setActive(true);
+							StayAtFireContainer->setActive(true);
 
 							Restart->Action();
 						}
@@ -615,6 +659,13 @@ int main()
 
 						if (OpenMenu->checkClick((Vector2f)Mouse::getPosition(window)) || OpenMainMenu->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							MainContainer->setActive(true);
+							HuntContainer->setActive(true);
+							FishContainer->setActive(true);
+							OpenInventoryContainer->setActive(true);
+							StartFireContainer->setActive(true);
+							StayAtFireContainer->setActive(true);
+
 							Data::SaveAllStaticData();
 							window.close();
 							OpenMenu->Action(Menu::MenuWindow, menuObj);
@@ -751,7 +802,17 @@ int main()
 
 #pragma region StartFire
 
-			if (GeneralTime::DeltaTime(startedDay, startedHour) >= 12) StayAtFireContainer->setVisible(false); // an example; it's not necessary must be 5
+			if (!Character::IsStayAtFire())
+			{
+				StayAtFireContainer->setVisible(false);
+				StayAtFireContainer->setActive(false);
+			}
+
+			if (GeneralTime::DeltaTime(Character::startedDay, Character::startedHour) > 2)
+			{
+				StayAtFireContainer->setVisible(false); // an example; it's not necessary must be 5
+				Character::SetStayAtFire(false);
+			}
 			if (StayAtFireContainer->getVisible()) StartFire->setActive(false);
 			else StartFire->setActive(true);
 			StartFireContainer->render(window, Vector2f(0, 0));
@@ -761,7 +822,7 @@ int main()
 
 #pragma region ExploreArea
 
-			if (ExploreArea->getActive()) ChooseWhereToGoContainer->setVisible(false);
+			if (ExploreArea->getActive() || Character::CheckIFCharacteristicsBelowZero()) ChooseWhereToGoContainer->setVisible(false);
 			else ChooseWhereToGoContainer->setVisible(true);
 
 #pragma endregion
@@ -787,28 +848,29 @@ int main()
 
 #pragma endregion
 
-			if (Character::CheckIFCharacteristicsBelowZero())
-			{
-				MainContainer->setActive(false);
-				HuntContainer->setActive(false);
-				FishContainer->setActive(false);
-				OpenInventoryContainer->setActive(false);
-				StartFireContainer->setActive(false);
-				StayAtFire->setActive(false);
+			//Update text
+			TimeLabel->setText(GeneralTime::GetTime());
+			TemperatureLabel->setText(to_string(Location::GetTemperature()) + "°t");
 
-				StayAtFire->setVisible(false);
-				Craft::changeCraftMenu(&craftMenus, NULL);
-				HuntContainer->setVisible(false);
-				OpenInventoryContainer->setVisible(false);
-				StartFireContainer->setVisible(false);
+			//Update Bars
+			bars[Bars::HungerBar].SetScale(Character::GetHungerLevel());
+			bars[Bars::HungerBar].Render(window);
 
-				FailMenu->render(window, Vector2f(0, 0));
-			}
+			bars[Bars::ThirstBar].SetScale(Character::GetThirstLevel());
+			bars[Bars::ThirstBar].Render(window);
+			
+			bars[Bars::WarmthBar].SetScale(Character::GetWarmthLevel());
+			bars[Bars::WarmthBar].Render(window);
 
-			Data::SaveGamePerSomeTime(23); // Save data per some time (in hours)
+			bars[Bars::EnergyBar].SetScale(Character::GetEnergyLevel());
+			bars[Bars::EnergyBar].Render(window);
 
+			bars[Bars::ConditionBar].SetScale(Character::GetConditionLevel());
+			bars[Bars::ConditionBar].Render(window);
+
+
+			Data::SaveGamePerSomeTime(23); // Save data per some time (in hours)	
 			MainContainer->render(window, Vector2f(0, 0)); // render themself and all ui that contain
-
 
 #pragma region ChooseWhereToGo
 
@@ -830,6 +892,30 @@ int main()
 			OpenMenuContainer->render(window, Vector2f(0, 0));
 
 #pragma endregion
+
+#pragma region LostMenu
+			if (Character::CheckIFCharacteristicsBelowZero())
+			{
+				MainContainer->setActive(false);
+				HuntContainer->setActive(false);
+				FishContainer->setActive(false);
+				OpenInventoryContainer->setActive(false);
+				StartFireContainer->setActive(false);
+				StayAtFireContainer->setActive(false);
+				ChooseWhereToGoContainer->setActive(false);
+
+				StayAtFireContainer->setVisible(false);
+				ChooseWhereToGoContainer->setVisible(false);
+				HuntContainer->setVisible(false);
+				OpenInventoryContainer->setVisible(false);
+				StartFireContainer->setVisible(false);
+				Craft::changeCraftMenu(&craftMenus, NULL);
+
+				FailMenu->render(window, Vector2f(0, 0));
+			}
+#pragma endregion
+
+
 
 #pragma region OpenInventory
 

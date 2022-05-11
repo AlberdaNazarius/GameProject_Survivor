@@ -83,6 +83,7 @@ public:
 	static void DisplayCurrentTime();
 	static void AddTime(int hours, int minutes);
 	static int DeltaTime(int startedDay, int startedHour);
+	static string GetTime();
 	static int GetDay();
 	static int GetHours();
 	static int GetMinutes();

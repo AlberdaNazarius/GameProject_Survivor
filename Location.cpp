@@ -45,6 +45,18 @@ void Environment::SetBackground(sf::Sprite& sprite, sf::Texture& texture, string
 		throw "Picture isn't set!";
 }
 
+string GeneralTime::GetTime()
+{
+	if (GetHours() < 10 && GetMinutes() < 10)
+		return to_string(GetDay()) + ":0" + to_string(GetHours()) + ":0" + to_string(GetMinutes());
+	else if (GetMinutes() < 10)
+		return to_string(GetDay()) + ":" + to_string(GetHours()) + ":0" + to_string(GetMinutes());
+	else if (GetHours() < 10)
+		return to_string(GetDay()) + ":0" + to_string(GetHours()) + ":" + to_string(GetMinutes());
+	else
+		return to_string(GetDay()) + ":" + to_string(GetHours()) + ":" + to_string(GetMinutes());
+}
+
 map<int, string>::iterator Environment::Hunt(int maxIndexOfGeneration)
 {
 	auto it = animals.begin();

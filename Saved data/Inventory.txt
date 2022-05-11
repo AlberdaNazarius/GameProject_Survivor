@@ -16,4 +16,4 @@ Spear 1
 SpringTrap 1
 Tinder 0
 Water 1
-Wood -5
+Wood 0

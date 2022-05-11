@@ -17,17 +17,23 @@ public:
 	static void Rest(int hours);
 	static void DisplayCharacteristics();
 	static bool CheckIFCharacteristicsBelowZero();
+	static bool IsStayAtFire();
+	static void SetStayAtFire(bool value);
 
 	void ReloadData(std::map<std::string, int> data) override;
 	void DisplayStats() override;
 	void SetDeffaultCharacteristics() override;
 	std::map<std::string, int> WhatToSave() override;
+
+	int static startedHour;
+	int static startedDay;
 private:
-	int static hunger,
-			   thirst,
-		       warmth,
-			   energy,
-			   condition;
+	int static hunger;
+	int static thirst;
+	int static warmth;
+	int static energy;
+	int static condition;
+	bool static isStayAtFire;
 };
 
 

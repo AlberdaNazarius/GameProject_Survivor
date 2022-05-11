@@ -1,5 +1,8 @@
 Condition 100
 Energy 100
 Hunger 100
-Thirst 99
+IsStayAtFire 0
+StartedDay 0
+StartedHour 0
+Thirst 100
 Warmth 100
