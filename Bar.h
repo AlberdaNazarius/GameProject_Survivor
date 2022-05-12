@@ -9,6 +9,7 @@ class Bar
 public:
 	Bar(std::string outlineLocation, std::string scaleLocation, float sizeX, float sizeY);
 	Bar(std::string outlineLocation, std::string scaleLocation, float sizeX, float sizeY, std::string text, Color color);
+	Bar(std::string outlineLocation, std::string scaleLocation, std::string backScale, float sizeX, float sizeY, std::string text, Color color);
 
 	void SetScale(float x);
 	void SetScale(float x, float y);
@@ -18,14 +19,17 @@ public:
 	void Render(sf::RenderWindow& window);
 
 private:
-	int sizeX, sizeY;
+	float sizeX, sizeY;
 	float maxValue = 100;
 	Image outlineImage;
 	Image scaleImage;
+	Image backScaleImage;
 	Texture outlineTexture;
 	Texture scaleTexture;
+	Texture backScaleTexture;
 	Sprite outlineSprite;
 	Sprite scaleSprite;
+	Sprite backScaleSprite;
 	Vector2f adoptedScale;
 	Text text;
 	void TextureAdaptation(float sizeX, float sizeY);

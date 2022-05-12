@@ -1,24 +1,5 @@
 #include "Panel.h"
 
-Panel::Panel(Texture* texture, Vector2f pos, IntRect intRect)
-{
-	this->sprite.setTexture(*texture);
-	this->setPosition(pos);
-	this->sprite.setTextureRect(intRect);
-}
-
-Panel::Panel(Vector2f pos, IntRect intRect)
-{
-	this->sprite.setTexture(Game::defPanel);
-	this->setPosition(pos);
-	this->sprite.setTextureRect(intRect);
-}
-
-Panel::Panel()
-{
-	this->sprite.setTexture(Game::defPanel);
-}
-
 Panel::Panel(Vector2f position, float sizeX, float sizeY)
 {
 	this->size.x = sizeX;

@@ -447,11 +447,11 @@ int main()
 
 		Bar bars[] = 
 		{
-			Bar("Pictures/ButtonOutline.png", "Pictures/Scale.png", barWidth, barHeitght, "Hunger", Color::White),
-			Bar("Pictures/ButtonOutline.png", "Pictures/Scale.png", barWidth, barHeitght, "Thirst", Color::White),
-			Bar("Pictures/ButtonOutline.png", "Pictures/Scale.png", barWidth, barHeitght, "Warmth", Color::White), 
-			Bar("Pictures/ButtonOutline.png", "Pictures/Scale.png", barWidth, barHeitght, "Energy", Color::White), 
-			Bar("Pictures/ButtonOutline.png", "Pictures/Scale.png", barWidth, barHeitght, "Condition", Color::White) 
+			Bar("Pictures/Bars/ButtonOutline.png", "Pictures/Bars/Scale.png", "Pictures/Bars/BackScale.png", barWidth, barHeitght, "Hunger", Color::Black),
+			Bar("Pictures/Bars/ButtonOutline.png", "Pictures/Bars/Scale.png", "Pictures/Bars/BackScale.png", barWidth, barHeitght, "Thirst", Color::Black),
+			Bar("Pictures/Bars/ButtonOutline.png", "Pictures/Bars/Scale.png", "Pictures/Bars/BackScale.png", barWidth, barHeitght, "Warmth", Color::Black),
+			Bar("Pictures/Bars/ButtonOutline.png", "Pictures/Bars/Scale.png", "Pictures/Bars/BackScale.png", barWidth, barHeitght, "Energy", Color::Black),
+			Bar("Pictures/Bars/ButtonOutline.png", "Pictures/Bars/Scale.png", "Pictures/Bars/BackScale.png", barWidth, barHeitght, "Condition", Color::Black)
 		};
 
 		for (int i = 0; i < 5; i++)
@@ -751,7 +751,7 @@ int main()
 							StartFireContainer->setActive(true);
 							StayAtFireContainer->setActive(true);
 							IsUsedAxeContainer->setActive(true);
-
+							FailMenu->setActive(false);
 							Restart->Action();
 						}
 
@@ -1036,6 +1036,7 @@ int main()
 				StayAtFireContainer->setActive(false);
 				ChooseWhereToGoContainer->setActive(false);
 				IsUsedAxeContainer->setActive(false);
+				FailMenu->setActive(true);
 
 				StayAtFireContainer->setVisible(false);
 				ChooseWhereToGoContainer->setVisible(false);
