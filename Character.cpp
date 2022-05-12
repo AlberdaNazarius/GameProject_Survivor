@@ -19,12 +19,14 @@ void Character::ChangeHungerLevel(int food)
 	Character::hunger += food;
 	if (Character::hunger > 100) Character::hunger = 100;
 	if (Character::hunger < 0) Character::hunger = 0;
+	if (food > 0) Character::energy += round(food / 2);
 }
 void Character::ChangeThirstLevel(int water)
 {
 	Character::thirst += water;
 	if (Character::thirst > 100) Character::thirst = 100;
 	if (Character::thirst < 0) Character::thirst = 0;
+	if (water > 0) Character::energy += round(water / 2);
 }
 void Character::ChangeWarmthLevel(int warmth)
 {
@@ -50,8 +52,8 @@ void Character::Rest(int hours)
 {
 	Character::ChangeEnergyLevel(hours * 13); // sleeping for 8 hours will fully restore energy
 	GeneralTime::AddTime(hours, 0);
-	Character::ChangeThirstLevel(hours * -10);
-	Character::ChangeHungerLevel(hours * -10);
+	Character::ChangeThirstLevel(hours * -5);
+	Character::ChangeHungerLevel(hours * -7);
 
 	//test
 	DisplayCharacteristics();

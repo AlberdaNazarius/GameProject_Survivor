@@ -10,7 +10,8 @@ class Inventory : public IData
 public:
 	static void Change_Item(string item_name, int number);
     static bool Check_Tool(string tool_id);
-	static void ExploreArea();
+	static void ExploreArea(int counterClick);
+	static void LoseInventory();
 	static void DisplayCharacteristics();
 	static int ReturnNumberOfItems(string item_name);
 

@@ -79,6 +79,23 @@ void HuntOveriwrite(int maxIndex, int spentEnergy, int indexOfEnvironment)
 
 #pragma endregion
 
+#pragma region ExploreArea
+
+void UseAxe()
+{
+	srand(time(0));
+	Inventory::wood += 3 + rand() % 8;
+	Character::ChangeEnergyLevel(-15);
+	GeneralTime::AddTime(0, 30);
+	Character::ChangeHungerLevel(-5);
+	Character::ChangeThirstLevel(-7);
+}
+void DontUseAxe(Container* container)
+{
+	container->setVisible(false);
+}
+#pragma endregion
+
 #pragma region StartFire
 
 void StayAtFireSetVisible(Container* cont, bool value, int minutes, int takenEnergy)
@@ -206,8 +223,24 @@ int main()
 
 #pragma region ExploreArea
 
-		Button<void(*)()>* ExploreArea = new Button<void(*)()>(Vector2f((float)windowWidth * 0.34, (float)windowHeight * 0.02), Vector2f(windowWidth * 0.14, windowHeight * 0.16), "Explore Area");
+		Button<void(*)(int)>* ExploreArea = new Button<void(*)(int)>(Vector2f((float)windowWidth * 0.34, (float)windowHeight * 0.02), Vector2f(windowWidth * 0.14, windowHeight * 0.16), "Explore Area");
 		ExploreArea->setDelegate(Inventory::ExploreArea);
+		int counterClick = 0;
+
+		Container* IsUsedAxeContainer = new Container;
+		Panel* IsUsedAxePanel = new Panel(Vector2f((float)windowWidth / 10, (float)windowHeight / 10), windowWidth * 0.8, windowHeight * 0.6);
+		IsUsedAxeContainer->setVisible(false);
+
+		Button<void(*)()>* UseAxeButton = new Button<void(*)()>(Vector2f((float)IsUsedAxePanel->getWidth() / 4, (float)IsUsedAxePanel->getHeight() / 2.5), Vector2f((float)IsUsedAxePanel->getWidth() / 6, (float)IsUsedAxePanel->getHeight() / 5), "Use Axe");
+		UseAxeButton->setDelegate(UseAxe);
+
+		Button<void(*)(Container*)>* DontUseAxeButton = new Button<void(*)(Container*)>(Vector2f((float)IsUsedAxePanel->getWidth() / 1.8, (float)IsUsedAxePanel->getHeight() / 2.5), Vector2f((float)IsUsedAxePanel->getWidth() / 6, (float)IsUsedAxePanel->getHeight() / 5), "Don't Use Axe");
+		DontUseAxeButton->setDelegate(DontUseAxe);
+
+		IsUsedAxeContainer->addChild(IsUsedAxePanel);
+
+		IsUsedAxePanel->addChild(UseAxeButton);
+		IsUsedAxePanel->addChild(DontUseAxeButton);
 
 #pragma endregion
 
@@ -253,7 +286,7 @@ int main()
 		Button<void(*)(int, int, int)>* SpringTrap = new Button<void(*)(int, int, int)>(Vector2f((float)250, (float)40), Vector2f(200, 100), "Spring Trap");
 		SpringTrap->setDelegate(HuntOveriwrite);
 
-		Button<void(*)(int, int, int)>* BirdTrap = new Button<void(*)(int, int, int)>(Vector2f((float)460, (float)40), Vector2f(200, 100), "Birs Trap");
+		Button<void(*)(int, int, int)>* BirdTrap = new Button<void(*)(int, int, int)>(Vector2f((float)460, (float)40), Vector2f(200, 100), "Birds Trap");
 		BirdTrap->setDelegate(HuntOveriwrite);
 
 		HuntContainer->addChild(HuntPanel);
@@ -261,10 +294,6 @@ int main()
 		HuntPanel->addChild(FallTrap);
 		HuntPanel->addChild(SpringTrap);
 		HuntPanel->addChild(BirdTrap);
-
-		if (!Inventory::Check_Tool("fall trap")) FallTrap->setVisible(false);
-		if (!Inventory::Check_Tool("spring trap")) SpringTrap->setVisible(false);
-		if (!Inventory::Check_Tool("bird trap")) BirdTrap->setVisible(false);
 
 		Container* FishContainer = new Container;
 		Panel* FishPanel = new Panel(Vector2f((float)100, (float)490), 1040, 380);
@@ -296,6 +325,19 @@ int main()
 
 #pragma endregion
 
+#pragma region EatAndDrink
+
+		Button<void(*)(int)>* EatButton = new Button<void(*)(int)>(Vector2f(windowWidth * 0.55, windowHeight / 6.9), Vector2f(windowWidth / 40, windowHeight / 40), "Use");
+		EatButton->setDelegate(Character::ChangeHungerLevel);
+
+		Button<void(*)(int)>* DrinkButton = new Button<void(*)(int)>(Vector2f(windowWidth * 0.55, windowHeight / 5.8), Vector2f(windowWidth / 40, windowHeight / 40), "Use");
+		DrinkButton->setDelegate(Character::ChangeThirstLevel);
+
+		Button<void(*)(int)>* CosumeMedicineButton = new Button<void(*)(int)>(Vector2f(windowWidth * 0.55, windowHeight / 4.25), Vector2f(windowWidth / 40, windowHeight / 40), "Use");
+		CosumeMedicineButton->setDelegate(Character::ChangeConditionLevel);
+
+#pragma endregion
+
 #pragma region OpenInventory
 
 		Container* OpenInventoryContainer = new Container;
@@ -311,6 +353,9 @@ int main()
 
 		OpenInventoryContainer->addChild(OpenInventoryPanel);
 		OpenInventoryPanel->addChild(CloseInventory);
+		OpenInventoryPanel->addChild(EatButton);
+		OpenInventoryPanel->addChild(DrinkButton);
+		OpenInventoryPanel->addChild(CosumeMedicineButton);
 
 #pragma endregion
 
@@ -319,7 +364,7 @@ int main()
 		Container* OpenMenuContainer = new Container;
 		Panel* OpenMenuPanel = new Panel("Pictutes/transparent.png", Vector2f((float)windowWidth / 1.07, 0), windowWidth * 0.07, windowHeight * 0.07);
 
-		Button<void(*)(RenderWindow&, Menu&)>* OpenMenu = new Button<void(*)(RenderWindow&, Menu&)>(Vector2f(0, 0), Vector2f(OpenMenuPanel->getWidth(), OpenMenuPanel->getHeight()), "Open Menu");
+		Button<void(*)(RenderWindow&, Menu&)>* OpenMenu = new Button<void(*)(RenderWindow&, Menu&)>(Vector2f(0, 0), Vector2f(OpenMenuPanel->getWidth(), OpenMenuPanel->getHeight()), "Menu");
 		OpenMenu->setDelegate(CallMenu);
 
 		OpenMenuContainer->addChild(OpenMenuPanel);
@@ -454,6 +499,7 @@ int main()
 							Character::startedDay = GeneralTime::GetDay();
 							HuntContainer->setVisible(false);
 							FishContainer->setVisible(false);
+							IsUsedAxeContainer->setVisible(false);
 						}
 						if (FireLighter->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
@@ -489,9 +535,10 @@ int main()
 						{
 							int minutes = 60;
 							GeneralTime::AddTime(0, minutes);
-							Character::ChangeHungerLevel(minutes / 60 * -10);
-							Character::ChangeThirstLevel(minutes / 60 * -15);
+							Character::ChangeHungerLevel(minutes / 60 * -5);
+							Character::ChangeThirstLevel(minutes / 60 * -7);
 							StayAtFire->Action(minutes * 2);
+							Character::ChangeEnergyLevel(minutes / 6);
 							Character::DisplayCharacteristics();
 						}
 #pragma endregion 
@@ -500,8 +547,9 @@ int main()
 
 						if (ExploreArea->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
-							ExploreArea->Action();
-							ExploreArea->setActive(false); // it becomes active with changing location;
+							counterClick++;
+							ExploreArea->Action(counterClick);
+							if (Inventory::Check_Tool("axe")) IsUsedAxeContainer->setVisible(true);
 							FirstVariantToTravel->setText(CaptionOfButton(0));
 							SecondVariantToTravel->setText(CaptionOfButton(1));
 							ThirdVariantToTravel->setText(CaptionOfButton(2));
@@ -509,6 +557,12 @@ int main()
 							HuntContainer->setVisible(false);
 							FishContainer->setVisible(false);
 						}
+						if (UseAxeButton->checkClick((Vector2f)Mouse::getPosition(window)))
+						{
+							UseAxeButton->Action();
+							IsUsedAxeContainer->setVisible(false);
+						}
+						if (DontUseAxeButton->checkClick((Vector2f)Mouse::getPosition(window))) DontUseAxeButton->Action(IsUsedAxeContainer);
 
 #pragma endregion
 
@@ -517,6 +571,7 @@ int main()
 						if (FirstVariantToTravel->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
 							srand(time(0));
+							counterClick = 0;
 							int posibilityOfBeingHurted = rand() % 2;
 							FirstVariantToTravel->Action(Data::GetEnvironment(0));
 							Location::LocationCurrent = Data::GetEnvironment(0);
@@ -529,13 +584,18 @@ int main()
 								Character::ChangeConditionLevel(-5);
 								cout << "You were hurted during travelling" << endl;
 							}
+							Inventory::LoseInventory();
 							Character::DisplayCharacteristics();
-							ExploreArea->setActive(true);
+							StartFireContainer->setVisible(false);
+							HuntContainer->setVisible(false);
+							FishContainer->setVisible(false);
+							IsUsedAxeContainer->setVisible(false);
 							StayAtFireContainer->setVisible(false);
 						}
 						if (SecondVariantToTravel->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
 							srand(time(0));
+							counterClick = 0;
 							int posibilityOfBeingHurted = rand() % 2;
 							SecondVariantToTravel->Action(Data::GetEnvironment(1));
 							Location::LocationCurrent = Data::GetEnvironment(1);
@@ -548,13 +608,18 @@ int main()
 								Character::ChangeConditionLevel(-5);
 								cout << "You were hurted during travelling" << endl;
 							}
+							Inventory::LoseInventory();
 							Character::DisplayCharacteristics();
-							ExploreArea->setActive(true);
+							StartFireContainer->setVisible(false);
+							HuntContainer->setVisible(false);
+							FishContainer->setVisible(false);
+							IsUsedAxeContainer->setVisible(false);
 							StayAtFireContainer->setVisible(false);
 						}
 						if (ThirdVariantToTravel->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
 							srand(time(0));
+							counterClick = 0;
 							int posibilityOfBeingHurted = rand() % 2;
 							ThirdVariantToTravel->Action(Data::GetEnvironment(2));
 							Location::LocationCurrent = Data::GetEnvironment(2);
@@ -567,8 +632,12 @@ int main()
 								Character::ChangeConditionLevel(-5);
 								cout << "You were hurted during travelling" << endl;
 							}
+							Inventory::LoseInventory();
 							Character::DisplayCharacteristics();
-							ExploreArea->setActive(true);
+							StartFireContainer->setVisible(false);
+							HuntContainer->setVisible(false);
+							FishContainer->setVisible(false);
+							IsUsedAxeContainer->setVisible(false);
 							StayAtFireContainer->setVisible(false);
 						}
 
@@ -576,7 +645,12 @@ int main()
 
 #pragma region Hunt
 
-						if (HuntButton->checkClick((Vector2f)Mouse::getPosition(window))) HuntButton->Action(HuntContainer, true);
+						if (HuntButton->checkClick((Vector2f)Mouse::getPosition(window)))
+						{
+							HuntButton->Action(HuntContainer, true);
+							IsUsedAxeContainer->setVisible(false);
+							StartFireContainer->setVisible(false);
+						}
 						if (FallTrap->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
 							Inventory::Change_Item("fall trap", 0);
@@ -595,7 +669,12 @@ int main()
 							BirdTrap->Action(15, -5, Location::LocationCurrent);
 							HuntContainer->setVisible(false);
 						}
-						if (FishButton->checkClick((Vector2f)Mouse::getPosition(window))) FishButton->Action(FishContainer, true);
+						if (FishButton->checkClick((Vector2f)Mouse::getPosition(window)))
+						{
+							FishButton->Action(FishContainer, true);
+							IsUsedAxeContainer->setVisible(false);
+							StartFireContainer->setVisible(false);
+						}
 						if (FishingRod->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
 							FishingRod->Action(5, -7, Location::LocationCurrent);
@@ -617,6 +696,7 @@ int main()
 							StartFireContainer->setVisible(false);
 							HuntContainer->setVisible(false);
 							FishContainer->setVisible(false);
+							IsUsedAxeContainer->setVisible(false);
 						}
 
 #pragma endregion 
@@ -630,11 +710,32 @@ int main()
 							StartFireContainer->setVisible(false);
 							HuntContainer->setVisible(false);
 							FishContainer->setVisible(false);
+							IsUsedAxeContainer->setVisible(false);
 						}
 						if (CloseInventory->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
 							OpenInventory->Action(OpenInventoryContainer, false);
 							CloseInventory->setVisible(false);
+						}
+
+#pragma endregion
+
+#pragma region EatAndDrink
+
+						if (EatButton->checkClick((Vector2f)Mouse::getPosition(window)))
+						{
+							EatButton->Action(5); 
+							Inventory::food -= 1;
+						}
+						if (DrinkButton->checkClick((Vector2f)Mouse::getPosition(window)))
+						{
+							DrinkButton->Action(5);
+							Inventory::water -= 1;
+						}
+						if (CosumeMedicineButton->checkClick((Vector2f)Mouse::getPosition(window)))
+						{
+							CosumeMedicineButton->Action(5);
+							Inventory::medicine -= 1;
 						}
 
 #pragma endregion
@@ -649,6 +750,7 @@ int main()
 							OpenInventoryContainer->setActive(true);
 							StartFireContainer->setActive(true);
 							StayAtFireContainer->setActive(true);
+							IsUsedAxeContainer->setActive(true);
 
 							Restart->Action();
 						}
@@ -681,6 +783,7 @@ int main()
 							StartFireContainer->setVisible(false);
 							HuntContainer->setVisible(false);
 							FishContainer->setVisible(false);
+							IsUsedAxeContainer->setVisible(false);
 						}
 						for (map<Button<bool(*)(string)>*, string>::iterator it = craftBut.begin(); it != craftBut.end(); ++it)
 						{
@@ -730,6 +833,9 @@ int main()
 #pragma region ExploreArea
 
 			ExploreArea->update((Vector2f)Mouse::getPosition(window));
+			UseAxeButton->update((Vector2f)Mouse::getPosition(window));
+			DontUseAxeButton->update((Vector2f)Mouse::getPosition(window));
+
 
 #pragma endregion
 
@@ -750,6 +856,14 @@ int main()
 			FishButton->update((Vector2f)Mouse::getPosition(window));
 			FishingRod->update((Vector2f)Mouse::getPosition(window));
 			SpearFishing->update((Vector2f)Mouse::getPosition(window));
+
+#pragma endregion
+
+#pragma region EatAndDrink
+
+			EatButton->update((Vector2f)Mouse::getPosition(window));
+			DrinkButton->update((Vector2f)Mouse::getPosition(window));
+			CosumeMedicineButton->update((Vector2f)Mouse::getPosition(window));
 
 #pragma endregion
 
@@ -815,6 +929,7 @@ int main()
 			}
 			if (StayAtFireContainer->getVisible()) StartFire->setActive(false);
 			else StartFire->setActive(true);
+			if (Inventory::wood < 5) StartFire->setActive(false);
 			StartFireContainer->render(window, Vector2f(0, 0));
 			StayAtFireContainer->render(window, Vector2f(0, 0));
 
@@ -822,8 +937,19 @@ int main()
 
 #pragma region ExploreArea
 
-			if (ExploreArea->getActive() || Character::CheckIFCharacteristicsBelowZero()) ChooseWhereToGoContainer->setVisible(false);
+			if (!counterClick || Character::CheckIFCharacteristicsBelowZero()) ChooseWhereToGoContainer->setVisible(false);
 			else ChooseWhereToGoContainer->setVisible(true);
+
+#pragma endregion
+
+#pragma region EatAndDrink
+
+			if (!Inventory::food) EatButton->setVisible(false);
+			else EatButton->setVisible(true);
+			if (!Inventory::water) DrinkButton->setVisible(false);
+			else DrinkButton->setVisible(true);
+			if (!Inventory::medicine) CosumeMedicineButton->setVisible(false);
+			else CosumeMedicineButton->setVisible(true);
 
 #pragma endregion
 
@@ -839,6 +965,10 @@ int main()
 				FishButton->setVisible(false);
 				HuntButton->setVisible(true);
 			}
+
+			if (!Inventory::Check_Tool("fall trap")) FallTrap->setVisible(false);
+			if (!Inventory::Check_Tool("spring trap")) SpringTrap->setVisible(false);
+			if (!Inventory::Check_Tool("bird trap")) BirdTrap->setVisible(false);
 
 #pragma endregion
 
@@ -887,6 +1017,8 @@ int main()
 
 			OpenInventoryContainer->render(window, Vector2f(0, 0));
 
+			IsUsedAxeContainer->render(window, Vector2f(0, 0));
+
 #pragma region Menu
 
 			OpenMenuContainer->render(window, Vector2f(0, 0));
@@ -903,12 +1035,14 @@ int main()
 				StartFireContainer->setActive(false);
 				StayAtFireContainer->setActive(false);
 				ChooseWhereToGoContainer->setActive(false);
+				IsUsedAxeContainer->setActive(false);
 
 				StayAtFireContainer->setVisible(false);
 				ChooseWhereToGoContainer->setVisible(false);
 				HuntContainer->setVisible(false);
 				OpenInventoryContainer->setVisible(false);
 				StartFireContainer->setVisible(false);
+				IsUsedAxeContainer->setVisible(false);
 				Craft::changeCraftMenu(&craftMenus, NULL);
 
 				FailMenu->render(window, Vector2f(0, 0));
