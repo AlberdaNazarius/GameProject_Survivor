@@ -1,7 +1,10 @@
 #include "Menu.h"
 
 RenderWindow Menu::MenuWindow(sf::VideoMode(VideoMode::getDesktopMode().width, VideoMode::getDesktopMode().height), "Menu", sf::Style::Fullscreen);
+Texture BackgroundTexture;
+Sprite BackgroundPicture;
 bool Menu::openMainWindow = false;
+
 void ForButtonPlay(bool value)
 {
 	Menu::openMainWindow = value;
@@ -23,6 +26,8 @@ void ForButtonQuit(RenderWindow& window)
 }
 Menu::Menu()
 {
+	BackgroundTexture.loadFromFile("Pictures/Background.png", sf::IntRect(0, 0, 1920, 1080));
+	BackgroundPicture.setTexture(BackgroundTexture);
 	Game::errorTexture.setRepeated(true);
 	if (!Game::errorTexture.loadFromFile("Pictures/Button.png"))
 		throw std::invalid_argument("Failed to load ErrorTexture.png");
@@ -64,11 +69,15 @@ Menu::Menu()
 	MenuPanel->addChild(OpenOptions);
 	MenuPanel->addChild(Quit);
 
+
 	OptionsContainer->addChild(OptionsPanel);
 	OptionsPanel->addChild(CloseOptions);
 }
 void Menu::Draw()
 {
+	
+
+
 	while (MenuWindow.isOpen())
 	{
 		while (MenuWindow.pollEvent(event))
@@ -109,6 +118,7 @@ void Menu::Draw()
 
 		MenuWindow.clear();
 
+		MenuWindow.draw(BackgroundPicture);
 		MenuContainer->render(MenuWindow, Vector2f(0, 0));
 		OptionsContainer->render(MenuWindow, Vector2f(0, 0));
 
