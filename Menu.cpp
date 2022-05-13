@@ -1,6 +1,7 @@
 #include "Menu.h"
 
 RenderWindow Menu::MenuWindow(sf::VideoMode(VideoMode::getDesktopMode().width, VideoMode::getDesktopMode().height), "Menu", sf::Style::Fullscreen);
+
 Texture BackgroundTexture;
 Sprite BackgroundPicture;
 bool Menu::openMainWindow = false;
@@ -42,25 +43,25 @@ Menu::Menu()
 		Game::defPanel.setRepeated(true);
 	}
 	MenuContainer = new Container;
-	MenuPanel = new Panel(Vector2f(600, 300), 640, 480);
+	MenuPanel = new Panel(Vector2f(windowWidth / 3.2, windowHeight/3.6), windowWidth / 3, windowHeight / 2.25);
 
 	OptionsContainer = new Container;
-	OptionsPanel = new Panel(Vector2f(600, 300), 640, 480);
+	OptionsPanel = new Panel(Vector2f(windowWidth / 3.2, windowHeight / 3.6), windowWidth / 3, windowHeight / 2.25);
 	OptionsContainer->setVisible(false);
 
-	LoadSavedGame = new Button<void(*)(bool)>(Vector2f(200, 130), Vector2f(200, 100), "Load Saved Game");
+	LoadSavedGame = new Button<void(*)(bool)>(Vector2f(MenuPanel->getWidth() / 3.76, MenuPanel->getHeight()/3.7), Vector2f(MenuPanel->getWidth() / 2.1, MenuPanel->getHeight() / 4.8), "Load Saved Game");
 	LoadSavedGame->setDelegate(ForButtonPlay);
 
-	NewGame = new Button<void(*)(bool)>(Vector2f(200, 10), Vector2f(200, 100), "New Game");
+	NewGame = new Button<void(*)(bool)>(Vector2f(MenuPanel->getWidth() / 3.76, MenuPanel->getHeight() / 48), Vector2f(MenuPanel->getWidth() / 2.1, MenuPanel->getHeight() / 4.8), "New Game");
 	NewGame->setDelegate(ForButtonPlay);
 
-	OpenOptions = new Button<void(*)(Container*, Container*, bool)>(Vector2f(200, 250), Vector2f(200, 100), "Options");
+	OpenOptions = new Button<void(*)(Container*, Container*, bool)>(Vector2f(MenuPanel->getWidth() / 3.76, MenuPanel->getHeight() / 1.92), Vector2f(MenuPanel->getWidth() / 2.1, MenuPanel->getHeight() / 4.8), "Options");
 	OpenOptions->setDelegate(ForButtonOptions);
 
-	Quit = new Button<void(*)(RenderWindow&)>(Vector2f(200, 370), Vector2f(200, 100), "Quit");
+	Quit = new Button<void(*)(RenderWindow&)>(Vector2f(MenuPanel->getWidth() / 3.76, MenuPanel->getHeight() / 1.3), Vector2f(MenuPanel->getWidth() / 2.1, MenuPanel->getHeight() / 4.8), "Quit");
 	Quit->setDelegate(ForButtonQuit);
 
-	CloseOptions = new Button<void(*)(Container*, Container*, bool)>(Vector2f(300, 300), Vector2f(200, 100), "Close Options");
+	CloseOptions = new Button<void(*)(Container*, Container*, bool)>(Vector2f(OptionsPanel->getWidth() / 2.1, OptionsPanel->getHeight() / 1.6), Vector2f(OptionsPanel->getWidth() / 2.1, OptionsPanel->getHeight() / 4.8), "Close Options");
 	CloseOptions->setDelegate(ForButtonOptions);
 
 	MenuContainer->addChild(MenuPanel);

@@ -50,7 +50,7 @@ void Character::ChangeConditionLevel(int points)
 }
 void Character::Rest(int hours)
 {
-	Character::ChangeEnergyLevel(hours * 25); // sleeping for 8 hours will fully restore energy
+	Character::ChangeEnergyLevel(hours * 13); // sleeping for 8 hours will fully restore energy
 	GeneralTime::AddTime(hours, 0);
 	Character::ChangeThirstLevel(hours * -5);
 	Character::ChangeHungerLevel(hours * -7);

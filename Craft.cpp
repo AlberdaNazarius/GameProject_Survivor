@@ -66,9 +66,9 @@ void Craft::InitializeCraftMenus(vector<Panel*>* craftMenus, map<Button<bool(*)(
 	{
 		if (i * colPerMenu >= recQuant)
 		{
-			return;
+			return; 
 		}
-		(*craftMenus).push_back(new Panel(craftMenuPos, 640, 480));
+		(*craftMenus).push_back(new Panel(craftMenuPos, (float)VideoMode::getDesktopMode().width * 0.8, (float)VideoMode::getDesktopMode().height * 0.6));
 		if (i != 0)   // next button delegate set
 		{
 			(*switchBut).insert({ tempSwiBut, (*craftMenus)[i] });

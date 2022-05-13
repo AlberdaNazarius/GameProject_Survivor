@@ -83,7 +83,7 @@ map<int, string>::iterator Environment::Hunt(int maxIndexOfGeneration)
 	{
 		++it;
 	}
-	cout << it->second << endl;
+//	cout << it->second << endl;
 	return it;
 }
 

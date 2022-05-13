@@ -17,6 +17,8 @@ public:
 	static bool openMainWindow;	
 	static RenderWindow MenuWindow;
 private:
+	const int windowWidth = VideoMode::getDesktopMode().width;
+	const int windowHeight = VideoMode::getDesktopMode().height;
 	Container* MenuContainer;
 	Panel* MenuPanel;
 	Container* OptionsContainer;
