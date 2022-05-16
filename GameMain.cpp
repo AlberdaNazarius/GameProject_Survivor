@@ -22,9 +22,9 @@ enum Bars
 {
 	HungerBar,
 	ThirstBar,
-	WarmthBar,
 	EnergyBar,
-	ConditionBar
+	ConditionBar,
+	WarmthBar,
 };
 Text eventsDescription;
 
@@ -156,9 +156,8 @@ int main()
 
 	if (Menu::OpenMainWindow())
 	{
+		//RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Game");
 		RenderWindow window(sf::VideoMode(VideoMode::getDesktopMode().width, VideoMode::getDesktopMode().height), "Game", sf::Style::Fullscreen);
-
-		//RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Game" /*, sf::Style::Fullscreen*/);
 		Event event;
 		Location location;
 
@@ -177,8 +176,12 @@ int main()
 		}
 		Container* MainContainer = new Container;
 		Panel* MainPanel = new Panel(Vector2f((float)0, (float)windowHeight * 0.8), windowWidth, windowHeight * 0.2);
-
 		MainContainer->addChild(MainPanel);
+
+		// consts
+		const Vector2f hungerIcoSize(40, 55);
+		const Vector2f energyIcoSize(35, 55);
+		const Vector2f thirstIcoSize(25, 60);
 
 #pragma region Events
 
@@ -199,6 +202,21 @@ int main()
 #pragma endregion
 
 #pragma region StartFire
+
+		SpriteWithText changeCharacteristicStayAtFire[] =
+		{
+		SpriteWithText("Pictures/Characteristics/Energy.png", "???", Color::White, energyIcoSize),
+		SpriteWithText("Pictures/Characteristics/Hunger.png", "???", Color::White, hungerIcoSize),
+		SpriteWithText("Pictures/Characteristics/Thirst.png", "???", Color::White, thirstIcoSize),
+		SpriteWithText("Pictures/Characteristics/Warmth.png", "???", Color::White, Vector2f(50, 60)),
+		};
+
+		SpriteWithText changeCharacteristicsStayAtFire[] =
+		{
+			SpriteWithText("Pictures/Characteristics/Energy.png", "???", Color::White, energyIcoSize),
+			SpriteWithText("Pictures/Characteristics/Hunger.png", "???", Color::White, hungerIcoSize),
+			SpriteWithText("Pictures/Characteristics/Thirst.png", "???", Color::White, thirstIcoSize),
+		};
 
 		Container* StartFireContainer = new Container;
 		Panel* StartFirePanel = new Panel(Vector2f((float)windowWidth / 10, (float)windowHeight / 10), windowWidth * 0.8, windowHeight * 0.6);
@@ -256,6 +274,20 @@ int main()
 
 #pragma region ExploreArea
 
+		SpriteWithText changeCharacteristicsUseAxe[] =
+		{
+			SpriteWithText("Pictures/Characteristics/Energy.png", "-15", Color::White, energyIcoSize),
+			SpriteWithText("Pictures/Characteristics/Hunger.png", "-5", Color::White, hungerIcoSize),
+			SpriteWithText("Pictures/Characteristics/Thirst.png", "-7", Color::White, thirstIcoSize),
+		};
+
+		SpriteWithText changeCharacteristicsDontUseAxe[] =
+		{
+			SpriteWithText("Pictures/Characteristics/Energy.png", "-15", Color::White, energyIcoSize),
+			SpriteWithText("Pictures/Characteristics/Hunger.png", "-5", Color::White, hungerIcoSize),
+			SpriteWithText("Pictures/Characteristics/Thirst.png", "-7", Color::White, thirstIcoSize),
+		};
+
 		Button<string(*)(int)>* ExploreArea = new Button<string(*)(int)>(Vector2f((float)MainPanel->getWidth() / 2, (float)MainPanel->getHeight() / 1.93), Vector2f((float)MainPanel->getWidth() / 6.4, (float)MainPanel->getHeight() / 2.16), "Explore Area");
 		ExploreArea->setDelegate(Inventory::ExploreArea);
 
@@ -267,7 +299,7 @@ int main()
 		UseAxeButton->setDelegate(UseAxe);
 
 		Button<void(*)(Container*)>* DontUseAxeButton = new Button<void(*)(Container*)>(Vector2f((float)IsUsedAxePanel->getWidth() / 1.8, (float)IsUsedAxePanel->getHeight() / 2.5), Vector2f(StartFirePanel->getWidth() / 5.12, StartFirePanel->getHeight() / 6.48), "Don't Use Axe");
-		DontUseAxeButton->setDelegate(DontUseAxe);
+		DontUseAxeButton->setDelegate(DontUseAxe);	
 
 		IsUsedAxeContainer->addChild(IsUsedAxePanel);
 
@@ -277,12 +309,18 @@ int main()
 #pragma endregion
 
 #pragma region ChooseWhereToGo
-
 		Generator::GenerateEnvironments(3, 3);
+	
+		SpriteWithText changeCharacteristicsChooseWhereToGo[] =
+		{
+			SpriteWithText("Pictures/Characteristics/Energy.png", "-15", Color::White, Vector2f(20, 35)),
+			SpriteWithText("Pictures/Characteristics/Hunger.png", "-10", Color::White, Vector2f(20, 35)),
+			SpriteWithText("Pictures/Characteristics/Thirst.png", "-15", Color::White, Vector2f(13, 40)),
+		};
 
 		Container* ChooseWhereToGoContainer = new Container;
 		Panel* ChooseWhereToGoPanel = new Panel ("Pictures/transparent.png", Vector2f(0, (float)windowHeight / 7), windowWidth, windowHeight * 0.07);
-
+		
 		Button<void(*)(int)>* FirstVariantToTravel = new Button<void(*)(int)>(Vector2f((float)ChooseWhereToGoPanel->getWidth() /100, (float)0), Vector2f(ChooseWhereToGoPanel->getWidth() * 0.1, ChooseWhereToGoPanel->getHeight()), "Forest");
 		FirstVariantToTravel->setDelegate(Location::CheckWhatEnvironment);
 		FirstVariantToTravel->setVisible(true);
@@ -293,7 +331,7 @@ int main()
 
 		Button<void(*)(int)>* ThirdVariantToTravel = new Button<void(*)(int)>(Vector2f((float)ChooseWhereToGoPanel->getWidth() / 1.12, (float)0), Vector2f(ChooseWhereToGoPanel->getWidth() * 0.1, ChooseWhereToGoPanel->getHeight()), "River");
 		ThirdVariantToTravel->setDelegate(Location::CheckWhatEnvironment);
-		ThirdVariantToTravel->setVisible(true);
+		ThirdVariantToTravel->setVisible(true);		
 
 		ChooseWhereToGoContainer->addChild(ChooseWhereToGoPanel);
 
@@ -304,6 +342,13 @@ int main()
 #pragma endregion
 
 #pragma region Hunt
+
+		SpriteWithText changeCharacteristicsHunt[] =
+		{
+			SpriteWithText("Pictures/Characteristics/Energy.png", "???", Color::White, energyIcoSize),
+			SpriteWithText("Pictures/Characteristics/Hunger.png", "???", Color::White, hungerIcoSize),
+			SpriteWithText("Pictures/Characteristics/Thirst.png", "???", Color::White, thirstIcoSize),
+		};
 
 		Container* HuntContainer = new Container;
 		Panel* HuntPanel = new Panel(Vector2f((float)windowWidth / 10, (float)windowHeight / 10), windowWidth * 0.8, windowHeight * 0.6);
@@ -326,6 +371,13 @@ int main()
 		HuntPanel->addChild(FallTrap);
 		HuntPanel->addChild(SpringTrap);
 		HuntPanel->addChild(BirdTrap);
+
+		SpriteWithText changeCharacteristicsFish[] =
+		{
+			SpriteWithText("Pictures/Characteristics/Energy.png", "???", Color::White, energyIcoSize),
+			SpriteWithText("Pictures/Characteristics/Hunger.png", "???", Color::White, hungerIcoSize),
+			SpriteWithText("Pictures/Characteristics/Thirst.png", "???", Color::White, thirstIcoSize),
+		};
 
 		Container* FishContainer = new Container;
 		Panel* FishPanel = new Panel(Vector2f((float)windowWidth / 10, (float)windowHeight / 10), windowWidth * 0.8, windowHeight * 0.6);
@@ -358,6 +410,12 @@ int main()
 #pragma endregion
 
 #pragma region EatAndDrink
+		SpriteWithText changeCharacteristicHunger = SpriteWithText("Pictures/Characteristics/Hunger.png", "+5", Color::White, Vector2f(15, 22));
+		SpriteWithText changeCharacteristicThirst = SpriteWithText("Pictures/Characteristics/Thirst.png", "+5", Color::White, Vector2f(8, 22));
+		SpriteWithText changeCharacteristicCondition = SpriteWithText("Pictures/Characteristics/Condition.png", "+5", Color::White, Vector2f(19, 19));
+		changeCharacteristicHunger.SetTextSize(15);
+		changeCharacteristicThirst.SetTextSize(15);
+		changeCharacteristicCondition.SetTextSize(15);
 
 		Button<void(*)(int)>* EatButton = new Button<void(*)(int)>(Vector2f(windowWidth * 0.55, windowHeight / 6.9), Vector2f(windowWidth / 40, windowHeight / 40), "Use");
 		EatButton->setDelegate(Character::ChangeHungerLevel);
@@ -470,22 +528,23 @@ int main()
 		int distance = 60;
 
 		Label* TimeLabel = new Label(Vector2f(windowWidth / timeCoefficient[0], windowHeight / timeCoefficient[1]), GeneralTime::GetTime(), 30, Color::Red);
-		Label* TemperatureLabel = new Label(Vector2f(windowWidth / temperatureCoefficient[0], windowHeight / temperatureCoefficient[1]), to_string(Location::GetTemperature()) + "°t", 30, Color::Red);
+
+		TemperatureBar temperatureBar("Pictures/TemperatureScale/TemperatureHot.png", "Pictures/TemperatureScale/TemperatureCold.png", 25, 75, to_string(Location::GetTemperature()) + "°C", Color::Red);
+		temperatureBar.SetPosition(windowWidth / temperatureCoefficient[0], windowHeight / temperatureCoefficient[1]);
 
 		Bar bars[] = 
 		{
-			Bar("Pictures/Bars/ButtonOutline.png", "Pictures/Bars/Scale.png", "Pictures/Bars/BackScale.png", barWidth, barHeitght, "Hunger", Color::Black),
-			Bar("Pictures/Bars/ButtonOutline.png", "Pictures/Bars/Scale.png", "Pictures/Bars/BackScale.png", barWidth, barHeitght, "Thirst", Color::Black),
-			Bar("Pictures/Bars/ButtonOutline.png", "Pictures/Bars/Scale.png", "Pictures/Bars/BackScale.png", barWidth, barHeitght, "Warmth", Color::Black),
-			Bar("Pictures/Bars/ButtonOutline.png", "Pictures/Bars/Scale.png", "Pictures/Bars/BackScale.png", barWidth, barHeitght, "Energy", Color::Black),
-			Bar("Pictures/Bars/ButtonOutline.png", "Pictures/Bars/Scale.png", "Pictures/Bars/BackScale.png", barWidth, barHeitght, "Condition", Color::Black)
+			Bar("Pictures/Bars/Hunger/BarOutlineHunger.png", "Pictures/Bars/Hunger/ScaleHunger.png", "Pictures/Bars/Hunger/BackScaleHunger.png", barWidth, barHeitght, Character::GetHungerLevel(), Color::Black),
+			Bar("Pictures/Bars/Thirst/BarOutlineThirst.png", "Pictures/Bars/Thirst/ScaleThirst.png", "Pictures/Bars/Thirst/BackScaleThirst.png", barWidth, barHeitght, Character::GetThirstLevel(), Color::Black),
+			Bar("Pictures/Bars/Energy/BarOutlineEnergy.png", "Pictures/Bars/Energy/ScaleEnergy.png", "Pictures/Bars/Energy/BackScaleEnergy.png", barWidth, barHeitght, Character::GetEnergyLevel(), Color::Black),
+			Bar("Pictures/Bars/Condition/BarOutlineCondition.png", "Pictures/Bars/Condition/ScaleCondition.png", "Pictures/Bars/Condition/BackScaleCondition.png", barWidth, barHeitght, Character::GetConditionLevel(), Color::Black),
+			Bar("Pictures/Bars/Warmth/BarOutlineWarmth.png", "Pictures/Bars/Warmth/ScaleWarmth.png", "Pictures/Bars/Warmth/BackScaleWarmth.png", barWidth, barHeitght, Character::GetWarmthLevel(), Color::Black),
 		};
 
 		for (int i = 0; i < 5; i++)
 			bars[i].SetPosition(windowWidth / characteristicsCoefficient[0], windowHeight / characteristicsCoefficient[1] + i * distance);
 
 		DisplayContainer->addChild(TimeLabel);
-		DisplayContainer->addChild(TemperatureLabel);
 		MainContainer->addChild(DisplayContainer);
 #pragma endregion
 
@@ -499,7 +558,6 @@ int main()
 		// Attaching pictures to environments
 		Forest::SetPicture("Pictures/Environment.jpg");
 		Lake::SetPicture("Pictures/Lake.jpg");
-
 		//Main cycle
 		while (window.isOpen())
 		{
@@ -604,7 +662,8 @@ int main()
 							if (Inventory::wood - previousValue) eventsDescription.setString("Wood+" + to_string(Inventory::wood) + "\n");
 							IsUsedAxeContainer->setVisible(false);
 						}
-						if (DontUseAxeButton->checkClick((Vector2f)Mouse::getPosition(window))) DontUseAxeButton->Action(IsUsedAxeContainer);
+						if (DontUseAxeButton->checkClick((Vector2f)Mouse::getPosition(window))) 
+							DontUseAxeButton->Action(IsUsedAxeContainer);
 
 #pragma endregion
 
@@ -870,8 +929,9 @@ int main()
 				if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel);
 				else if (event.mouseWheelScroll.wheel == sf::Mouse::HorizontalWheel);
 			}
-			// Update 
 
+		
+			// Update 
 #pragma region StartFire
 
 			FireLighter->update((Vector2f)Mouse::getPosition(window));
@@ -890,11 +950,9 @@ int main()
 			UseAxeButton->update((Vector2f)Mouse::getPosition(window));
 			DontUseAxeButton->update((Vector2f)Mouse::getPosition(window));
 
-
 #pragma endregion
 
 #pragma region ChooseWhereToGo
-
 			FirstVariantToTravel->update((Vector2f)Mouse::getPosition(window));
 			SecondVariantToTravel->update((Vector2f)Mouse::getPosition(window));
 			ThirdVariantToTravel->update((Vector2f)Mouse::getPosition(window));
@@ -1039,26 +1097,28 @@ int main()
 			OpenInventoryContainer->render(window, Vector2f(0, 0));
 
 #pragma endregion
-
+			
 			//Update text
 			TimeLabel->setText(GeneralTime::GetTime());
-			TemperatureLabel->setText(to_string(Location::GetTemperature()) + "°t");
 
 			//Update Bars
-			bars[Bars::HungerBar].SetScale(Character::GetHungerLevel());
+			bars[Bars::HungerBar].SetTextAndScale(Character::GetHungerLevel());
 			bars[Bars::HungerBar].Render(window);
 
-			bars[Bars::ThirstBar].SetScale(Character::GetThirstLevel());
+			bars[Bars::ThirstBar].SetTextAndScale(Character::GetThirstLevel());
 			bars[Bars::ThirstBar].Render(window);
 			
-			bars[Bars::WarmthBar].SetScale(Character::GetWarmthLevel());
+			bars[Bars::WarmthBar].SetTextAndScale(Character::GetWarmthLevel());
 			bars[Bars::WarmthBar].Render(window);
 
-			bars[Bars::EnergyBar].SetScale(Character::GetEnergyLevel());
+			bars[Bars::EnergyBar].SetTextAndScale(Character::GetEnergyLevel());
 			bars[Bars::EnergyBar].Render(window);
 
-			bars[Bars::ConditionBar].SetScale(Character::GetConditionLevel());
+			bars[Bars::ConditionBar].SetTextAndScale(Character::GetConditionLevel());
 			bars[Bars::ConditionBar].Render(window);
+
+			temperatureBar.ChangeTemperaturePicture(Location::GetTemperature());
+			temperatureBar.Render(window);
 
 
 			Data::SaveGamePerSomeTime(23); // Save data per some time (in hours)	
@@ -1080,6 +1140,229 @@ int main()
 			OpenMenuContainer->render(window, Vector2f(0, 0));
 
 #pragma endregion
+
+#pragma region OpenInventory
+
+			if (OpenInventoryContainer->getVisible())
+				Inventory::DisplayInventory(window, Vector2f(windowWidth, windowHeight));
+
+#pragma endregion
+
+#pragma region DisplayCharacteristicsIcos
+			// Explore area
+				// Use axe
+			if (UseAxeButton->isContains())
+			{
+				changeCharacteristicsUseAxe->SetPosition(Vector2f(UseAxeButton->getRealPosition().x * 1.038, UseAxeButton->getRealPosition().y + UseAxeButton->getHeight() / 6));
+				changeCharacteristicsUseAxe->SetDistanceBetweenObjects(Vector2f(100, 0), changeCharacteristicsUseAxe, 3);
+
+				UseAxeButton->setTextRender(false);
+				changeCharacteristicsUseAxe[0].Render(window);
+				changeCharacteristicsUseAxe[1].Render(window);
+				changeCharacteristicsUseAxe[2].Render(window);
+			}
+			else
+				UseAxeButton->setTextRender(true);
+
+				// Don't use axe
+			if (DontUseAxeButton->isContains())
+			{
+				changeCharacteristicsDontUseAxe->SetPosition(Vector2f(DontUseAxeButton->getRealPosition().x * 1.021, DontUseAxeButton->getRealPosition().y + DontUseAxeButton->getHeight() / 6));
+				changeCharacteristicsDontUseAxe->SetDistanceBetweenObjects(Vector2f(100, 0), changeCharacteristicsDontUseAxe, 3);	
+
+				DontUseAxeButton->setTextRender(false);
+				changeCharacteristicsDontUseAxe[0].Render(window);
+				changeCharacteristicsDontUseAxe[1].Render(window);
+				changeCharacteristicsDontUseAxe[2].Render(window);
+			}
+			else
+				DontUseAxeButton->setTextRender(true);
+			
+			// Choose where to go 	
+			if (FirstVariantToTravel->isContains() || SecondVariantToTravel->isContains() || ThirdVariantToTravel->isContains())
+			{
+				changeCharacteristicsChooseWhereToGo->SetDistanceBetweenObjects(Vector2f(60, 0), changeCharacteristicsChooseWhereToGo, 3);
+				if (FirstVariantToTravel->isContains())
+				{
+					changeCharacteristicsChooseWhereToGo->SetPosition(Vector2f(FirstVariantToTravel->getRealPosition().x * 1.5, FirstVariantToTravel->getRealPosition().y + FirstVariantToTravel->getHeight() / 5));
+					FirstVariantToTravel->setTextRender(false);
+				}
+				else if (SecondVariantToTravel->isContains())
+				{
+					changeCharacteristicsChooseWhereToGo->SetPosition(Vector2f(SecondVariantToTravel->getRealPosition().x * 1.015, SecondVariantToTravel->getRealPosition().y + SecondVariantToTravel->getHeight() / 5));
+					SecondVariantToTravel->setTextRender(false);
+				}
+				else
+				{
+					changeCharacteristicsChooseWhereToGo->SetPosition(Vector2f(ThirdVariantToTravel->getRealPosition().x * 1.008, ThirdVariantToTravel->getRealPosition().y + ThirdVariantToTravel->getHeight() / 5));
+					ThirdVariantToTravel->setTextRender(false);
+				}
+
+				changeCharacteristicsChooseWhereToGo[0].Render(window);
+				changeCharacteristicsChooseWhereToGo[1].Render(window);
+				changeCharacteristicsChooseWhereToGo[2].Render(window);
+			}
+			else
+			{
+				FirstVariantToTravel->setTextRender(true);
+				SecondVariantToTravel->setTextRender(true);
+				ThirdVariantToTravel->setTextRender(true);
+			}
+
+			// Eat and drink
+				// Eat
+			if (EatButton->isContains())
+			{
+				changeCharacteristicHunger.SetPosition(Vector2f(EatButton->getRealPosition().x * 1.004, EatButton->getRealPosition().y + EatButton->getHeight() / 8));
+				changeCharacteristicHunger.SetTexPosition(Vector2f(changeCharacteristicHunger.GetTextPosition().x, EatButton->getRealPosition().y + EatButton->getHeight() / 6));
+
+				EatButton->setTextRender(false);
+				changeCharacteristicHunger.Render(window);
+			}
+			else
+				EatButton->setTextRender(true);
+
+				// Drink
+			if (DrinkButton->isContains())
+			{
+				changeCharacteristicThirst.SetPosition(Vector2f(DrinkButton->getRealPosition().x * 1.004, DrinkButton->getRealPosition().y + DrinkButton->getHeight() / 8));
+				changeCharacteristicThirst.SetTexPosition(Vector2f(changeCharacteristicThirst.GetTextPosition().x, DrinkButton->getRealPosition().y + DrinkButton->getHeight() / 6));
+
+				DrinkButton->setTextRender(false);
+				changeCharacteristicThirst.Render(window);
+			}
+			else
+				DrinkButton->setTextRender(true);
+
+				// Medicine
+			if (CosumeMedicineButton->isContains())
+			{
+				changeCharacteristicCondition.SetPosition(Vector2f(CosumeMedicineButton->getRealPosition().x * 1.004, CosumeMedicineButton->getRealPosition().y + CosumeMedicineButton->getHeight() / 8));
+				changeCharacteristicCondition.SetTexPosition(Vector2f(changeCharacteristicCondition.GetTextPosition().x, CosumeMedicineButton->getRealPosition().y + CosumeMedicineButton->getHeight() / 6));
+
+				CosumeMedicineButton->setTextRender(false);
+				changeCharacteristicCondition.Render(window);
+			}
+			else
+				CosumeMedicineButton->setTextRender(true);
+
+			// Hunt
+			if (FallTrap->isContains() || SpringTrap->isContains() || BirdTrap->isContains())
+			{
+				changeCharacteristicsHunt->SetDistanceBetweenObjects(Vector2f(100, 0), changeCharacteristicsHunt, 3);
+				if (FallTrap->isContains())
+				{
+					changeCharacteristicsHunt->SetPosition(Vector2f(FallTrap->getRealPosition().x * 1.038, FallTrap->getRealPosition().y + FallTrap->getHeight() / 6));
+					FallTrap->setTextRender(false);
+				}
+				else if (SpringTrap->isContains())
+				{
+					changeCharacteristicsHunt->SetPosition(Vector2f(SpringTrap->getRealPosition().x * 1.021, SpringTrap->getRealPosition().y + SpringTrap->getHeight() / 6));
+					SpringTrap->setTextRender(false);
+				}
+				else
+				{
+					changeCharacteristicsHunt->SetPosition(Vector2f(BirdTrap->getRealPosition().x * 1.008, BirdTrap->getRealPosition().y + BirdTrap->getHeight() / 6));
+					BirdTrap->setTextRender(false);
+				}
+
+				changeCharacteristicsHunt[0].Render(window);
+				changeCharacteristicsHunt[1].Render(window);
+				changeCharacteristicsHunt[2].Render(window);
+			}
+			else
+			{
+				FallTrap->setTextRender(true);
+				SpringTrap->setTextRender(true);
+				BirdTrap->setTextRender(true);
+			}
+
+			// Fish 
+			if (FishingRod->isContains() || SpearFishing->isContains())
+			{
+				changeCharacteristicsFish->SetDistanceBetweenObjects(Vector2f(100, 0), changeCharacteristicsFish, 3);
+				if (FishingRod->isContains())
+				{
+					changeCharacteristicsFish->SetPosition(Vector2f(FishingRod->getRealPosition().x * 1.038, FishingRod->getRealPosition().y + FishingRod->getHeight() / 6));
+					FishingRod->setTextRender(false);
+				}
+				else
+				{
+					changeCharacteristicsFish->SetPosition(Vector2f(SpearFishing->getRealPosition().x * 1.021, SpearFishing->getRealPosition().y + SpearFishing->getHeight() / 6));
+					SpearFishing->setTextRender(false);
+				}
+
+				changeCharacteristicsFish[0].Render(window);
+				changeCharacteristicsFish[1].Render(window);
+				changeCharacteristicsFish[2].Render(window);
+			}
+			else
+			{
+				FishingRod->setTextRender(true);
+				SpearFishing->setTextRender(true);
+			}
+
+			// Stay at fire
+				//  Methods
+			if (FireLighter->isContains() || FireStone->isContains() || FireMatches->isContains() || FireBow->isContains() || FireLens->isContains() )
+			{
+				changeCharacteristicsStayAtFire->SetDistanceBetweenObjects(Vector2f(100, 0), changeCharacteristicsStayAtFire, 3);
+				if (FireLighter->isContains())
+				{
+					changeCharacteristicsStayAtFire->SetPosition(Vector2f(FireLighter->getRealPosition().x * 1.038, FireLighter->getRealPosition().y + FireLighter->getHeight() / 6));
+					FireLighter->setTextRender(false);
+				}
+				else if (FireStone->isContains())
+				{
+					changeCharacteristicsStayAtFire->SetPosition(Vector2f(FireStone->getRealPosition().x * 1.021, FireStone->getRealPosition().y + FireStone->getHeight() / 6));
+					FireStone->setTextRender(false);
+				}
+				else if (FireMatches->isContains())
+				{
+					changeCharacteristicsStayAtFire->SetPosition(Vector2f(FireMatches->getRealPosition().x * 1.021, FireMatches->getRealPosition().y + FireMatches->getHeight() / 6));
+					FireMatches->setTextRender(false);
+				}
+				else if (FireBow->isContains())
+				{
+					changeCharacteristicsStayAtFire->SetPosition(Vector2f(FireBow->getRealPosition().x * 1.021, FireBow->getRealPosition().y + FireBow->getHeight() / 6));
+					FireBow->setTextRender(false);
+				}
+				else
+				{
+					changeCharacteristicsStayAtFire->SetPosition(Vector2f(FireLens->getRealPosition().x * 1.008, FireLens->getRealPosition().y + FireLens->getHeight() / 6));
+					FireLens->setTextRender(false);
+				}
+
+				changeCharacteristicsStayAtFire[0].Render(window);
+				changeCharacteristicsStayAtFire[1].Render(window);
+				changeCharacteristicsStayAtFire[2].Render(window);
+			}
+			else
+			{
+				FireLighter->setTextRender(true);
+				FireStone->setTextRender(true);
+				FireMatches->setTextRender(true);
+				FireBow->setTextRender(true);
+				FireLens->setTextRender(true);
+			}
+
+				// Stay at fire action 
+			if (StayAtFire->isContains())
+			{
+				changeCharacteristicStayAtFire->SetPosition(Vector2f(StayAtFire->getRealPosition().x * 1.038, StayAtFire->getRealPosition().y + StayAtFire->getHeight() / 6));
+				changeCharacteristicStayAtFire->SetDistanceBetweenObjects(Vector2f(100, 0), changeCharacteristicStayAtFire, 4);
+
+				StayAtFire->setTextRender(false);
+				changeCharacteristicStayAtFire[0].Render(window);
+				changeCharacteristicStayAtFire[1].Render(window);
+				changeCharacteristicStayAtFire[2].Render(window);
+				changeCharacteristicStayAtFire[3].Render(window);
+			}
+			else
+				StayAtFire->setTextRender(true);
+
+#pragma endregion
+
 
 #pragma region LostMenu
 			if (Character::CheckIFCharacteristicsBelowZero())
@@ -1104,76 +1387,6 @@ int main()
 
 				FailMenu->render(window, Vector2f(0, 0));
 			}
-#pragma endregion
-
-#pragma region OpenInventory
-
-			if (OpenInventoryContainer->getVisible())
-			{
-				Font font;
-				font.loadFromFile("CALIBRI.TTF");
-				Text Items, Items_Title, Items_Values, Tools, Tools_Title, Tools_Values;
-
-				Items.setFont(font);
-				Items_Title.setFont(font);
-				Items_Values.setFont(font);
-				Tools.setFont(font);
-				Tools_Title.setFont(font);
-				Tools_Values.setFont(font);
-
-				Items_Title.setString("Items");
-				Items.setString("Wood\nFood\nWater\nTinder\nMedicine");
-				Items_Values.setString(to_string(Inventory::ReturnNumberOfItems("wood")) + "\n" +
-					to_string(Inventory::ReturnNumberOfItems("food")) + "\n" +
-					to_string(Inventory::ReturnNumberOfItems("water")) + "\n" +
-					to_string(Inventory::ReturnNumberOfItems("tinder")) + "\n" +
-					to_string(Inventory::ReturnNumberOfItems("medicine")));
-				Tools_Title.setString("Tools");
-				Tools.setString("Axe\nFlashlight\nLighter\nFishing rod\nCompass\nMap\nMatches\nLens\nKnife\nRope\nSpear\nSpring trap\nBird trap\nFall trap");
-				Tools_Values.setString(to_string(Inventory::Check_Tool("axe")) + "\n" +
-					to_string(Inventory::Check_Tool("flashlight")) + "\n" +
-					to_string(Inventory::Check_Tool("lighter")) + "\n" +
-					to_string(Inventory::Check_Tool("fishing rod")) + "\n" +
-					to_string(Inventory::Check_Tool("compass")) + "\n" +
-					to_string(Inventory::Check_Tool("map")) + "\n" +
-					to_string(Inventory::Check_Tool("matches")) + "\n" +
-					to_string(Inventory::Check_Tool("lens")) + "\n" +
-					to_string(Inventory::Check_Tool("knife")) + "\n" +
-					to_string(Inventory::Check_Tool("rope")) + "\n" +
-					to_string(Inventory::Check_Tool("spear")) + "\n" +
-					to_string(Inventory::Check_Tool("spring trap")) + "\n" +
-					to_string(Inventory::Check_Tool("bird trap")) + "\n" +
-					to_string(Inventory::Check_Tool("fall trap")));
-
-				Items_Title.setCharacterSize(windowHeight / 20);
-				Items.setCharacterSize(windowHeight / 40);
-				Items_Values.setCharacterSize(windowHeight / 40);
-				Tools_Title.setCharacterSize(windowHeight / 20);
-				Tools.setCharacterSize(windowHeight / 40);
-				Tools_Values.setCharacterSize(windowHeight / 40);
-
-				Items_Title.setPosition((float)windowWidth * 0.5, (float)windowHeight * 0.12);
-				Items.setPosition((float)windowWidth * 0.5, (float)windowHeight * 0.21);
-				Items_Values.setPosition((float)windowWidth * 0.6, (float)windowHeight * 0.21);
-				Tools_Title.setPosition((float)windowWidth * 0.15, (float)windowHeight * 0.12);
-				Tools.setPosition((float)windowWidth * 0.15, (float) windowHeight * 0.21);
-				Tools_Values.setPosition((float)windowWidth * 0.27, (float)windowHeight * 0.21);
-
-				Items_Title.setFillColor(Color::Black);
-				Items.setFillColor(Color::Black);
-				Items_Values.setFillColor(Color::Black);
-				Tools_Title.setFillColor(Color::Black);
-				Tools.setFillColor(Color::Black);
-				Tools_Values.setFillColor(Color::Black);
-
-				window.draw(Items_Title);
-				window.draw(Items);
-				window.draw(Items_Values);
-				window.draw(Tools_Title);
-				window.draw(Tools);
-				window.draw(Tools_Values);
-			}
-
 #pragma endregion
 
 			window.draw(eventsDescription);

@@ -15,6 +15,9 @@ private:
 	Font* font;
 	Text text;
 	Vector2f size;
+	Vector2f position;
+	bool contains;
+	bool  renderText = true;
 public:
         T Action;
 		Button(Vector2f pos, IntRect intRect, std::string text)
@@ -89,6 +92,11 @@ public:
 			this->Action = func;
 		}
 
+		void setTextRender(bool value)
+		{
+			renderText = value;
+		}
+
 		void update(Vector2f pos) 
 		{
 			if (isActive && isVisible)
@@ -103,16 +111,30 @@ public:
 					else
 					{
 						this->sprite.setTexture(*(this->hover));
-						this->sprite.setColor(Color(255, 0, 0)); // test
+						this->sprite.setColor(Color(255, 0, 0)); // test		
+						contains = true;
 					}
 				}
 				else
 				{
 					this->sprite.setTexture(*(this->idle));
 					this->sprite.setColor(Color(255, 255, 255)); // test
+					contains = false;
 				}
 			}
+			else
+				contains = false;
 	    }
+
+		bool isContains(){ return contains; }
+
+		Vector2f getRealPosition(){	return position; }
+
+		int getWidth() { return size.x; }
+		
+		int getHeight() { return size.y; }
+
+
 		bool checkClick(Vector2f pos) 
 		{
 			if (isActive && isVisible)
@@ -140,12 +162,15 @@ public:
 		{
 			if (isVisible)
 			{
-				this->sprite.setPosition(offset + relPosition);
+				this->sprite.setPosition(offset + relPosition);				
 				this->text.setPosition(
 					this->sprite.getGlobalBounds().left + (this->size.x / 2) - (this->text.getGlobalBounds().width / 2),
 					this->sprite.getGlobalBounds().top + (this->size.y / 2) - (this->text.getGlobalBounds().height / 2) - (this->text.getCharacterSize() / 4));
+				if (position ==  Vector2f(0,0))
+					position = sprite.getPosition();
 				target.draw(this->sprite);
-				target.draw(this->text);
+				if (renderText)
+					target.draw(this->text);
 			}
 	    }
 };

@@ -334,3 +334,70 @@ int Inventory::ReturnNumberOfItems(string item_name)
 	if (item_name == "medicine")
 		return medicine;
 }
+
+void Inventory::DisplayInventory(sf::RenderWindow& window, sf::Vector2f windowResolution)
+{
+	sf::Font font;
+	font.loadFromFile("CALIBRI.TTF");
+	sf::Text Items, Items_Title, Items_Values, Tools, Tools_Title, Tools_Values;
+	sf::Color textColor = sf::Color::Black;
+
+	Items.setFont(font);
+	Items_Title.setFont(font);
+	Items_Values.setFont(font);
+	Tools.setFont(font);
+	Tools_Title.setFont(font);
+	Tools_Values.setFont(font);
+
+	Items_Title.setString("Items");
+	Items.setString("Wood\nFood\nWater\nTinder\nMedicine");
+	Items_Values.setString(to_string(Inventory::ReturnNumberOfItems("wood")) + "\n" +
+		to_string(Inventory::ReturnNumberOfItems("food")) + "\n" +
+		to_string(Inventory::ReturnNumberOfItems("water")) + "\n" +
+		to_string(Inventory::ReturnNumberOfItems("tinder")) + "\n" +
+		to_string(Inventory::ReturnNumberOfItems("medicine")));
+	Tools_Title.setString("Tools");
+	Tools.setString("Axe\nFlashlight\nLighter\nFishing rod\nCompass\nMap\nMatches\nLens\nKnife\nRope\nSpear\nSpring trap\nBird trap\nFall trap");
+	Tools_Values.setString(to_string(Inventory::Check_Tool("axe")) + "\n" +
+		to_string(Inventory::Check_Tool("flashlight")) + "\n" +
+		to_string(Inventory::Check_Tool("lighter")) + "\n" +
+		to_string(Inventory::Check_Tool("fishing rod")) + "\n" +
+		to_string(Inventory::Check_Tool("compass")) + "\n" +
+		to_string(Inventory::Check_Tool("map")) + "\n" +
+		to_string(Inventory::Check_Tool("matches")) + "\n" +
+		to_string(Inventory::Check_Tool("lens")) + "\n" +
+		to_string(Inventory::Check_Tool("knife")) + "\n" +
+		to_string(Inventory::Check_Tool("rope")) + "\n" +
+		to_string(Inventory::Check_Tool("spear")) + "\n" +
+		to_string(Inventory::Check_Tool("spring trap")) + "\n" +
+		to_string(Inventory::Check_Tool("bird trap")) + "\n" +
+		to_string(Inventory::Check_Tool("fall trap")));
+
+	Items_Title.setCharacterSize(windowResolution.y / 20);
+	Items.setCharacterSize(windowResolution.y / 40);
+	Items_Values.setCharacterSize(windowResolution.y / 40);
+	Tools_Title.setCharacterSize(windowResolution.y / 20);
+	Tools.setCharacterSize(windowResolution.y / 40);
+	Tools_Values.setCharacterSize(windowResolution.y / 40);
+
+	Items_Title.setPosition((float)windowResolution.x * 0.5, (float)windowResolution.y * 0.12);
+	Items.setPosition((float)windowResolution.x * 0.5, (float)windowResolution.y * 0.21);
+	Items_Values.setPosition((float)windowResolution.x * 0.6, (float)windowResolution.y * 0.21);
+	Tools_Title.setPosition((float)windowResolution.x * 0.15, (float)windowResolution.y * 0.12);
+	Tools.setPosition((float)windowResolution.x * 0.15, (float)windowResolution.y * 0.21);
+	Tools_Values.setPosition((float)windowResolution.x * 0.27, (float)windowResolution.y * 0.21);
+
+	Items_Title.setFillColor(textColor);
+	Items.setFillColor(textColor);
+	Items_Values.setFillColor(textColor);
+	Tools_Title.setFillColor(textColor);
+	Tools.setFillColor(textColor);
+	Tools_Values.setFillColor(textColor);
+
+	window.draw(Items_Title);
+	window.draw(Items);
+	window.draw(Items_Values);
+	window.draw(Tools_Title);
+	window.draw(Tools);
+	window.draw(Tools_Values);
+}

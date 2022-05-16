@@ -1,6 +1,7 @@
 #pragma once
 #include <map>
 #include <string>
+#include <SFML/Graphics.hpp>
 #include "Interfaces.h"
 
 using namespace std;
@@ -14,6 +15,7 @@ public:
 	static string LoseInventory();
 	static void DisplayCharacteristics();
 	static int ReturnNumberOfItems(string item_name);
+	static void DisplayInventory(sf::RenderWindow& window, sf::Vector2f windowResolution);
 
 	void ReloadData(map<std::string, int> data) override;
 	void DisplayStats() override;

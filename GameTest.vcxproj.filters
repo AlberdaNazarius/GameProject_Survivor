@@ -33,9 +33,6 @@
     <ClCompile Include="Character.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="Button.cpp">
-      <Filter>Resource Files\UI</Filter>
-    </ClCompile>
     <ClCompile Include="Container.cpp">
       <Filter>Resource Files\UI</Filter>
     </ClCompile>
