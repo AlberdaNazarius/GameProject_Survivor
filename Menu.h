@@ -1,7 +1,5 @@
 #pragma once
 #include "SFML/Graphics.hpp"
-#include "Button.h"
-#include "Container.h"
 #include "Panel.h"
 #include "Location.h"
 #include <iostream>
@@ -11,7 +9,7 @@ class Menu
 {
 public:
 	Menu();
-	~Menu() {};
+	~Menu();
 	void Draw();
 	static bool OpenMainWindow() { return openMainWindow; }	
 	static bool openMainWindow;	

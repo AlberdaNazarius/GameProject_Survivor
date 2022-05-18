@@ -74,20 +74,26 @@ Menu::Menu()
 	OptionsContainer->addChild(OptionsPanel);
 	OptionsPanel->addChild(CloseOptions);
 }
+Menu::~Menu()
+{
+	delete MenuContainer;
+	delete MenuPanel;
+	delete OptionsContainer;
+	delete OptionsPanel;
+	delete NewGame;
+	delete LoadSavedGame;
+	delete OpenOptions;
+	delete Quit;
+	delete CloseOptions; 
+}
 void Menu::Draw()
 {
-	
-
-
 	while (MenuWindow.isOpen())
 	{
 		while (MenuWindow.pollEvent(event))
 		{
 			switch (event.type)
 			{
-			case Event::Closed:
-				MenuWindow.close();
-				break;
 			case Event::MouseButtonPressed:
 				if (event.mouseButton.button == sf::Mouse::Left)
 				{
@@ -108,8 +114,6 @@ void Menu::Draw()
 				}
 				break;
 			}
-			if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel);
-			else if (event.mouseWheelScroll.wheel == sf::Mouse::HorizontalWheel);
 		}
 		LoadSavedGame->update((Vector2f)Mouse::getPosition(MenuWindow));
 		NewGame->update((Vector2f)Mouse::getPosition(MenuWindow));

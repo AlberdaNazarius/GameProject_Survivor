@@ -22,7 +22,7 @@ public:
 	void SetDeffaultCharacteristics() override;
 	std::map<std::string, int> WhatToSave() override;
 
-	static int food, water, wood, tinder, medicine;
+	static int food, water, wood, tinder, medicine, rope;
 	static map<string, bool> tools;
 	static int checkClickExploreArea;
 };

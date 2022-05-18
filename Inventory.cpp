@@ -10,6 +10,7 @@ Inventory::water = 1,
 Inventory::wood = 0,
 Inventory::tinder = 0,
 Inventory::medicine = 0,
+Inventory::rope = 0,
 Inventory::checkClickExploreArea = 0;
 
 map<string, bool> Inventory::tools = {
@@ -22,7 +23,6 @@ map<string, bool> Inventory::tools = {
 		{"matches", false},
 		{"lens", false},
 		{"knife", false},
-		{"rope", false},
 		{"spear", true},
 		{"spring trap", true},
 		{"bird trap", true},
@@ -66,9 +66,9 @@ string Inventory::ExploreArea(int counterClick)
 	}
 	if (2 + lucky - counterClick > 0)
 	{
-		previousValue = tools["rope"];
-		tools["rope"] = rand() % (2 + lucky - counterClick);
-		differenceValue = tools["rope"] - previousValue;
+		previousValue = rope;
+		rope = rand() % (2 + lucky - counterClick);
+		differenceValue = rope - previousValue;
 		stringstream temp;
 		temp << differenceValue;
 		temp >> difference;
@@ -124,12 +124,8 @@ string Inventory::ExploreArea(int counterClick)
 			if (result == "") result += "Medicine+" + difference;
 			else result += "\nMedicine+" + difference;
 	}
-	Character::ChangeEnergyLevel(-15);
-	GeneralTime::AddTime(0, 30);
-	Character::ChangeHungerLevel(-5);
-	Character::ChangeThirstLevel(-7);
+
 	if (counterClick == 1) Generator::GenerateEnvironments(3, 3);
-	Character::DisplayCharacteristics();
 	return result;
 }
 string Inventory::LoseInventory()
@@ -181,11 +177,6 @@ string Inventory::LoseInventory()
 		tools["knife"] = 0;
 		result += "\nKnife-1";
 	}
-	if (Check_Tool("rope") && !(rand() % 10))
-	{
-		tools["rope"] = 0;
-		result += "\nRope-1";
-	}
 	if (Check_Tool("spear") && !(rand() % 10))
 	{
 		tools["spear"] = 0;
@@ -220,6 +211,11 @@ void Inventory::Change_Item(string item_name, int number)
 	{
 		tools[item_name] = number;
 	}
+	if (item_name == "rope")	rope += number;
+	else
+	{
+		tools[item_name] = number;
+	}
 }
 void Inventory::DisplayCharacteristics()
 {
@@ -244,6 +240,7 @@ std::map<std::string, int> Inventory::WhatToSave()
 		{"Wood", wood},
 		{"Tinder", tinder},
 		{"Medicine", medicine},
+		{"Rope", rope},
 		{"Axe", (int)Inventory::tools["axe"]},
 		{"Flashlight", (int)Inventory::tools["flashlight"]},
 		{"Lighter", Inventory::tools["lighter"]},
@@ -253,7 +250,6 @@ std::map<std::string, int> Inventory::WhatToSave()
 		{"Matches", (int)Inventory::tools["matches"]},
 		{"Lens", (int)Inventory::tools["lens"]},
 		{"Knife", (int)Inventory::tools["knife"]},
-		{"Rope", (int)Inventory::tools["rope"]},
 		{"Spear", (int)Inventory::tools["spear"]},
 		{"SpringTrap", (int)Inventory::tools["spring trap"]},
 		{"BirdTrap", (int)Inventory::tools["bird trap"]},
@@ -269,6 +265,7 @@ void  Inventory::ReloadData(map<string, int> data)
 	wood = data["Wood"];
 	tinder = data["Tinder"];
 	medicine = data["Medicine"];
+	rope = data["Rope"];
 	Inventory::tools["axe"] = data["Axe"];
 	Inventory::tools["flashlight"] = data["Flashlight"];
 	Inventory::tools["lighter"] = data["Lighter"];
@@ -278,7 +275,6 @@ void  Inventory::ReloadData(map<string, int> data)
 	Inventory::tools["matches"] = data["Matches"];
 	Inventory::tools["lens"] = data["Lens"];
 	Inventory::tools["knife"] = data["Knife"];
-	Inventory::tools["rope"] = data["Rope"];
 	Inventory::tools["spear"] = data["Spear"];
 	Inventory::tools["spring trap"] = data["SpringTrap"];
 	Inventory::tools["bird trap"] = data["BirdTrap"];
@@ -292,6 +288,7 @@ void Inventory::DisplayStats()
 	cout << "Wood = " << wood;
 	cout << "Tinder = " << tinder;
 	cout << "Medicine = " << medicine;
+	cout << "Rope = " << rope;
 }
 
 void Inventory::SetDeffaultCharacteristics()
@@ -301,6 +298,7 @@ void Inventory::SetDeffaultCharacteristics()
 	wood = 0;
 	tinder = 0;
 	medicine = 0;
+	rope = 0;
 	checkClickExploreArea = 0;
 
 	Inventory::tools["axe"] = 1;
@@ -312,7 +310,6 @@ void Inventory::SetDeffaultCharacteristics()
 	Inventory::tools["matches"] = 1;
 	Inventory::tools["lens"] = 1;
 	Inventory::tools["knife"] = 0;
-	Inventory::tools["rope"] = 0;
 	Inventory::tools["spear"] = 1;
 	Inventory::tools["spring trap"] = 1;
 	Inventory::tools["bird trap"] = 1;
@@ -333,6 +330,8 @@ int Inventory::ReturnNumberOfItems(string item_name)
 		return tinder;
 	if (item_name == "medicine")
 		return medicine;
+	if (item_name == "rope")
+		return rope;
 }
 
 void Inventory::DisplayInventory(sf::RenderWindow& window, sf::Vector2f windowResolution)
@@ -350,14 +349,15 @@ void Inventory::DisplayInventory(sf::RenderWindow& window, sf::Vector2f windowRe
 	Tools_Values.setFont(font);
 
 	Items_Title.setString("Items");
-	Items.setString("Wood\nFood\nWater\nTinder\nMedicine");
+	Items.setString("Wood\nFood\nWater\nTinder\nMedicine\nRope");
 	Items_Values.setString(to_string(Inventory::ReturnNumberOfItems("wood")) + "\n" +
 		to_string(Inventory::ReturnNumberOfItems("food")) + "\n" +
 		to_string(Inventory::ReturnNumberOfItems("water")) + "\n" +
 		to_string(Inventory::ReturnNumberOfItems("tinder")) + "\n" +
-		to_string(Inventory::ReturnNumberOfItems("medicine")));
+		to_string(Inventory::ReturnNumberOfItems("medicine")) + "\n" +
+		to_string(Inventory::ReturnNumberOfItems("rope")));
 	Tools_Title.setString("Tools");
-	Tools.setString("Axe\nFlashlight\nLighter\nFishing rod\nCompass\nMap\nMatches\nLens\nKnife\nRope\nSpear\nSpring trap\nBird trap\nFall trap");
+	Tools.setString("Axe\nFlashlight\nLighter\nFishing rod\nCompass\nMap\nMatches\nLens\nKnife\nSpear\nSpring trap\nBird trap\nFall trap");
 	Tools_Values.setString(to_string(Inventory::Check_Tool("axe")) + "\n" +
 		to_string(Inventory::Check_Tool("flashlight")) + "\n" +
 		to_string(Inventory::Check_Tool("lighter")) + "\n" +
@@ -367,7 +367,6 @@ void Inventory::DisplayInventory(sf::RenderWindow& window, sf::Vector2f windowRe
 		to_string(Inventory::Check_Tool("matches")) + "\n" +
 		to_string(Inventory::Check_Tool("lens")) + "\n" +
 		to_string(Inventory::Check_Tool("knife")) + "\n" +
-		to_string(Inventory::Check_Tool("rope")) + "\n" +
 		to_string(Inventory::Check_Tool("spear")) + "\n" +
 		to_string(Inventory::Check_Tool("spring trap")) + "\n" +
 		to_string(Inventory::Check_Tool("bird trap")) + "\n" +

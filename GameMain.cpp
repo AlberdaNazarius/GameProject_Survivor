@@ -46,16 +46,16 @@ void HuntOveriwrite(int maxIndex, int spentEnergy, int indexOfEnvironment)
 	map<int, string>::iterator it;
 	srand(time(0));
 	int randValue = rand() % 2;
-	int minutes = 10 + rand() % 51;
+	int minutes = 60 + rand() % 91;
 	Character::ChangeEnergyLevel(spentEnergy);
 	GeneralTime::AddTime(0, minutes);
 	Character::ChangeHungerLevel(-10 * minutes / 60);
 	Character::ChangeThirstLevel(-15 * minutes / 60);
-	eventsDescription.setString("Energy-" + to_string(spentEnergy) + "\nHunger-" + to_string(-10 * minutes / 60) + "\nThirst-" + to_string(-15 * minutes / 60));
+	eventsDescription.setString("Energy" + to_string(spentEnergy) + "\nHunger" + to_string(-10 * minutes / 60) + "\nThirst" + to_string(-15 * minutes / 60));
 	if (randValue)
 	{
 		Character::ChangeConditionLevel(-5);
-		eventsDescription.setString("You were bitten by snake\nCondition-5\nEnergy-" + to_string(spentEnergy) + "\nHunger-" + to_string(-10 * minutes / 60) + "\nThirst-" + to_string(-15 * minutes / 60));
+		eventsDescription.setString("You were bitten by snake\nCondition-5\nEnergy" + to_string(spentEnergy) + "\nHunger" + to_string(-10 * minutes / 60) + "\nThirst" + to_string(-15 * minutes / 60));
 
 	}// because of beating by snake etc.
 	randValue = rand() % 3;
@@ -66,24 +66,24 @@ void HuntOveriwrite(int maxIndex, int spentEnergy, int indexOfEnvironment)
 			Forest forest;
 			it = forest.Hunt(maxIndex);
 			Inventory::Change_Item("food", it->first);
-			eventsDescription.setString(it->second+"\nEnergy-" + to_string(spentEnergy) + "\nHunger-" + to_string(-10 * minutes / 60) + "\nThirst-" + to_string(-15 * minutes / 60));
+			eventsDescription.setString(it->second+"\nEnergy" + to_string(spentEnergy) + "\nHunger" + to_string(-10 * minutes / 60) + "\nThirst" + to_string(-15 * minutes / 60));
 		}
 		if (indexOfEnvironment == 2)
 		{
 			Lake lake;
 			it = lake.Hunt(maxIndex);
 			Inventory::Change_Item("food", it->first);
-			eventsDescription.setString(it->second + "\nEnergy-" + to_string(spentEnergy) + "\nHunger-" + to_string(-10 * minutes / 60) + "\nThirst-" + to_string(-15 * minutes / 60));
+			eventsDescription.setString(it->second + "\nEnergy" + to_string(spentEnergy) + "\nHunger" + to_string(-10 * minutes / 60) + "\nThirst" + to_string(-15 * minutes / 60));
 		}
 		if (indexOfEnvironment == 3)
 		{
 			River river;
 			it = river.Hunt(maxIndex);
 			Inventory::Change_Item("food",it->first);
-			eventsDescription.setString(it->second + "\nEnergy-" + to_string(spentEnergy) + "\nHunger-" + to_string(-10 * minutes / 60) + "\nThirst-" + to_string(-15 * minutes / 60));
+			eventsDescription.setString(it->second + "\nEnergy" + to_string(spentEnergy) + "\nHunger" + to_string(-10 * minutes / 60) + "\nThirst" + to_string(-15 * minutes / 60));
 		}
 	}
-	else  eventsDescription.setString("It's nothing hunted\nEnergy-" + to_string(spentEnergy) + "\nHunger-" + to_string(-10 * minutes / 60) + "\nThirst-" + to_string(-15 * minutes / 60));
+	else  eventsDescription.setString("It's nothing hunted\nEnergy" + to_string(spentEnergy) + "\nHunger" + to_string(-10 * minutes / 60) + "\nThirst" + to_string(-15 * minutes / 60));
 	Character::DisplayCharacteristics();
 }
 
@@ -95,14 +95,18 @@ void UseAxe()
 {
 	srand(time(0));
 	Inventory::wood += 3 + rand() % 8;
-	Character::ChangeEnergyLevel(-15);
-	GeneralTime::AddTime(0, 30);
-	Character::ChangeHungerLevel(-5);
-	Character::ChangeThirstLevel(-7);
+	Character::ChangeEnergyLevel(-30);
+	GeneralTime::AddTime(1, 0);
+	Character::ChangeHungerLevel(-10);
+	Character::ChangeThirstLevel(-14);
 }
 void DontUseAxe(Container* container)
 {
 	container->setVisible(false);
+	Character::ChangeEnergyLevel(-15);
+	GeneralTime::AddTime(0, 30);
+	Character::ChangeHungerLevel(-5);
+	Character::ChangeThirstLevel(-7);
 }
 #pragma endregion
 
@@ -186,7 +190,7 @@ int main()
 #pragma region Events
 
 
-		Panel* EventsPanel = new Panel("Pictures/defaultPanelForText.png", Vector2f(MainPanel->getWidth() / 32, MainPanel->getHeight() / 21.6), MainPanel->getWidth() / 2.29, MainPanel->getHeight() / 1.1);
+		Panel* EventsPanel = new Panel("Pictures/defaultPanelForText.png", Vector2f(MainPanel->getWidth() / 32, MainPanel->getHeight() / 21.6), MainPanel->getWidth() / 2.29, MainPanel->getHeight() / 1.07);
 
 		MainPanel->addChild(EventsPanel);
 
@@ -198,6 +202,12 @@ int main()
 		eventsDescription.setCharacterSize(windowHeight / 50);
 		eventsDescription.setPosition(Vector2f(windowWidth / 20, windowHeight / 1.2));
 		eventsDescription.setFillColor(Color::Black);
+
+		Text characteristics;
+		characteristics.setFont(font);
+		characteristics.setCharacterSize(windowHeight / 50);
+		characteristics.setPosition(Vector2f(windowWidth / 8, windowHeight / 1.2));
+		characteristics.setFillColor(Color::Black);
 
 #pragma endregion
 
@@ -274,11 +284,13 @@ int main()
 
 #pragma region ExploreArea
 
+		string value;
+
 		SpriteWithText changeCharacteristicsUseAxe[] =
 		{
-			SpriteWithText("Pictures/Characteristics/Energy.png", "-15", Color::White, energyIcoSize),
-			SpriteWithText("Pictures/Characteristics/Hunger.png", "-5", Color::White, hungerIcoSize),
-			SpriteWithText("Pictures/Characteristics/Thirst.png", "-7", Color::White, thirstIcoSize),
+			SpriteWithText("Pictures/Characteristics/Energy.png", "-30", Color::White, energyIcoSize),
+			SpriteWithText("Pictures/Characteristics/Hunger.png", "-10", Color::White, hungerIcoSize),
+			SpriteWithText("Pictures/Characteristics/Thirst.png", "-14", Color::White, thirstIcoSize),
 		};
 
 		SpriteWithText changeCharacteristicsDontUseAxe[] =
@@ -404,8 +416,26 @@ int main()
 
 #pragma region Rest
 
-		Button<void(*)(int)>* RestButton = new Button<void(*)(int)>(Vector2f((float)MainPanel->getWidth() / 1.5, (float)MainPanel->getHeight() / 54), Vector2f((float)MainPanel->getWidth() / 6.4, (float)MainPanel->getHeight() / 2.16), "Rest");
-		RestButton->setDelegate(Character::Rest);
+		Button<void(*)(Container*, bool)>* RestButton = new Button<void(*)(Container*, bool)>(Vector2f((float)MainPanel->getWidth() / 1.5, (float)MainPanel->getHeight() / 54), Vector2f((float)MainPanel->getWidth() / 6.4, (float)MainPanel->getHeight() / 2.16), "Rest");
+		RestButton->setDelegate(ContainerSetVisible);
+
+		Container* RestContainer = new Container;
+		Panel* RestPanel = new Panel(Vector2f((float)windowWidth / 10, (float)windowHeight / 10), windowWidth * 0.8, windowHeight * 0.6);
+		RestContainer->setVisible(false);
+
+		Button<void(*)(int)>* RestThreeHours = new Button<void(*)(int)>(Vector2f((float)HuntPanel->getWidth() / 14.5, (float)HuntPanel->getHeight() / 2.5), Vector2f(StartFirePanel->getWidth() / 5.12, StartFirePanel->getHeight() / 6.48), "3 hours");
+		RestThreeHours->setDelegate(Character::Rest);
+
+		Button<void(*)(int)>* RestSixHours = new Button<void(*)(int)>(Vector2f((float)HuntPanel->getWidth() / 2.49, (float)HuntPanel->getHeight() / 2.5), Vector2f(StartFirePanel->getWidth() / 5.12, StartFirePanel->getHeight() / 6.48), "6 hours");
+		RestSixHours->setDelegate(Character::Rest);
+
+		Button<void(*)(int) >* RestEightHours = new Button<void(*)(int)>(Vector2f((float)HuntPanel->getWidth() / 1.36, (float)HuntPanel->getHeight() / 2.5), Vector2f(StartFirePanel->getWidth() / 5.12, StartFirePanel->getHeight() / 6.48), "8 hours");
+		RestEightHours->setDelegate(Character::Rest);
+
+		RestContainer->addChild(RestPanel);
+		RestPanel->addChild(RestThreeHours);
+		RestPanel->addChild(RestSixHours);
+		RestPanel->addChild(RestEightHours);
 
 #pragma endregion
 
@@ -575,6 +605,9 @@ int main()
 					if (event.mouseButton.button == sf::Mouse::Left)
 					{
 
+						characteristics.setString("");
+						eventsDescription.setString("");
+
 #pragma region StartFire
 
 						if (StartFire->checkClick((Vector2f)Mouse::getPosition(window)))
@@ -585,6 +618,7 @@ int main()
 							HuntContainer->setVisible(false);
 							FishContainer->setVisible(false);
 							IsUsedAxeContainer->setVisible(false);
+							RestContainer->setVisible(false);
 						}
 						if (FireLighter->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
@@ -645,25 +679,42 @@ int main()
 						if (ExploreArea->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
 							Inventory::checkClickExploreArea++;
-							string value = ExploreArea->Action(Inventory::checkClickExploreArea);
-							eventsDescription.setString(value);
+							value = ExploreArea->Action(Inventory::checkClickExploreArea);
 							if (Inventory::Check_Tool("axe")) IsUsedAxeContainer->setVisible(true);
+							else
+							{
+								Character::ChangeEnergyLevel(-15);
+								GeneralTime::AddTime(0, 30);
+								Character::ChangeHungerLevel(-5);
+								Character::ChangeThirstLevel(-7);
+								characteristics.setString("Energy-15\nHunger-5\nThirst-7");
+								eventsDescription.setString(value);
+							}
 							FirstVariantToTravel->setText(CaptionOfButton(0));
 							SecondVariantToTravel->setText(CaptionOfButton(1));
 							ThirdVariantToTravel->setText(CaptionOfButton(2));
 							StartFireContainer->setVisible(false);
 							HuntContainer->setVisible(false);
 							FishContainer->setVisible(false);
+							RestContainer->setVisible(false);
 						}
 						if (UseAxeButton->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
 							int previousValue = Inventory::wood;
 							UseAxeButton->Action();
-							if (Inventory::wood - previousValue) eventsDescription.setString("Wood+" + to_string(Inventory::wood) + "\n");
+							if (Inventory::wood - previousValue)
+							{
+								characteristics.setString("Energy-30\nHunger-10\nThirst-14");
+								eventsDescription.setString("Wood+" + to_string(Inventory::wood) + "\n" +value);
+							}
 							IsUsedAxeContainer->setVisible(false);
 						}
-						if (DontUseAxeButton->checkClick((Vector2f)Mouse::getPosition(window))) 
+						if (DontUseAxeButton->checkClick((Vector2f)Mouse::getPosition(window)))
+						{
 							DontUseAxeButton->Action(IsUsedAxeContainer);
+							characteristics.setString("Energy-15\nHunger-5\nThirst-7\n");
+							eventsDescription.setString(value);
+						}
 
 #pragma endregion
 
@@ -694,6 +745,7 @@ int main()
 							FishContainer->setVisible(false);
 							IsUsedAxeContainer->setVisible(false);
 							StayAtFireContainer->setVisible(false);
+							RestContainer->setVisible(false);
 						}
 						if (SecondVariantToTravel->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
@@ -720,6 +772,7 @@ int main()
 							FishContainer->setVisible(false);
 							IsUsedAxeContainer->setVisible(false);
 							StayAtFireContainer->setVisible(false);
+							RestContainer->setVisible(false);
 						}
 						if (ThirdVariantToTravel->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
@@ -746,6 +799,7 @@ int main()
 							FishContainer->setVisible(false);
 							IsUsedAxeContainer->setVisible(false);
 							StayAtFireContainer->setVisible(false);
+							RestContainer->setVisible(false);
 						}
 
 #pragma endregion
@@ -757,6 +811,7 @@ int main()
 							HuntButton->Action(HuntContainer, true);
 							IsUsedAxeContainer->setVisible(false);
 							StartFireContainer->setVisible(false);
+							RestContainer->setVisible(false);
 						}
 						if (FallTrap->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
@@ -781,6 +836,7 @@ int main()
 							FishButton->Action(FishContainer, true);
 							IsUsedAxeContainer->setVisible(false);
 							StartFireContainer->setVisible(false);
+							RestContainer->setVisible(false);
 						}
 						if (FishingRod->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
@@ -799,12 +855,29 @@ int main()
 
 						if (RestButton->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
-							RestButton->Action(4);
-							eventsDescription.setString("Energy+52\nHunger-28\nThirst-20");
+							RestButton->Action(RestContainer, true);
 							StartFireContainer->setVisible(false);     
 							HuntContainer->setVisible(false);
 							FishContainer->setVisible(false);
 							IsUsedAxeContainer->setVisible(false);
+						}
+						if (RestThreeHours->checkClick((Vector2f)Mouse::getPosition(window)))
+						{
+							RestThreeHours->Action(3);
+							eventsDescription.setString("Energy+39\nHunger-21\nThirst-15");
+							RestContainer->setVisible(false);
+						}
+						if (RestSixHours->checkClick((Vector2f)Mouse::getPosition(window)))
+						{
+							RestSixHours->Action(6);
+							eventsDescription.setString("Energy+78\nHunger-42\nThirst-30");
+							RestContainer->setVisible(false);
+						}
+						if (RestEightHours->checkClick((Vector2f)Mouse::getPosition(window)))
+						{
+							RestEightHours->Action(8);
+							eventsDescription.setString("Energy+100\nHunger-56\nThirst-40");
+							RestContainer->setVisible(false);
 						}
 
 #pragma endregion 
@@ -819,6 +892,7 @@ int main()
 							HuntContainer->setVisible(false);
 							FishContainer->setVisible(false);
 							IsUsedAxeContainer->setVisible(false);
+							RestContainer->setVisible(false);
 						}
 						if (CloseInventory->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
@@ -880,6 +954,7 @@ int main()
 							StartFireContainer->setActive(true);
 							StayAtFireContainer->setActive(true);
 							IsUsedAxeContainer->setVisible(false);
+							RestContainer->setVisible(false);
 
 							Data::SaveAllStaticData();
 							window.close();
@@ -982,6 +1057,9 @@ int main()
 #pragma region Rest
 
 			RestButton->update((Vector2f)Mouse::getPosition(window));
+			RestThreeHours->update((Vector2f)Mouse::getPosition(window));
+			RestSixHours->update((Vector2f)Mouse::getPosition(window));
+			RestEightHours->update((Vector2f)Mouse::getPosition(window));
 
 #pragma endregion
 
@@ -1032,6 +1110,12 @@ int main()
 
 #pragma endregion
 
+#pragma region Rest
+
+			RestContainer->render(window, Vector2f(0, 0));
+
+#pragma endregion
+
 #pragma region StartFire
 
 			if (!Character::IsStayAtFire())
@@ -1042,7 +1126,7 @@ int main()
 
 			if (GeneralTime::DeltaTime(Character::startedDay, Character::startedHour) > 2)
 			{
-				StayAtFireContainer->setVisible(false); // an example; it's not necessary must be 5
+				StayAtFireContainer->setVisible(false); // an example; it's not necessary must be 2
 				Character::SetStayAtFire(false);
 			}
 			if (StayAtFireContainer->getVisible()) StartFire->setActive(false);
@@ -1390,6 +1474,7 @@ int main()
 #pragma endregion
 
 			window.draw(eventsDescription);
+			window.draw(characteristics);
 
 			window.display();
 		}
