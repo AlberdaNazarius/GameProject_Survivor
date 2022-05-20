@@ -28,6 +28,7 @@ enum Bars
 };
 Text eventsDescription;
 
+
 #pragma region ChooseWhereToGo
 
 string CaptionOfButton(int index)
@@ -50,12 +51,12 @@ void HuntOveriwrite(int maxIndex, int spentEnergy, int indexOfEnvironment)
 	Character::ChangeEnergyLevel(spentEnergy);
 	GeneralTime::AddTime(0, minutes);
 	Character::ChangeHungerLevel(-10 * minutes / 60);
-	Character::ChangeThirstLevel(-15 * minutes / 60);
-	eventsDescription.setString("Energy" + to_string(spentEnergy) + "\nHunger" + to_string(-10 * minutes / 60) + "\nThirst" + to_string(-15 * minutes / 60));
+	Character::ChangeThirstLevel(-14 * minutes / 60);
+	eventsDescription.setString("Energy" + to_string(spentEnergy) + "\nHunger" + to_string(-10 * minutes / 60) + "\nThirst" + to_string(-14 * minutes / 60));
 	if (randValue)
 	{
 		Character::ChangeConditionLevel(-5);
-		eventsDescription.setString("You were bitten by snake\nCondition-5\nEnergy" + to_string(spentEnergy) + "\nHunger" + to_string(-10 * minutes / 60) + "\nThirst" + to_string(-15 * minutes / 60));
+		eventsDescription.setString("You were bitten by snake\nCondition-5\nEnergy" + to_string(spentEnergy) + "\nHunger" + to_string(-10 * minutes / 60) + "\nThirst" + to_string(-14* minutes / 60));
 
 	}// because of beating by snake etc.
 	randValue = rand() % 3;
@@ -66,24 +67,24 @@ void HuntOveriwrite(int maxIndex, int spentEnergy, int indexOfEnvironment)
 			Forest forest;
 			it = forest.Hunt(maxIndex);
 			Inventory::Change_Item("food", it->first);
-			eventsDescription.setString(it->second+"\nEnergy" + to_string(spentEnergy) + "\nHunger" + to_string(-10 * minutes / 60) + "\nThirst" + to_string(-15 * minutes / 60));
+			eventsDescription.setString(it->second+"\nEnergy" + to_string(spentEnergy) + "\nHunger" + to_string(-10 * minutes / 60) + "\nThirst" + to_string(-14 * minutes / 60));
 		}
 		if (indexOfEnvironment == 2)
 		{
 			Lake lake;
 			it = lake.Hunt(maxIndex);
 			Inventory::Change_Item("food", it->first);
-			eventsDescription.setString(it->second + "\nEnergy" + to_string(spentEnergy) + "\nHunger" + to_string(-10 * minutes / 60) + "\nThirst" + to_string(-15 * minutes / 60));
+			eventsDescription.setString(it->second + "\nEnergy" + to_string(spentEnergy) + "\nHunger" + to_string(-10 * minutes / 60) + "\nThirst" + to_string(-14 * minutes / 60));
 		}
 		if (indexOfEnvironment == 3)
 		{
 			River river;
 			it = river.Hunt(maxIndex);
 			Inventory::Change_Item("food",it->first);
-			eventsDescription.setString(it->second + "\nEnergy" + to_string(spentEnergy) + "\nHunger" + to_string(-10 * minutes / 60) + "\nThirst" + to_string(-15 * minutes / 60));
+			eventsDescription.setString(it->second + "\nEnergy" + to_string(spentEnergy) + "\nHunger" + to_string(-10* minutes / 60) + "\nThirst" + to_string(-14 * minutes / 60));
 		}
 	}
-	else  eventsDescription.setString("It's nothing hunted\nEnergy" + to_string(spentEnergy) + "\nHunger" + to_string(-10 * minutes / 60) + "\nThirst" + to_string(-15 * minutes / 60));
+	else  eventsDescription.setString("It's nothing hunted\nEnergy" + to_string(spentEnergy) + "\nHunger" + to_string(-10 * minutes / 60) + "\nThirst" + to_string(-14 * minutes / 60));
 	Character::DisplayCharacteristics();
 }
 
@@ -118,9 +119,11 @@ void StayAtFireSetVisible(Container* cont, bool value, int minutes, int takenEne
 	GeneralTime::AddTime(0, minutes);
 	Character::ChangeEnergyLevel(takenEnergy);
 	Character::ChangeHungerLevel(-10 * minutes / 60);
-	Character::ChangeThirstLevel(-15 * minutes / 60);
+	Character::ChangeThirstLevel(-14 * minutes / 60);
 	Character::DisplayCharacteristics();
 	Character::SetStayAtFire(true);
+	if (-10 * minutes / 60) eventsDescription.setString("You have more than 2 hours until fire burns out\nEnergy" + to_string(takenEnergy) + "\nHunger" + to_string(-10*minutes/60) + "\nThirst" + to_string(-14*minutes/60));
+	else eventsDescription.setString("You have more than 2 hours until fire burns out\nEnergy" + to_string(takenEnergy) + "\nThirst" + to_string(-14 * minutes / 60));
 }
 void ContainerSetVisible(Container* cont, bool value)
 {
@@ -150,6 +153,7 @@ void CallMenu(RenderWindow& window, Menu& obj)
 
 int main()
 {
+	srand(time(0));
 	const int windowWidth = VideoMode::getDesktopMode().width;
 	const int windowHeight = VideoMode::getDesktopMode().height;
 	//const int windowWidth = 700;
@@ -321,7 +325,6 @@ int main()
 #pragma endregion
 
 #pragma region ChooseWhereToGo
-		Generator::GenerateEnvironments(3, 3);
 	
 		SpriteWithText changeCharacteristicsChooseWhereToGo[] =
 		{
@@ -411,6 +414,17 @@ int main()
 
 		if (!Inventory::Check_Tool("fishing rod")) FishingRod->setVisible(false);
 		if (!Inventory::Check_Tool("spear")) SpearFishing->setVisible(false);
+
+		if (Location::LocationCurrent != 1)
+		{
+			HuntButton->setVisible(false);
+			FishButton->setVisible(true);
+		}
+		if (Location::LocationCurrent == 1)
+		{
+			FishButton->setVisible(false);
+			HuntButton->setVisible(true);
+		}
 
 #pragma endregion
 
@@ -584,10 +598,11 @@ int main()
 
 #pragma endregion
 
+		int hours = GeneralTime::GetHours();
+		int days = GeneralTime::GetDay();
 
 		// Attaching pictures to environments
-		Forest::SetPicture("Pictures/Environment.jpg");
-		Lake::SetPicture("Pictures/Lake.jpg");
+
 		//Main cycle
 		while (window.isOpen())
 		{
@@ -612,50 +627,47 @@ int main()
 
 						if (StartFire->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
-							StartFire->Action(StartFireContainer, true);
-							Character::startedHour = GeneralTime::GetHours();
-							Character::startedDay = GeneralTime::GetDay();
+							if (Inventory::wood < 5) eventsDescription.setString("You need at  least 5 iteams of Wood to Start Fire");
+							else
+							{
+								StartFire->Action(StartFireContainer, true);
+								Character::startedHour = GeneralTime::GetHours();
+								Character::startedDay = GeneralTime::GetDay();
+							}
 							HuntContainer->setVisible(false);
 							FishContainer->setVisible(false);
 							IsUsedAxeContainer->setVisible(false);
 							RestContainer->setVisible(false);
+							OpenInventoryContainer->setVisible(false);
+							for (Panel* x : craftMenus)
+								x->setVisible(false);
 						}
 						if (FireLighter->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
-							eventsDescription.setString("You have more than 2 hours until fire burns out\nEnergy-3");
-
 							FireLighter->Action(StayAtFireContainer, true, 5, -3);
 							Inventory::Change_Item("wood", -5);
 							StartFireContainer->setVisible(false);
 						}
 						if (FireStone->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
-							eventsDescription.setString("You have more than 2 hours until fire burns out\nEnergy-20");
-
 							FireStone->Action(StayAtFireContainer, true, 40, -20);
 							Inventory::Change_Item("wood", -5);
 							StartFireContainer->setVisible(false);
 						}
 						if (FireMatches->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
-							eventsDescription.setString("You have more than 2 hours until fire burns out\nEnergy-5");
-
 							FireMatches->Action(StayAtFireContainer, true, 5, -5);
 							Inventory::Change_Item("wood", -5);
 							StartFireContainer->setVisible(false);
 						}
 						if (FireBow->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
-							eventsDescription.setString("You have more than 2 hours until fire burns out\nEnergy-25");
-
 							FireBow->Action(StayAtFireContainer, true, 60, -25);
 							Inventory::Change_Item("wood", -5);
 							StartFireContainer->setVisible(false);
 						}
 						if (FireLens->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
-							eventsDescription.setString("You have more than 2 hours until fire burns out\nEnergy-15");
-
 							FireLens->Action(StayAtFireContainer, true, 30, -15);
 							Inventory::Change_Item("wood", -5);
 							StartFireContainer->setVisible(false);
@@ -666,8 +678,8 @@ int main()
 
 							int minutes = 60;
 							GeneralTime::AddTime(0, minutes);
-							Character::ChangeHungerLevel(minutes / 60 * -5);
-							Character::ChangeThirstLevel(minutes / 60 * -7);
+							Character::ChangeHungerLevel(minutes / 60 * -10);
+							Character::ChangeThirstLevel(minutes / 60 * -14);
 							StayAtFire->Action(minutes);
 							Character::ChangeEnergyLevel(minutes / 6);
 							Character::DisplayCharacteristics();
@@ -697,6 +709,9 @@ int main()
 							HuntContainer->setVisible(false);
 							FishContainer->setVisible(false);
 							RestContainer->setVisible(false);
+							OpenInventoryContainer->setVisible(false);
+							for (Panel* x : craftMenus)
+								x->setVisible(false);
 						}
 						if (UseAxeButton->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
@@ -705,7 +720,7 @@ int main()
 							if (Inventory::wood - previousValue)
 							{
 								characteristics.setString("Energy-30\nHunger-10\nThirst-14");
-								eventsDescription.setString("Wood+" + to_string(Inventory::wood) + "\n" +value);
+								eventsDescription.setString("Wood+" + to_string(Inventory::wood - previousValue) + "\n" +value);
 							}
 							IsUsedAxeContainer->setVisible(false);
 						}
@@ -730,14 +745,17 @@ int main()
 							Character::ChangeEnergyLevel(-15);
 							GeneralTime::AddTime(1, 0);
 							Character::ChangeHungerLevel(-10);
-							Character::ChangeThirstLevel(-15);
+							Character::ChangeThirstLevel(-14);
 							string value = Inventory::LoseInventory();
-							eventsDescription.setString("Energy-15\nHunger-10\nThirst-15" + value);
+							eventsDescription.setString(value);
+							if (eventsDescription.getString() != "") characteristics.setString("Energy-15\nHunger-10\nThirst-14");
+							else eventsDescription.setString("Energy-15\nHunger-10\nThirst-14");
 							if (posibilityOfBeingHurted)
 							{
 								Character::ChangeConditionLevel(-5);
-								//cout << "You were hurted during travelling" << endl;
-								eventsDescription.setString("Energy-15\nHunger-10\nThirst-15\nYou were hurted during travelling\nCondition-5" + value);
+								eventsDescription.setString(value);
+								if (eventsDescription.getString() != "") characteristics.setString("Energy-15\nHunger-10\nThirst-14\nYou were hurted during travelling\nCondition-5");
+								else eventsDescription.setString("Energy-15\nHunger-10\nThirst-14\nYou were hurted during travelling\nCondition-5");
 							}
 							Character::DisplayCharacteristics();
 							StartFireContainer->setVisible(false);
@@ -746,6 +764,9 @@ int main()
 							IsUsedAxeContainer->setVisible(false);
 							StayAtFireContainer->setVisible(false);
 							RestContainer->setVisible(false);
+							OpenInventoryContainer->setVisible(false);
+							for (Panel* x : craftMenus)
+								x->setVisible(false);
 						}
 						if (SecondVariantToTravel->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
@@ -757,14 +778,18 @@ int main()
 							Character::ChangeEnergyLevel(-15);
 							GeneralTime::AddTime(1, 0);
 							Character::ChangeHungerLevel(-10);
-							Character::ChangeThirstLevel(-15);
+							Character::ChangeThirstLevel(-14);
 							string value = Inventory::LoseInventory();
-							eventsDescription.setString("Energy-15\nHunger-10\nThirst-15" + value);
+							eventsDescription.setString(value);
+							if (eventsDescription.getString() != "") characteristics.setString("Energy-15\nHunger-10\nThirst-14");
+							else eventsDescription.setString("Energy-15\nHunger-10\nThirst-14");
 							if (posibilityOfBeingHurted)
 							{
 								Character::ChangeConditionLevel(-5);
 								//cout << "You were hurted during travelling" << endl;
-								eventsDescription.setString("Energy-15\nHunger-10\nThirst-15\nYou were hurted during travelling\nCondition-5" + value);
+								eventsDescription.setString(value);
+								if (eventsDescription.getString() != "") characteristics.setString("Energy-15\nHunger-10\nThirst-14\nYou were hurted during travelling\nCondition-5");
+								else eventsDescription.setString("Energy-15\nHunger-10\nThirst-14\nYou were hurted during travelling\nCondition-5");
 							}
 							Character::DisplayCharacteristics();
 							StartFireContainer->setVisible(false);
@@ -773,6 +798,9 @@ int main()
 							IsUsedAxeContainer->setVisible(false);
 							StayAtFireContainer->setVisible(false);
 							RestContainer->setVisible(false);
+							OpenInventoryContainer->setVisible(false);
+							for (Panel* x : craftMenus)
+								x->setVisible(false);
 						}
 						if (ThirdVariantToTravel->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
@@ -784,14 +812,18 @@ int main()
 							Character::ChangeEnergyLevel(-15);
 							GeneralTime::AddTime(1, 0);
 							Character::ChangeHungerLevel(-10);
-							Character::ChangeThirstLevel(-15);
+							Character::ChangeThirstLevel(-14);
 							string value = Inventory::LoseInventory();
-							eventsDescription.setString("Energy-15\nHunger-10\nThirst-15" + value);
+							eventsDescription.setString(value);
+							if (eventsDescription.getString() != "") characteristics.setString("Energy-15\nHunger-10\nThirst-14");
+							else eventsDescription.setString("Energy-15\nHunger-10\nThirst-14");
 							if (posibilityOfBeingHurted)
 							{
 								Character::ChangeConditionLevel(-5);
 								//cout << "You were hurted during travelling" << endl;
-								eventsDescription.setString("Energy-15\nHunger-10\nThirst-15\nYou were hurted during travelling\nCondition-5" + value);
+								eventsDescription.setString(value);
+								if (eventsDescription.getString() != "") characteristics.setString("Energy-15\nHunger-10\nThirst-14\nYou were hurted during travelling\nCondition-5");
+								else eventsDescription.setString("Energy-15\nHunger-10\nThirst-14\nYou were hurted during travelling\nCondition-5");
 							}
 							Character::DisplayCharacteristics();
 							StartFireContainer->setVisible(false);
@@ -800,6 +832,9 @@ int main()
 							IsUsedAxeContainer->setVisible(false);
 							StayAtFireContainer->setVisible(false);
 							RestContainer->setVisible(false);
+							OpenInventoryContainer->setVisible(false);
+							for (Panel* x : craftMenus)
+								x->setVisible(false);
 						}
 
 #pragma endregion
@@ -812,6 +847,9 @@ int main()
 							IsUsedAxeContainer->setVisible(false);
 							StartFireContainer->setVisible(false);
 							RestContainer->setVisible(false);
+							OpenInventoryContainer->setVisible(false);
+							for (Panel* x : craftMenus)
+								x->setVisible(false);
 						}
 						if (FallTrap->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
@@ -837,6 +875,9 @@ int main()
 							IsUsedAxeContainer->setVisible(false);
 							StartFireContainer->setVisible(false);
 							RestContainer->setVisible(false);
+							OpenInventoryContainer->setVisible(false);
+							for (Panel* x : craftMenus)
+								x->setVisible(false);
 						}
 						if (FishingRod->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
@@ -860,6 +901,9 @@ int main()
 							HuntContainer->setVisible(false);
 							FishContainer->setVisible(false);
 							IsUsedAxeContainer->setVisible(false);
+							OpenInventoryContainer->setVisible(false);
+							for (Panel* x : craftMenus)
+								x->setVisible(false);
 						}
 						if (RestThreeHours->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
@@ -893,6 +937,8 @@ int main()
 							FishContainer->setVisible(false);
 							IsUsedAxeContainer->setVisible(false);
 							RestContainer->setVisible(false);
+							for (Panel* x : craftMenus)
+								x->setVisible(false);
 						}
 						if (CloseInventory->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
@@ -939,6 +985,8 @@ int main()
 							IsUsedAxeContainer->setActive(true);
 							FailMenu->setActive(false);
 							Restart->Action();
+							StartFireContainer->setActive(false);
+							IsUsedAxeContainer->setActive(false);
 						}
 
 #pragma endregion
@@ -947,14 +995,21 @@ int main()
 
 						if (OpenMenu->checkClick((Vector2f)Mouse::getPosition(window)) || OpenMainMenu->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							FailMenu->setActive(false);
 							MainContainer->setActive(true);
 							HuntContainer->setActive(true);
+							HuntContainer->setVisible(false);
 							FishContainer->setActive(true);
+							FishContainer->setVisible(false);
 							OpenInventoryContainer->setActive(true);
+							OpenInventoryContainer->setVisible(false);
 							StartFireContainer->setActive(true);
+							StartFireContainer->setVisible(false);
 							StayAtFireContainer->setActive(true);
 							IsUsedAxeContainer->setVisible(false);
 							RestContainer->setVisible(false);
+							for (Panel* x : craftMenus)
+								x->setVisible(false);
 
 							Data::SaveAllStaticData();
 							window.close();
@@ -972,6 +1027,7 @@ int main()
 							HuntContainer->setVisible(false);
 							FishContainer->setVisible(false);
 							IsUsedAxeContainer->setVisible(false);
+							OpenInventoryContainer->setVisible(false);
 						}
 						for (map<Button<bool(*)(string)>*, string>::iterator it = craftBut.begin(); it != craftBut.end(); ++it)
 						{
@@ -1004,7 +1060,6 @@ int main()
 				if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel);
 				else if (event.mouseWheelScroll.wheel == sf::Mouse::HorizontalWheel);
 			}
-
 		
 			// Update 
 #pragma region StartFire
@@ -1131,7 +1186,7 @@ int main()
 			}
 			if (StayAtFireContainer->getVisible()) StartFire->setActive(false);
 			else StartFire->setActive(true);
-			if (Inventory::wood < 5) StartFire->setActive(false);
+
 			StartFireContainer->render(window, Vector2f(0, 0));
 			StayAtFireContainer->render(window, Vector2f(0, 0));
 
@@ -1173,6 +1228,33 @@ int main()
 			if (!Inventory::Check_Tool("fall trap")) FallTrap->setVisible(false);
 			if (!Inventory::Check_Tool("spring trap")) SpringTrap->setVisible(false);
 			if (!Inventory::Check_Tool("bird trap")) BirdTrap->setVisible(false);
+
+#pragma endregion
+
+#pragma region TemperatureAndWarmth
+
+			if (GeneralTime::GetHours() < 17 && GeneralTime::GetHours() > 7)
+			{
+				if (GeneralTime::DeltaTime(days, hours) >= 2)
+				{
+					Location::ChangeTemperature(1 + rand() % 3);
+					hours = GeneralTime::GetHours();
+					days = GeneralTime::GetDay();
+					Character::ChangeWarmthLevel(5);
+					eventsDescription.setString("ChangedTemperature" + to_string(Location::GetTemperature())); // for test
+				}
+			}
+			if (GeneralTime::GetHours() > 17 || GeneralTime::GetHours() < 7)
+			{
+				if (GeneralTime::DeltaTime(days, hours) >= 2)
+				{
+					Location::ChangeTemperature(-3 + rand() % 3);
+					hours = GeneralTime::GetHours();
+					days = GeneralTime::GetDay();
+					Character::ChangeWarmthLevel(-5);
+					eventsDescription.setString("ChangedTemperature" + to_string(Location::GetTemperature())); // for test
+				}
+			}
 
 #pragma endregion
 

@@ -32,6 +32,11 @@ void Location::CheckWhatEnvironment(int environmentIndex)
 		auto lake = (Lake*)Location::CurrentLocation;
 		lake->SetBackground(Sprite, texture, Lake::GetPicture(), windowWidth, windowHeight);
 	}
+	if (environmentIndex == 3)
+	{
+		auto river = (River*)Location::CurrentLocation;
+		river->SetBackground(Sprite, texture, River::GetPicture(), windowWidth, windowHeight);
+	}
 }
 
 void Environment::SetBackground(sf::Sprite& sprite, sf::Texture& texture, string picture, int windowWidth, int windowHeight)
@@ -126,9 +131,8 @@ void Location::DisplayStats()
 
 void Location::SetDeffaultCharacteristics()
 {
-	temperature = 18;
+	temperature = 10;
 	Shelter = 0;
-	LocationCurrent = 1;
 }
 
 std::map<std::string, int> GeneralTime::WhatToSave()
@@ -187,11 +191,11 @@ Forest::Forest() : Environment()
 	index = 1;
 	animals =
 	{
-		{ 1, "Bird"},
-		{ 2, "Squirrel"},
-		{ 3, "Hare"},
-		{ 4, "Fox"},
-		{ 6, "Deer"},
+		{ 3, "Bird"},
+		{ 4, "Squirrel"},
+		{ 5, "Hare"},
+		{ 6, "Fox"},
+		{ 8, "Deer"},
 	};
 }
 
@@ -200,9 +204,9 @@ Lake::Lake() : Environment()
 	index = 2;
 	animals =
 	{
-		{ 3, "Duck"},
-		{ 2, "Fish"},
-		{ 1, "Fog"},
+		{ 5, "Duck"},
+		{ 4, "Fish"},
+		{ 3, "Fog"},
 	};
 }
 
@@ -211,8 +215,8 @@ River::River() : Environment()
 	index = 3;
 	animals =
 	{
-		{ 3, "Beaver"},
-		{ 2, "Fish"},
+		{ 5, "Beaver"},
+		{ 4, "Fish"},
 	};
 }
 

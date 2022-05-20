@@ -64,18 +64,6 @@ string Inventory::ExploreArea(int counterClick)
 			if (result == "") result += "Flashlight+" + difference;
 			else result += "\nFlashlight+" + difference;
 	}
-	if (2 + lucky - counterClick > 0)
-	{
-		previousValue = rope;
-		rope = rand() % (2 + lucky - counterClick);
-		differenceValue = rope - previousValue;
-		stringstream temp;
-		temp << differenceValue;
-		temp >> difference;
-		if (differenceValue > 0)
-			if (result == "") result += "Rope+" + difference;
-			else result += "\nRope+" + difference;
-	}
 	if (1 + lucky - counterClick > 0)
 	{
 		previousValue = food;
@@ -88,10 +76,10 @@ string Inventory::ExploreArea(int counterClick)
 			if (result == "") result += "Food+" + difference;
 			else result += "\nFood+" + difference;
 	}
-	if (5 + lucky - counterClick > 0)
+	if (6 + lucky - counterClick > 0)
 	{
 		previousValue = water;
-		water += rand() % (5 + lucky - counterClick);
+		water += 1 + rand() % (6 + lucky - counterClick);
 		differenceValue = water - previousValue;
 		stringstream temp;
 		temp << differenceValue;
@@ -100,10 +88,10 @@ string Inventory::ExploreArea(int counterClick)
 			if (result == "") result += "Water+" + difference;
 			else result += "\nWater+" + difference;
 	}
-	if (3 + lucky - counterClick > 0)
+	if (5 + lucky - counterClick > 0)
 	{
 		previousValue = tinder;
-		tinder += rand() % (3 + lucky - counterClick);
+		tinder += rand() % (5 + lucky - counterClick);
 		differenceValue = tinder - previousValue;
 		stringstream temp;
 		temp << differenceValue;
@@ -135,52 +123,62 @@ string Inventory::LoseInventory()
 	if (Check_Tool("axe") && !(rand() % 10))
 	{
 		tools["axe"] = 0;
-		result = "\nAxe-1";
+		if (result == "") result += "Axe-1";
+		else result += "Axe-1";
 	}
 	if (Check_Tool("flashlight") && !(rand() % 10))
 	{
 		tools["flashlight"] = 0;
-		result += "\nFlashlight-1";
+		if (result == "") 	result += "Flashlight-1";
+		else 	result += "\nFlashlight-1";
 	}
 	if (Check_Tool("lighter") && !(rand() % 10))
 	{
 		tools["lighter"] = 0;
-		result += "\nLighter-1";
+		if (result == "")	result += "Lighter-1";
+		else	result += "\nLighter-1";
 	}
 	if (Check_Tool("fishing rod") && !(rand() % 10))
 	{
 		tools["fishing rod"] = 0;
-		result += "\nFishing rod-1";
+		if (result == "")	result += "Fishing rod-1";
+		else	result += "\nFishing rod-1";
 	}
 	if (Check_Tool("compass") && !(rand() % 10))
 	{
 		tools["compass"] = 0;
-		result += "\nCompass-1";
+		if (result == "") 	result += "Compass-1";
+		else 	result += "\nCompass-1";
 	}
 	if (Check_Tool("map") && !(rand() % 10))
 	{
 		tools["map"] = 0;
-		result += "\nMap-1";
+		if (result == "")	result += "Map-1";
+		else	result += "\nMap-1";
 	}
 	if (Check_Tool("matches") && !(rand() % 10))
 	{
 		tools["matches"] = 0;
-		result += "\nMatches-1";
+		if (result == "")	result += "Matches-1";
+		else	result += "\nMatches-1";
 	}
 	if (Check_Tool("lens") && !(rand() % 10))
 	{
 		tools["lens"] = 0;
-		result += "\nLens-1";
+		if (result == "")	result += "Lens-1";
+		else	result += "\nLens-1";
 	}
 	if (Check_Tool("knife") && !(rand() % 10))
 	{
 		tools["knife"] = 0;
-		result += "\nKnife-1";
+		if (result == "")	result += "Knife-1";
+		else	result += "\nKnife-1";
 	}
 	if (Check_Tool("spear") && !(rand() % 10))
 	{
 		tools["spear"] = 0;
-		result += "\nSpear-1";
+		if (result == "")	result += "Spear-1";
+		else	result += "\nSpear-1";
 	}
 	return result;
  }

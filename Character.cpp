@@ -31,8 +31,10 @@ void Character::ChangeThirstLevel(int water)
 void Character::ChangeWarmthLevel(int warmth)
 {
     Character::warmth += warmth;
+	Character::condition += warmth / 5;
 	if (Character::warmth > 100) Character::warmth = 100;
 	if (Character::warmth < 0) Character::warmth = 0;
+	
 }
 void Character::ChangeEnergyLevel(int energy)
 {
@@ -50,10 +52,10 @@ void Character::ChangeConditionLevel(int points)
 }
 void Character::Rest(int hours)
 {
-	Character::ChangeEnergyLevel(hours * 13); // sleeping for 8 hours will fully restore energy
+	Character::ChangeEnergyLevel(13* hours ); // sleeping for 8 hours will fully restore energy
 	GeneralTime::AddTime(hours, 0);
-	Character::ChangeThirstLevel(hours * -5);
-	Character::ChangeHungerLevel(hours * -7);
+	Character::ChangeThirstLevel(-5 * hours);
+	Character::ChangeHungerLevel(-7* hours);
 
 	//test
 	DisplayCharacteristics();

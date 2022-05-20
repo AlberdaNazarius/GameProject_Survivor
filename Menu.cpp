@@ -1,4 +1,6 @@
 #include "Menu.h"
+#include "Character.h"
+#include <ctime>
 
 RenderWindow Menu::MenuWindow(sf::VideoMode(VideoMode::getDesktopMode().width, VideoMode::getDesktopMode().height), "Menu", sf::Style::Fullscreen);
 
@@ -51,6 +53,9 @@ Menu::Menu()
 
 	LoadSavedGame = new Button<void(*)(bool)>(Vector2f(MenuPanel->getWidth() / 3.76, MenuPanel->getHeight()/3.7), Vector2f(MenuPanel->getWidth() / 2.1, MenuPanel->getHeight() / 4.8), "Load Saved Game");
 	LoadSavedGame->setDelegate(ForButtonPlay);
+	Data::ReloadAllStaticData();
+	if (Character::CheckIFCharacteristicsBelowZero()) LoadSavedGame->setActive(false);
+	else LoadSavedGame->setActive(true);
 
 	NewGame = new Button<void(*)(bool)>(Vector2f(MenuPanel->getWidth() / 3.76, MenuPanel->getHeight() / 48), Vector2f(MenuPanel->getWidth() / 2.1, MenuPanel->getHeight() / 4.8), "New Game");
 	NewGame->setDelegate(ForButtonPlay);
@@ -104,7 +109,14 @@ void Menu::Draw()
 					}
 					if (NewGame->checkClick((Vector2f)Mouse::getPosition(MenuWindow)))
 					{
+						srand(time(0));
 						Data::SetDeffaultCharacteristics();
+						Forest::SetPicture("Pictures/Environment.jpg");
+						Lake::SetPicture("Pictures/Lake.jpg");
+						River::SetPicture("Pictures/River.jpg");
+						Generator::GenerateEnvironments(3, 3);
+						Location::LocationCurrent = Data::GetEnvironment(0);
+						Location::CheckWhatEnvironment(Location::LocationCurrent);
 						NewGame->Action(true);
 					}
 					if (Quit->checkClick((Vector2f)Mouse::getPosition(MenuWindow))) Quit->Action(MenuWindow);
@@ -120,6 +132,9 @@ void Menu::Draw()
 		OpenOptions->update((Vector2f)Mouse::getPosition(MenuWindow));
 		CloseOptions->update((Vector2f)Mouse::getPosition(MenuWindow));
 		Quit->update((Vector2f)Mouse::getPosition(MenuWindow));
+
+		if (Character::CheckIFCharacteristicsBelowZero()) LoadSavedGame->setActive(false);
+		else LoadSavedGame->setActive(true);
 
 		MenuWindow.clear();
 
