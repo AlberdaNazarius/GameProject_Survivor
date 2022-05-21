@@ -54,6 +54,7 @@ public:
 	TemperatureBar(std::string hotTemperatureLocation, std::string coldTemperatureLocation, const float sizeX, const float sizeY, std::string text, Color color);
 
 	void SetPosition(const float sizeX, const float sizeY);
+	void SetText(std::string text);
 
 	void ChangeTemperaturePicture(int temperature);
 	void Render(sf::RenderWindow& window);

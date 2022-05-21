@@ -47,7 +47,7 @@ void Environment::SetBackground(sf::Sprite& sprite, sf::Texture& texture, string
 		sprite.setTexture(texture);
 	}
 	else
-		throw "Picture isn't set!";
+		cout << "Picture isn't loaded!";
 }
 
 string GeneralTime::GetTime()

@@ -219,10 +219,11 @@ int main()
 
 		SpriteWithText changeCharacteristicStayAtFire[] =
 		{
-		SpriteWithText("Pictures/Characteristics/Energy.png", "???", Color::White, energyIcoSize),
-		SpriteWithText("Pictures/Characteristics/Hunger.png", "???", Color::White, hungerIcoSize),
-		SpriteWithText("Pictures/Characteristics/Thirst.png", "???", Color::White, thirstIcoSize),
-		SpriteWithText("Pictures/Characteristics/Warmth.png", "???", Color::White, Vector2f(50, 60)),
+			SpriteWithText("Pictures/Characteristics/Energy.png", "???", Color::White, Vector2f(20, 40)),
+			SpriteWithText("Pictures/Characteristics/Hunger.png", "???", Color::White, Vector2f(25, 40)),
+			SpriteWithText("Pictures/Characteristics/Thirst.png", "???", Color::White, Vector2f(15, 43)),
+			SpriteWithText("Pictures/Characteristics/Warmth.png", "???", Color::White, Vector2f(30, 40)),
+			SpriteWithText("Pictures/Characteristics/Condition.png", "???", Color::White, Vector2f(35, 35)),
 		};
 
 		SpriteWithText changeCharacteristicsStayAtFire[] =
@@ -232,6 +233,9 @@ int main()
 			SpriteWithText("Pictures/Characteristics/Thirst.png", "???", Color::White, thirstIcoSize),
 		};
 
+		for (int i = 0; i < 5; i++)
+			changeCharacteristicStayAtFire[i].SetTextSize(22);
+
 		Container* StartFireContainer = new Container;
 		Panel* StartFirePanel = new Panel(Vector2f((float)windowWidth / 10, (float)windowHeight / 10), windowWidth * 0.8, windowHeight * 0.6);
 		StartFireContainer->setVisible(false);
@@ -240,7 +244,7 @@ int main()
 		StartFire->setDelegate(ContainerSetVisible);
 
 		Container* StayAtFireContainer = new Container;
-		Panel* StayAtFirePanel = new Panel(Vector2f((float)windowWidth / 2.5, (float)windowHeight / 2), windowWidth * 0.08, windowHeight * 0.15);
+		Panel* StayAtFirePanel = new Panel(Vector2f((float)windowWidth / 2.1, (float)windowHeight / 1.5), windowWidth * 0.2, windowHeight * 0.1);
 		
 		if (Character::IsStayAtFire())
 		{
@@ -250,7 +254,7 @@ int main()
 		else
 			StayAtFireContainer->setVisible(false);
 
-		Button<void(*)(int)>* StayAtFire = new Button<void(*)(int)>(Vector2f((float)StayAtFirePanel->getWidth() * 0, (float)StayAtFirePanel->getHeight() * 0), Vector2f(StayAtFirePanel->getWidth(), StayAtFirePanel->getHeight()), "Stay at fire");
+		Button<void(*)(int)>* StayAtFire = new Button<void(*)(int)>(Vector2f(0, 0), Vector2f(StayAtFirePanel->getWidth(), StayAtFirePanel->getHeight()), "Stay at fire");
 		StayAtFire->setDelegate(Character::ChangeWarmthLevel);
 
 		Button<void(*)(Container*, bool, int, int)>* FireLighter = new Button<void(*)(Container*, bool, int, int)>(Vector2f((float)StartFirePanel->getWidth()/426.5, (float)StartFirePanel->getHeight() / 2.36), Vector2f(StartFirePanel->getWidth() / 5.12, StartFirePanel->getHeight() / 6.48), "Lighter");
@@ -481,12 +485,7 @@ int main()
 		Button<void(*)(Container*, bool)>* OpenInventory = new Button<void(*)(Container*, bool)>(Vector2f((float)MainPanel->getWidth() / 1.2, (float)MainPanel->getHeight() / 1.93), Vector2f((float)MainPanel->getWidth() / 6.4, (float)MainPanel->getHeight() / 2.16), "OpenInventory");
 		OpenInventory->setDelegate(InventorySetVisible);
 
-		Button<void(*)(Container*, bool)>* CloseInventory = new Button<void(*)(Container*, bool)>(Vector2f((float)windowWidth * 0.63, (float)windowHeight * 0.47), Vector2f(windowWidth * 0.15, windowHeight * 0.1), "CloseInventory");
-		CloseInventory->setDelegate(InventorySetVisible);
-		CloseInventory->setVisible(false);
-
 		OpenInventoryContainer->addChild(OpenInventoryPanel);
-		OpenInventoryPanel->addChild(CloseInventory);
 		OpenInventoryPanel->addChild(EatButton);
 		OpenInventoryPanel->addChild(DrinkButton);
 		OpenInventoryPanel->addChild(CosumeMedicineButton);
@@ -709,6 +708,7 @@ int main()
 								ThirdVariantToTravel->setText(CaptionOfButton(2));
 							}
 							StartFireContainer->setVisible(false);
+							StayAtFirePanel->setVisible(!IsUsedAxeContainer->getVisible());
 							HuntContainer->setVisible(false);
 							FishContainer->setVisible(false);
 							RestContainer->setVisible(false);
@@ -865,6 +865,7 @@ int main()
 						if (HuntButton->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
 							HuntButton->Action(HuntContainer, !HuntContainer->getVisible());
+							StayAtFirePanel->setVisible(!HuntContainer->getVisible());
 							IsUsedAxeContainer->setVisible(false);
 							StartFireContainer->setVisible(false);
 							RestContainer->setVisible(false);
@@ -918,6 +919,7 @@ int main()
 						if (RestButton->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
 							RestButton->Action(RestContainer, !RestContainer->getVisible());
+							StayAtFirePanel->setVisible(!RestContainer->getVisible());
 							StartFireContainer->setVisible(false);     
 							HuntContainer->setVisible(false);
 							FishContainer->setVisible(false);
@@ -952,7 +954,7 @@ int main()
 						if (OpenInventory->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
 							OpenInventory->Action(OpenInventoryContainer, !OpenInventoryContainer->getVisible());
-							CloseInventory->setVisible(!CloseInventory->getVisible());
+							StayAtFirePanel->setVisible(!OpenInventoryContainer->getVisible());
 							StartFireContainer->setVisible(false);
 							HuntContainer->setVisible(false);
 							FishContainer->setVisible(false);
@@ -960,11 +962,6 @@ int main()
 							RestContainer->setVisible(false);
 							for (Panel* x : craftMenus)
 								x->setVisible(false);
-						}
-						if (CloseInventory->checkClick((Vector2f)Mouse::getPosition(window)))
-						{
-							OpenInventory->Action(OpenInventoryContainer, false);
-							CloseInventory->setVisible(false);
 						}
 
 #pragma endregion
@@ -1008,6 +1005,9 @@ int main()
 							Restart->Action();
 							StartFireContainer->setActive(false);
 							IsUsedAxeContainer->setActive(false);
+
+							hours = GeneralTime::GetHours();
+							days = GeneralTime::GetDay();
 						}
 
 #pragma endregion
@@ -1019,6 +1019,7 @@ int main()
 							FailMenu->setActive(false);
 							MainContainer->setActive(true);
 							HuntContainer->setActive(true);
+							StayAtFirePanel->setVisible(true);
 							HuntContainer->setVisible(false);
 							FishContainer->setActive(true);
 							FishContainer->setVisible(false);
@@ -1047,12 +1048,15 @@ int main()
 								openCraftBut->Action(&craftMenus, NULL);
 							else
 								openCraftBut->Action(&craftMenus, craftMenus[0]);
+								
+							StayAtFirePanel->setVisible(!craftMenus[0]->getVisible());
 							StartFireContainer->setVisible(false);
 							HuntContainer->setVisible(false);
 							FishContainer->setVisible(false);
 							IsUsedAxeContainer->setVisible(false);
 							OpenInventoryContainer->setVisible(false);
 						}
+							
 						for (map<Button<bool(*)(string)>*, string>::iterator it = craftBut.begin(); it != craftBut.end(); ++it)
 						{
 							if (it->first->checkClick((Vector2f)Mouse::getPosition(window)))
@@ -1140,7 +1144,6 @@ int main()
 #pragma region OpenInventory
 
 			OpenInventory->update((Vector2f)Mouse::getPosition(window));
-			CloseInventory->update((Vector2f)Mouse::getPosition(window));
 
 #pragma endregion
 
@@ -1246,7 +1249,7 @@ int main()
 
 #pragma region TemperatureAndWarmth
 
-			if (GeneralTime::GetHours() < 17 && GeneralTime::GetHours() > 7)
+			if (GeneralTime::GetHours() >= 7 && GeneralTime::GetHours() <= 17)
 			{
 				if (GeneralTime::DeltaTime(days, hours) >= 2)
 				{
@@ -1279,6 +1282,7 @@ int main()
 			
 			//Update text
 			TimeLabel->setText(GeneralTime::GetTime());
+			temperatureBar.SetText(to_string(Location::GetTemperature()) + "°C");
 
 			//Update Bars
 			bars[Bars::HungerBar].SetTextAndScale(Character::GetHungerLevel());
@@ -1528,14 +1532,17 @@ int main()
 				// Stay at fire action 
 			if (StayAtFire->isContains())
 			{
-				changeCharacteristicStayAtFire->SetPosition(Vector2f(StayAtFire->getRealPosition().x * 1.038, StayAtFire->getRealPosition().y + StayAtFire->getHeight() / 6));
-				changeCharacteristicStayAtFire->SetDistanceBetweenObjects(Vector2f(100, 0), changeCharacteristicStayAtFire, 4);
+				changeCharacteristicStayAtFire->SetPosition(Vector2f(StayAtFire->getRealPosition().x * 1.018, StayAtFire->getRealPosition().y + StayAtFire->getHeight() / 6));
+				changeCharacteristicStayAtFire->SetDistanceBetweenObjects(Vector2f(65, 0), changeCharacteristicStayAtFire, 5);
+				changeCharacteristicStayAtFire[4].SetPosition(changeCharacteristicStayAtFire[4].GetPosition().x + 15, StayAtFire->getRealPosition().y + StayAtFire->getHeight() / 4.5);
+				changeCharacteristicStayAtFire[4].SetTexPosition(Vector2f(changeCharacteristicStayAtFire[4].GetTextPosition().x, StayAtFire->getRealPosition().y + StayAtFire->getHeight() / 3.8));
 
 				StayAtFire->setTextRender(false);
 				changeCharacteristicStayAtFire[0].Render(window);
 				changeCharacteristicStayAtFire[1].Render(window);
 				changeCharacteristicStayAtFire[2].Render(window);
 				changeCharacteristicStayAtFire[3].Render(window);
+				changeCharacteristicStayAtFire[4].Render(window);
 			}
 			else
 				StayAtFire->setTextRender(true);

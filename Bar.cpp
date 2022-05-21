@@ -209,7 +209,7 @@ void TemperatureBar::SetPosition(const float x, const float y)
 
 void TemperatureBar::ChangeTemperaturePicture(int temperature)
 {
-	if (temperature > 0)
+	if (temperature > 9)
 		temperatureSprite.setTexture(hotTemperatureTexture);
 	else
 		temperatureSprite.setTexture(coldTemperatureTexture);
@@ -219,4 +219,9 @@ void TemperatureBar::Render(sf::RenderWindow& window)
 {
 	window.draw(temperatureSprite);
 	window.draw(text);
+}
+
+void TemperatureBar::SetText(std::string text)
+{
+	this->text.setString(text);
 }
