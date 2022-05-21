@@ -76,10 +76,10 @@ string Inventory::ExploreArea(int counterClick)
 			if (result == "") result += "Food+" + difference;
 			else result += "\nFood+" + difference;
 	}
-	if (6 + lucky - counterClick > 0)
+	if (4 + lucky - counterClick > 0)
 	{
 		previousValue = water;
-		water += 1 + rand() % (6 + lucky - counterClick);
+		water += 1 + rand() % (4 + lucky - counterClick);
 		differenceValue = water - previousValue;
 		stringstream temp;
 		temp << differenceValue;

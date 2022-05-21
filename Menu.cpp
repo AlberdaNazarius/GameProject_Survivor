@@ -105,6 +105,10 @@ void Menu::Draw()
 					if (LoadSavedGame->checkClick((Vector2f)Mouse::getPosition(MenuWindow)))
 					{
 						Data::ReloadAllStaticData();
+						Forest::SetPicture("Pictures/Environment.jpg");
+						Lake::SetPicture("Pictures/Lake.jpg");
+						River::SetPicture("Pictures/River.jpg");
+						Location::CheckWhatEnvironment(Location::LocationCurrent);
 						LoadSavedGame->Action(true);
 					}
 					if (NewGame->checkClick((Vector2f)Mouse::getPosition(MenuWindow)))

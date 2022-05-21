@@ -95,11 +95,11 @@ void HuntOveriwrite(int maxIndex, int spentEnergy, int indexOfEnvironment)
 void UseAxe()
 {
 	srand(time(0));
-	Inventory::wood += 3 + rand() % 8;
-	Character::ChangeEnergyLevel(-30);
-	GeneralTime::AddTime(1, 0);
-	Character::ChangeHungerLevel(-10);
-	Character::ChangeThirstLevel(-14);
+	if (8 - Inventory::checkClickExploreArea > 0) Inventory::wood += 3 + rand() % 8 - Inventory::checkClickExploreArea;
+		Character::ChangeEnergyLevel(-30);
+		GeneralTime::AddTime(1, 0);
+		Character::ChangeHungerLevel(-10);
+		Character::ChangeThirstLevel(-14);
 }
 void DontUseAxe(Container* container)
 {
@@ -601,7 +601,9 @@ int main()
 		int days = GeneralTime::GetDay();
 
 		// Attaching pictures to environments
-
+		Forest::SetPicture("Pictures/Environment.jpg");
+		Lake::SetPicture("Pictures/Lake.jpg");
+		River::SetPicture("Pictures/River.jpg");
 		//Main cycle
 		while (window.isOpen())
 		{
@@ -689,21 +691,23 @@ int main()
 
 						if (ExploreArea->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
-							Inventory::checkClickExploreArea++;
-							value = ExploreArea->Action(Inventory::checkClickExploreArea);
-							if (Inventory::Check_Tool("axe")) IsUsedAxeContainer->setVisible(true);
-							else
+							if (IsUsedAxeContainer->getVisible()) IsUsedAxeContainer->setVisible(false);
+							else IsUsedAxeContainer->setVisible(true);
+							if (!Inventory::Check_Tool("axe"))
 							{
+								Inventory::checkClickExploreArea++;
+								value = ExploreArea->Action(Inventory::checkClickExploreArea);
 								Character::ChangeEnergyLevel(-15);
 								GeneralTime::AddTime(0, 30);
 								Character::ChangeHungerLevel(-5);
 								Character::ChangeThirstLevel(-7);
-								characteristics.setString("Energy-15\nHunger-5\nThirst-7");
 								eventsDescription.setString(value);
+								if (eventsDescription.getString() != "") characteristics.setString("Energy-15\nHunger-5\nThirst-7");
+								else eventsDescription.setString("Energy-15\nHunger-5\nThirst-7");
+								FirstVariantToTravel->setText(CaptionOfButton(0));
+								SecondVariantToTravel->setText(CaptionOfButton(1));
+								ThirdVariantToTravel->setText(CaptionOfButton(2));
 							}
-							FirstVariantToTravel->setText(CaptionOfButton(0));
-							SecondVariantToTravel->setText(CaptionOfButton(1));
-							ThirdVariantToTravel->setText(CaptionOfButton(2));
 							StartFireContainer->setVisible(false);
 							HuntContainer->setVisible(false);
 							FishContainer->setVisible(false);
@@ -714,20 +718,38 @@ int main()
 						}
 						if (UseAxeButton->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							Inventory::checkClickExploreArea++;
 							int previousValue = Inventory::wood;
+							value = ExploreArea->Action(Inventory::checkClickExploreArea);
 							UseAxeButton->Action();
-							if (Inventory::wood - previousValue)
+							if (Inventory::wood - previousValue>0)
 							{
 								characteristics.setString("Energy-30\nHunger-10\nThirst-14");
 								eventsDescription.setString("Wood+" + to_string(Inventory::wood - previousValue) + "\n" +value);
 							}
+							else
+							{
+								eventsDescription.setString(value);
+								if (eventsDescription.getString() != "") characteristics.setString("Energy-30\nHunger-10\nThirst-14");
+								else eventsDescription.setString("Energy-30\nHunger-10\nThirst-14");
+							}
+							FirstVariantToTravel->setText(CaptionOfButton(0));
+							SecondVariantToTravel->setText(CaptionOfButton(1));
+							ThirdVariantToTravel->setText(CaptionOfButton(2));
 							IsUsedAxeContainer->setVisible(false);
 						}
 						if (DontUseAxeButton->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							Inventory::checkClickExploreArea++;
+							value = ExploreArea->Action(Inventory::checkClickExploreArea);
+							FirstVariantToTravel->setText(CaptionOfButton(0));
+							SecondVariantToTravel->setText(CaptionOfButton(1));
+							ThirdVariantToTravel->setText(CaptionOfButton(2));
 							DontUseAxeButton->Action(IsUsedAxeContainer);
-							characteristics.setString("Energy-15\nHunger-5\nThirst-7\n");
 							eventsDescription.setString(value);
+							if (eventsDescription.getString() != "") characteristics.setString("Energy-15\nHunger-5\nThirst-7\n");
+							else eventsDescription.setString("Energy-15\nHunger-5\nThirst-7");
+
 						}
 
 #pragma endregion
@@ -1189,8 +1211,6 @@ int main()
 
 			if (!Inventory::checkClickExploreArea || Character::CheckIFCharacteristicsBelowZero()) ChooseWhereToGoContainer->setVisible(false);
 			else ChooseWhereToGoContainer->setVisible(true);
-			if (IsUsedAxeContainer->getVisible()) ExploreArea->setActive(false);
-			else ExploreArea->setActive(true);
 
 #pragma endregion
 
