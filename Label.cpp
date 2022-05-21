@@ -35,6 +35,11 @@ void Label::setText(int text)
 	this->text.setString(to_string(text));
 }
 
+void Label::setColor(Color color)
+{
+	this->text.setFillColor(color);
+}
+
 void Label::render(RenderTarget& target, Vector2f offset)
 {
 	if (isVisible)

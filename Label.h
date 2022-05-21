@@ -17,5 +17,6 @@ public:
 	Label(Vector2f pos, std::string text, int fontSize, Font* font);
 	void setText(std::string text);
 	void setText(int text);
+	void setColor(Color color);
 	void render(RenderTarget& target, Vector2f offset);
 };

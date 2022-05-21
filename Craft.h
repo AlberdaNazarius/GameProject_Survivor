@@ -20,7 +20,7 @@ public:
 	static string getRecipeName(int index);
 	static vector<string> getRecipeIngs(string craftItem);
 	static void changeCraftMenu(vector<Panel*>* craftMenus, Panel* newCraftMenu);
-	static void InitializeCraftMenus(vector<Panel*>* craftMenus, map<Button<bool(*)(string)>*, string>* craftBut, vector<Button<void(*)(vector<Panel*>*, Panel*)>*>* closeBut, map<Button<void(*)(vector<Panel*>*, Panel*)>*, Panel*>* switchBut, Container* mainCont, Vector2f craftMenuPos);
+	static void InitializeCraftMenus(vector<Panel*>* craftMenus, map<Button<bool(*)(string)>*, string>* craftBut, map<Button<void(*)(vector<Panel*>*, Panel*)>*, Panel*>* switchBut, Container* mainCont, Vector2f craftMenuPos);
 private:
 	static map<string, map<string, int>> recipes;
 };

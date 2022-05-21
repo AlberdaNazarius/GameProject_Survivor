@@ -526,11 +526,10 @@ int main()
 
 		vector<Panel*> craftMenus;
 		map<Button<bool(*)(string)>*, string> craftBut;
-		vector<Button<void(*)(vector<Panel*>*, Panel*)>*> closeCraftBut;
 		map<Button<void(*)(vector<Panel*>*, Panel*)>*, Panel*> switchCraftBut;
 		Button<void(*)(vector<Panel*>*, Panel*)>* openCraftBut = new Button<void(*)(vector<Panel*>*, Panel*)>(Vector2f((float)MainPanel->getWidth() / 1.2, (float)MainPanel->getHeight() / 54), Vector2f((float)MainPanel->getWidth() / 6.4, (float)MainPanel->getHeight() / 2.16), "Open craft menu");
 		openCraftBut->setDelegate(Craft::changeCraftMenu);
-		Craft::InitializeCraftMenus(&craftMenus, &craftBut, &closeCraftBut, &switchCraftBut, MainContainer, Vector2f((float)windowWidth / 10, (float)windowHeight / 10));
+		Craft::InitializeCraftMenus(&craftMenus, &craftBut, &switchCraftBut, MainContainer, Vector2f(windowWidth, windowHeight));
 		MainPanel->addChild(openCraftBut);
 
 #pragma endregion 
@@ -1021,8 +1020,11 @@ int main()
 
 #pragma region Craft
 						if (openCraftBut->checkClick((Vector2f)Mouse::getPosition(window)))
-						{
-							openCraftBut->Action(&craftMenus, craftMenus[0]);
+						{	
+							if (craftMenus[0]->getVisible())
+								openCraftBut->Action(&craftMenus, NULL);
+							else
+								openCraftBut->Action(&craftMenus, craftMenus[0]);
 							StartFireContainer->setVisible(false);
 							HuntContainer->setVisible(false);
 							FishContainer->setVisible(false);
@@ -1038,11 +1040,6 @@ int main()
 								else
 									eventsDescription.setString("Not enough resources or this tool already exist");
 							}
-						}
-						for (int i = 0; i < closeCraftBut.size(); i++)
-						{
-							if (closeCraftBut[i]->checkClick((Vector2f)Mouse::getPosition(window)))
-								closeCraftBut[i]->Action(&craftMenus, NULL);
 						}
 						for (map<Button<void(*)(vector<Panel*>*, Panel*)>*, Panel*>::iterator it = switchCraftBut.begin(); it != switchCraftBut.end(); ++it)
 						{
@@ -1144,10 +1141,6 @@ int main()
 			for (map<Button<bool(*)(string)>*, string>::iterator it = craftBut.begin(); it != craftBut.end(); ++it)
 			{
 				it->first->update((Vector2f)Mouse::getPosition(window));
-			}
-			for (int i = 0; i < closeCraftBut.size(); i++)
-			{
-				closeCraftBut[i]->update((Vector2f)Mouse::getPosition(window));
 			}
 			for (map<Button<void(*)(vector<Panel*>*, Panel*)>*, Panel*>::iterator it = switchCraftBut.begin(); it != switchCraftBut.end(); ++it)
 			{
