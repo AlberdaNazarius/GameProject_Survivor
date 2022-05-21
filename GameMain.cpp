@@ -629,7 +629,7 @@ int main()
 							if (Inventory::wood < 5) eventsDescription.setString("You need at  least 5 iteams of Wood to Start Fire");
 							else
 							{
-								StartFire->Action(StartFireContainer, true);
+								StartFire->Action(StartFireContainer, !StartFireContainer->getVisible());
 								Character::startedHour = GeneralTime::GetHours();
 								Character::startedDay = GeneralTime::GetDay();
 							}
@@ -842,7 +842,7 @@ int main()
 
 						if (HuntButton->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
-							HuntButton->Action(HuntContainer, true);
+							HuntButton->Action(HuntContainer, !HuntContainer->getVisible());
 							IsUsedAxeContainer->setVisible(false);
 							StartFireContainer->setVisible(false);
 							RestContainer->setVisible(false);
@@ -870,7 +870,7 @@ int main()
 						}
 						if (FishButton->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
-							FishButton->Action(FishContainer, true);
+							FishButton->Action(FishContainer, !FishContainer->getVisible());
 							IsUsedAxeContainer->setVisible(false);
 							StartFireContainer->setVisible(false);
 							RestContainer->setVisible(false);
@@ -895,7 +895,7 @@ int main()
 
 						if (RestButton->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
-							RestButton->Action(RestContainer, true);
+							RestButton->Action(RestContainer, !RestContainer->getVisible());
 							StartFireContainer->setVisible(false);     
 							HuntContainer->setVisible(false);
 							FishContainer->setVisible(false);
@@ -1234,7 +1234,7 @@ int main()
 					hours = GeneralTime::GetHours();
 					days = GeneralTime::GetDay();
 					Character::ChangeWarmthLevel(5);
-					eventsDescription.setString("ChangedTemperature" + to_string(Location::GetTemperature())); // for test
+					//eventsDescription.setString("ChangedTemperature" + to_string(Location::GetTemperature())); // for test
 				}
 			}
 			if (GeneralTime::GetHours() > 17 || GeneralTime::GetHours() < 7)
@@ -1245,7 +1245,7 @@ int main()
 					hours = GeneralTime::GetHours();
 					days = GeneralTime::GetDay();
 					Character::ChangeWarmthLevel(-5);
-					eventsDescription.setString("ChangedTemperature" + to_string(Location::GetTemperature())); // for test
+					//eventsDescription.setString("ChangedTemperature" + to_string(Location::GetTemperature())); // for test
 				}
 			}
 
