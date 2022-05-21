@@ -708,7 +708,7 @@ int main()
 								ThirdVariantToTravel->setText(CaptionOfButton(2));
 							}
 							StartFireContainer->setVisible(false);
-							StayAtFirePanel->setVisible(!IsUsedAxeContainer->getVisible());
+							StayAtFireContainer->setVisible(!IsUsedAxeContainer->getVisible());
 							HuntContainer->setVisible(false);
 							FishContainer->setVisible(false);
 							RestContainer->setVisible(false);
@@ -865,7 +865,7 @@ int main()
 						if (HuntButton->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
 							HuntButton->Action(HuntContainer, !HuntContainer->getVisible());
-							StayAtFirePanel->setVisible(!HuntContainer->getVisible());
+							StayAtFireContainer->setVisible(!HuntContainer->getVisible());
 							IsUsedAxeContainer->setVisible(false);
 							StartFireContainer->setVisible(false);
 							RestContainer->setVisible(false);
@@ -894,6 +894,7 @@ int main()
 						if (FishButton->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
 							FishButton->Action(FishContainer, !FishContainer->getVisible());
+							StayAtFireContainer->setVisible(!FishContainer->getVisible());
 							IsUsedAxeContainer->setVisible(false);
 							StartFireContainer->setVisible(false);
 							RestContainer->setVisible(false);
@@ -919,7 +920,7 @@ int main()
 						if (RestButton->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
 							RestButton->Action(RestContainer, !RestContainer->getVisible());
-							StayAtFirePanel->setVisible(!RestContainer->getVisible());
+							StayAtFireContainer->setVisible(!RestContainer->getVisible());
 							StartFireContainer->setVisible(false);     
 							HuntContainer->setVisible(false);
 							FishContainer->setVisible(false);
@@ -954,7 +955,7 @@ int main()
 						if (OpenInventory->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
 							OpenInventory->Action(OpenInventoryContainer, !OpenInventoryContainer->getVisible());
-							StayAtFirePanel->setVisible(!OpenInventoryContainer->getVisible());
+							StayAtFireContainer->setVisible(!OpenInventoryContainer->getVisible());
 							StartFireContainer->setVisible(false);
 							HuntContainer->setVisible(false);
 							FishContainer->setVisible(false);
@@ -1019,7 +1020,7 @@ int main()
 							FailMenu->setActive(false);
 							MainContainer->setActive(true);
 							HuntContainer->setActive(true);
-							StayAtFirePanel->setVisible(true);
+							StayAtFireContainer->setVisible(true);
 							HuntContainer->setVisible(false);
 							FishContainer->setActive(true);
 							FishContainer->setVisible(false);
@@ -1049,7 +1050,7 @@ int main()
 							else
 								openCraftBut->Action(&craftMenus, craftMenus[0]);
 								
-							StayAtFirePanel->setVisible(!craftMenus[0]->getVisible());
+							StayAtFireContainer->setVisible(!craftMenus[0]->getVisible());
 							StartFireContainer->setVisible(false);
 							HuntContainer->setVisible(false);
 							FishContainer->setVisible(false);
