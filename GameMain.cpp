@@ -603,6 +603,16 @@ int main()
 		Forest::SetPicture("Pictures/Environment.jpg");
 		Lake::SetPicture("Pictures/Lake.jpg");
 		River::SetPicture("Pictures/River.jpg");
+
+		//Make elements inactive
+		StartFireContainer->setVisible(false);
+		StayAtFireContainer->setVisible(false);
+		OpenInventoryContainer->setVisible(false);
+		HuntContainer->setVisible(false);
+		FishContainer->setActive(false);
+		IsUsedAxeContainer->setVisible(false);
+		
+
 		//Main cycle
 		while (window.isOpen())
 		{
@@ -996,8 +1006,6 @@ int main()
 						{
 							eventsDescription.setString("");
 							MainContainer->setActive(true);
-							HuntContainer->setActive(true);
-							FishContainer->setActive(true);
 							OpenInventoryContainer->setActive(true);
 							StartFireContainer->setActive(true);
 							StayAtFireContainer->setActive(true);
@@ -1006,6 +1014,7 @@ int main()
 							Restart->Action();
 							StartFireContainer->setActive(false);
 							IsUsedAxeContainer->setActive(false);
+							OpenInventoryContainer->setVisible(false);
 
 							hours = GeneralTime::GetHours();
 							days = GeneralTime::GetDay();
