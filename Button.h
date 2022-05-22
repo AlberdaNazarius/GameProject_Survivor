@@ -9,9 +9,11 @@ class Button : public UI
 {
 private:
 	Sprite sprite;
+	Texture uniqueTexture;
 	Texture* idle;
 	Texture* clicked;
 	Texture* hover;
+	Image image;
 	Font* font;
 	Text text;
 	Vector2f size;
@@ -63,6 +65,31 @@ public:
 
 			this->Action = nullptr;
 		}
+		Button(std::string texturePath, Vector2f position, Vector2f size, std::string text)
+		{
+			this->size = size;
+			this->image.loadFromFile(texturePath);
+			this->uniqueTexture.loadFromImage(image, IntRect(sf::Vector2i(0, 0), (sf::Vector2i)image.getSize()));
+			this->idle = &uniqueTexture;
+			this->setPosition(position);
+			this->sprite.setTexture(*(this->idle));
+			this->clicked = &uniqueTexture;
+			this->hover = &uniqueTexture;
+			this->font = &Game::defFont;
+
+			this->text.setFont(*(this->font));
+			this->text.setString(text);
+			this->text.setFillColor(Color::White);
+			this->text.setCharacterSize(16);
+
+			this->text.setPosition(
+				this->sprite.getGlobalBounds().left + (this->size.x / 2) - (this->text.getGlobalBounds().width / 2),
+				this->sprite.getGlobalBounds().top + (this->size.y / 2) - (this->text.getGlobalBounds().height / 2) - (this->text.getCharacterSize() / 4));
+
+			sprite.scale(size.x / idle->getSize().x, size.y / idle->getSize().y);
+
+			this->Action = nullptr;
+		}
 
 		~Button() {};
 
@@ -71,11 +98,20 @@ public:
 			this->sprite.setTextureRect(intRect);
 	    }
 
-		void setTexture(Texture* idle, Texture* clicked)
-		{
-			this->idle = idle;
-			this->clicked = clicked;
-	    }
+		////void setTexture(Texture* idle, Texture* clicked)
+		////{
+		////	this->idle = idle;
+		////	this->clicked = clicked;
+		////	//sprite.scale(size.x / idle->getSize().x, size.y / idle->getSize().y);
+	 ////   }
+
+		//void setTexture(std::string texturePath)
+		//{
+		//	this->image.loadFromFile(texturePath);
+		//	this->uniqueTexture.loadFromImage(image, IntRect(sf::Vector2i(0, 0), (sf::Vector2i)image.getSize()));
+		//	this->sprite.setTexture(this->uniqueTexture);
+		//	sprite.scale(this->size.x / image.getSize().x, this->size.y / image.getSize().y);
+		//}
 
 		void setFont(Font* font)
 		{

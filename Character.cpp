@@ -31,7 +31,7 @@ void Character::ChangeThirstLevel(int water)
 void Character::ChangeWarmthLevel(int warmth)
 {
     Character::warmth += warmth;
-	Character::condition += warmth / 5;
+	Character::ChangeConditionLevel(warmth / 2);
 	if (Character::condition > 100) Character::condition = 100;
 	if (Character::warmth > 100) Character::warmth = 100;
 	if (Character::warmth < 0) Character::warmth = 0;

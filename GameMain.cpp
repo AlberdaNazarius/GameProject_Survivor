@@ -213,6 +213,12 @@ int main()
 		characteristics.setPosition(Vector2f(windowWidth / 8, windowHeight / 1.2));
 		characteristics.setFillColor(Color::Black);
 
+		Text warmthAndConditionDuringGame;
+		warmthAndConditionDuringGame.setFont(font);
+		warmthAndConditionDuringGame.setCharacterSize(windowHeight / 50);
+		warmthAndConditionDuringGame.setPosition(Vector2f(windowWidth / 2.5, windowHeight / 1.2));
+		warmthAndConditionDuringGame.setFillColor(Color::Black);
+
 #pragma endregion
 
 #pragma region StartFire
@@ -244,8 +250,8 @@ int main()
 		StartFire->setDelegate(ContainerSetVisible);
 
 		Container* StayAtFireContainer = new Container;
-		Panel* StayAtFirePanel = new Panel(Vector2f((float)windowWidth / 2.1, (float)windowHeight / 1.5), windowWidth * 0.2, windowHeight * 0.1);
-		
+		Panel* StayAtFirePanel = new Panel("Pictures/transparent.png", Vector2f((float)windowWidth / 2.5, (float)windowHeight / 2), windowWidth * 0.08, windowHeight * 0.15);
+
 		if (Character::IsStayAtFire())
 		{
 			StayAtFireContainer->setVisible(true);
@@ -254,7 +260,7 @@ int main()
 		else
 			StayAtFireContainer->setVisible(false);
 
-		Button<void(*)(int)>* StayAtFire = new Button<void(*)(int)>(Vector2f(0, 0), Vector2f(StayAtFirePanel->getWidth(), StayAtFirePanel->getHeight()), "Stay at fire");
+		Button<void(*)(int)>* StayAtFire = new Button<void(*)(int)>("Pictures/Fire.png", Vector2f((float)StayAtFirePanel->getWidth() * 0, (float)StayAtFirePanel->getHeight() * 0), Vector2f(StayAtFirePanel->getWidth(), StayAtFirePanel->getHeight()), "Stay at fire");
 		StayAtFire->setDelegate(Character::ChangeWarmthLevel);
 
 		Button<void(*)(Container*, bool, int, int)>* FireLighter = new Button<void(*)(Container*, bool, int, int)>(Vector2f((float)StartFirePanel->getWidth()/426.5, (float)StartFirePanel->getHeight() / 2.36), Vector2f(StartFirePanel->getWidth() / 5.12, StartFirePanel->getHeight() / 6.48), "Lighter");
@@ -340,15 +346,15 @@ int main()
 		Container* ChooseWhereToGoContainer = new Container;
 		Panel* ChooseWhereToGoPanel = new Panel ("Pictures/transparent.png", Vector2f(0, (float)windowHeight / 7), windowWidth, windowHeight * 0.07);
 		
-		Button<void(*)(int)>* FirstVariantToTravel = new Button<void(*)(int)>(Vector2f((float)ChooseWhereToGoPanel->getWidth() /100, (float)0), Vector2f(ChooseWhereToGoPanel->getWidth() * 0.1, ChooseWhereToGoPanel->getHeight()), "Forest");
+		Button<void(*)(int)>* FirstVariantToTravel = new Button<void(*)(int)>("Pictures/Arrow.png", Vector2f((float)ChooseWhereToGoPanel->getWidth() / 100, (float)0), Vector2f(ChooseWhereToGoPanel->getWidth() * 0.1, ChooseWhereToGoPanel->getHeight()), "Forest");
 		FirstVariantToTravel->setDelegate(Location::CheckWhatEnvironment);
 		FirstVariantToTravel->setVisible(true);
 
-		Button<void(*)(int)>* SecondVariantToTravel = new Button<void(*)(int)>(Vector2f((float)ChooseWhereToGoPanel->getWidth() / 2.3, (float)0), Vector2f(ChooseWhereToGoPanel->getWidth() * 0.1, ChooseWhereToGoPanel->getHeight()), "Lake");
+		Button<void(*)(int)>* SecondVariantToTravel = new Button<void(*)(int)>("Pictures/Arrow.png", Vector2f((float)ChooseWhereToGoPanel->getWidth() / 2.3, (float)0), Vector2f(ChooseWhereToGoPanel->getWidth() * 0.1, ChooseWhereToGoPanel->getHeight()), "Lake");
 		SecondVariantToTravel->setDelegate(Location::CheckWhatEnvironment);
 		SecondVariantToTravel->setVisible(true);
 
-		Button<void(*)(int)>* ThirdVariantToTravel = new Button<void(*)(int)>(Vector2f((float)ChooseWhereToGoPanel->getWidth() / 1.12, (float)0), Vector2f(ChooseWhereToGoPanel->getWidth() * 0.1, ChooseWhereToGoPanel->getHeight()), "River");
+		Button<void(*)(int)>* ThirdVariantToTravel = new Button<void(*)(int)>("Pictures/Arrow.png", Vector2f((float)ChooseWhereToGoPanel->getWidth() / 1.12, (float)0), Vector2f(ChooseWhereToGoPanel->getWidth() * 0.1, ChooseWhereToGoPanel->getHeight()), "River");
 		ThirdVariantToTravel->setDelegate(Location::CheckWhatEnvironment);
 		ThirdVariantToTravel->setVisible(true);		
 
@@ -533,6 +539,15 @@ int main()
 
 #pragma endregion 
 
+#pragma region Shelter
+
+		Container* ShelterContainer = new Container;
+		Panel* Shelter = new Panel("Pictures/Shelter.png", Vector2f((float)windowWidth / 2, (float)windowHeight / 2.3), windowWidth / 3.3, windowHeight / 3.2);
+
+		ShelterContainer->addChild(Shelter);
+
+#pragma endregion 
+
 #pragma region StartFire
 
 		MainPanel->addChild(StartFire);
@@ -632,6 +647,7 @@ int main()
 
 						characteristics.setString("");
 						eventsDescription.setString("");
+						warmthAndConditionDuringGame.setString("");
 
 #pragma region StartFire
 
@@ -700,7 +716,7 @@ int main()
 
 						if (ExploreArea->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
-							if (IsUsedAxeContainer->getVisible()) IsUsedAxeContainer->setVisible(false);
+							if (IsUsedAxeContainer->getVisible() || !Inventory::Check_Tool("axe")) IsUsedAxeContainer->setVisible(false);
 							else IsUsedAxeContainer->setVisible(true);
 							if (!Inventory::Check_Tool("axe"))
 							{
@@ -794,6 +810,7 @@ int main()
 							FishContainer->setVisible(false);
 							IsUsedAxeContainer->setVisible(false);
 							StayAtFireContainer->setVisible(false);
+							Location::Shelter = false;
 							RestContainer->setVisible(false);
 							OpenInventoryContainer->setVisible(false);
 							for (Panel* x : craftMenus)
@@ -828,6 +845,7 @@ int main()
 							FishContainer->setVisible(false);
 							IsUsedAxeContainer->setVisible(false);
 							StayAtFireContainer->setVisible(false);
+							Location::Shelter = false;
 							RestContainer->setVisible(false);
 							OpenInventoryContainer->setVisible(false);
 							for (Panel* x : craftMenus)
@@ -862,6 +880,7 @@ int main()
 							FishContainer->setVisible(false);
 							IsUsedAxeContainer->setVisible(false);
 							StayAtFireContainer->setVisible(false);
+							Location::Shelter = false;
 							RestContainer->setVisible(false);
 							OpenInventoryContainer->setVisible(false);
 							for (Panel* x : craftMenus)
@@ -942,19 +961,47 @@ int main()
 						if (RestThreeHours->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
 							RestThreeHours->Action(3);
-							eventsDescription.setString("Energy+39\nHunger-21\nThirst-15");
+							if (!Location::Shelter)
+							{
+								int condition = Character::GetConditionLevel();
+								int warmth = Character::GetWarmthLevel();
+								Character::ChangeWarmthLevel(-10);
+								warmth = Character::GetWarmthLevel() - warmth;
+								condition = Character::GetConditionLevel() - condition;
+								eventsDescription.setString("Energy+39\nHunger-21\nThirst-15\nWarmth" + to_string(warmth) + "\nCondition" + to_string(condition));
+								Character::DisplayCharacteristics();
+							}
+							else eventsDescription.setString("Energy+39\nHunger-21\nThirst-15");
 							RestContainer->setVisible(false);
 						}
 						if (RestSixHours->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
 							RestSixHours->Action(6);
-							eventsDescription.setString("Energy+78\nHunger-42\nThirst-30");
+							if (!Location::Shelter)
+							{
+								int condition = Character::GetConditionLevel();
+								int warmth = Character::GetWarmthLevel();
+								Character::ChangeWarmthLevel(-20);
+								warmth = Character::GetWarmthLevel() - warmth;
+								condition = Character::GetConditionLevel() - condition;
+								eventsDescription.setString("Energy+78\nHunger-42\nThirst-30\nWarmth" + to_string( warmth) + "\nCondition" + to_string(condition));
+							}
+							else eventsDescription.setString("Energy+78\nHunger-42\nThirst-30");
 							RestContainer->setVisible(false);
 						}
 						if (RestEightHours->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
 							RestEightHours->Action(8);
-							eventsDescription.setString("Energy+100\nHunger-56\nThirst-40");
+							if (!Location::Shelter)
+							{
+								int condition = Character::GetConditionLevel();
+								int warmth = Character::GetWarmthLevel();
+								Character::ChangeWarmthLevel(-30);
+								warmth = Character::GetWarmthLevel() - warmth;
+								condition = Character::GetConditionLevel() - condition;
+								eventsDescription.setString("Energy+100\nHunger-56\nThirst-40\nWarmth" + to_string( warmth) + "\nCondition" + to_string(condition));
+							}
+							else eventsDescription.setString("Energy+100\nHunger-56\nThirst-40");
 							RestContainer->setVisible(false);
 						}
 
@@ -1193,6 +1240,14 @@ int main()
 
 #pragma endregion
 
+#pragma region Shelter
+
+			if (Location::Shelter) ShelterContainer->setVisible(true);
+			else ShelterContainer->setVisible(false);
+
+			ShelterContainer->render(window, Vector2f(0, 0));
+#pragma endregion
+
 #pragma region Rest
 
 			RestContainer->render(window, Vector2f(0, 0));
@@ -1206,7 +1261,6 @@ int main()
 				StayAtFireContainer->setVisible(false);
 				StayAtFireContainer->setActive(false);
 			}
-
 			if (GeneralTime::DeltaTime(Character::startedDay, Character::startedHour) > 2)
 			{
 				StayAtFireContainer->setVisible(false); // an example; it's not necessary must be 2
@@ -1266,8 +1320,10 @@ int main()
 					Location::ChangeTemperature(1 + rand() % 3);
 					hours = GeneralTime::GetHours();
 					days = GeneralTime::GetDay();
+					int condition = Character::GetConditionLevel();
+					int warmth = Character::GetWarmthLevel();
 					Character::ChangeWarmthLevel(5);
-					//eventsDescription.setString("ChangedTemperature" + to_string(Location::GetTemperature())); // for test
+					warmthAndConditionDuringGame.setString("Condition+" + to_string(Character::GetConditionLevel() - condition) + "\nWarmth+" + to_string(Character::GetWarmthLevel() - warmth));
 				}
 			}
 			if (GeneralTime::GetHours() > 17 || GeneralTime::GetHours() < 7)
@@ -1277,8 +1333,10 @@ int main()
 					Location::ChangeTemperature(-3 + rand() % 3);
 					hours = GeneralTime::GetHours();
 					days = GeneralTime::GetDay();
+					int condition = Character::GetConditionLevel();
+					int warmth = Character::GetWarmthLevel();
 					Character::ChangeWarmthLevel(-5);
-					//eventsDescription.setString("ChangedTemperature" + to_string(Location::GetTemperature())); // for test
+					warmthAndConditionDuringGame.setString("Condition" + to_string(condition - Character::GetConditionLevel()) + "\nWarmth" + to_string(warmth - Character::GetWarmthLevel()));
 				}
 			}
 
@@ -1587,6 +1645,7 @@ int main()
 
 			window.draw(eventsDescription);
 			window.draw(characteristics);
+			window.draw(warmthAndConditionDuringGame);
 
 			window.display();
 		}
