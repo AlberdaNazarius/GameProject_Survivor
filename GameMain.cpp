@@ -191,6 +191,16 @@ int main()
 		const Vector2f energyIcoSize(35, 55);
 		const Vector2f thirstIcoSize(25, 60);
 
+
+#pragma region Character
+
+		Container* CharacterContainer = new Container;
+		Panel* Character = new Panel("Pictures/Character.png", Vector2f((float)windowWidth / 4, (float)windowHeight / 3), windowWidth / 7.5, windowHeight / 3);
+
+		CharacterContainer->addChild(Character);
+
+#pragma endregion
+
 #pragma region Events
 
 
@@ -1234,6 +1244,12 @@ int main()
 			window.clear();
 			window.draw(location.Sprite);
 
+#pragma region Character
+
+			CharacterContainer->render(window, Vector2f(0, 0));
+
+#pragma endregion
+
 #pragma region ChooseWhereToGo
 
 			ChooseWhereToGoContainer->render(window, Vector2f(0, 0));
@@ -1323,7 +1339,7 @@ int main()
 					int condition = Character::GetConditionLevel();
 					int warmth = Character::GetWarmthLevel();
 					Character::ChangeWarmthLevel(5);
-					warmthAndConditionDuringGame.setString("Condition+" + to_string(Character::GetConditionLevel() - condition) + "\nWarmth+" + to_string(Character::GetWarmthLevel() - warmth));
+					if (Character::GetWarmthLevel() - warmth) warmthAndConditionDuringGame.setString("Condition+" + to_string(Character::GetConditionLevel() - condition) + "\nWarmth+" + to_string(Character::GetWarmthLevel() - warmth));
 				}
 			}
 			if (GeneralTime::GetHours() > 17 || GeneralTime::GetHours() < 7)
@@ -1336,7 +1352,7 @@ int main()
 					int condition = Character::GetConditionLevel();
 					int warmth = Character::GetWarmthLevel();
 					Character::ChangeWarmthLevel(-5);
-					warmthAndConditionDuringGame.setString("Condition" + to_string(condition - Character::GetConditionLevel()) + "\nWarmth" + to_string(warmth - Character::GetWarmthLevel()));
+					if (Character::GetWarmthLevel() - warmth) warmthAndConditionDuringGame.setString("Condition" + to_string(condition - Character::GetConditionLevel()) + "\nWarmth" + to_string(warmth - Character::GetWarmthLevel()));
 				}
 			}
 
