@@ -93,6 +93,9 @@ Menu::~Menu()
 }
 void Menu::Draw()
 {
+	Forest::SetPicture("Pictures/Environment.jpg");
+	Lake::SetPicture("Pictures/Lake.png");
+	River::SetPicture("Pictures/River.jpg");
 	while (MenuWindow.isOpen())
 	{
 		while (MenuWindow.pollEvent(event))
@@ -105,9 +108,6 @@ void Menu::Draw()
 					if (LoadSavedGame->checkClick((Vector2f)Mouse::getPosition(MenuWindow)))
 					{
 						Data::ReloadAllStaticData();
-						Forest::SetPicture("Pictures/Environment.jpg");
-						Lake::SetPicture("Pictures/Lake.jpg");
-						River::SetPicture("Pictures/River.jpg");
 						Location::CheckWhatEnvironment(Location::LocationCurrent);
 						LoadSavedGame->Action(true);
 					}
@@ -115,9 +115,6 @@ void Menu::Draw()
 					{
 						srand(time(0));
 						Data::SetDeffaultCharacteristics();
-						Forest::SetPicture("Pictures/Environment.jpg");
-						Lake::SetPicture("Pictures/Lake.jpg");
-						River::SetPicture("Pictures/River.jpg");
 						Generator::GenerateEnvironments(3, 3);
 						Location::LocationCurrent = Data::GetEnvironment(0);
 						Location::CheckWhatEnvironment(Location::LocationCurrent);
