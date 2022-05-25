@@ -594,9 +594,9 @@ int main()
 		int barHeitght = 50; 
 		int distance = 60;
 
-		Label* TimeLabel = new Label(Vector2f(windowWidth / timeCoefficient[0], windowHeight / timeCoefficient[1]), GeneralTime::GetTime(), 30, Color::Red);
+		Label* TimeLabel = new Label(Vector2f(windowWidth / timeCoefficient[0], windowHeight / timeCoefficient[1]), GeneralTime::GetTime(), 30, Color::White);
 
-		TemperatureBar temperatureBar("Pictures/TemperatureScale/TemperatureHot.png", "Pictures/TemperatureScale/TemperatureCold.png", 25, 75, to_string(Location::GetTemperature()) + "°C", Color::Red);
+		TemperatureBar temperatureBar("Pictures/TemperatureScale/TemperatureHot.png", "Pictures/TemperatureScale/TemperatureCold.png", 25, 75, to_string(Location::GetTemperature()) + "°C", Color::White);
 		temperatureBar.SetPosition(windowWidth / temperatureCoefficient[0], windowHeight / temperatureCoefficient[1]);
 
 		Bar bars[] = 
@@ -625,13 +625,13 @@ int main()
 		int days = GeneralTime::GetDay();
 
 		// Attaching pictures to environments
-		Forest::SetPicture("Pictures/Environment.jpg");
-		Lake::SetPicture("Pictures/Lake.png");
-		River::SetPicture("Pictures/River.jpg");
+		Forest::SetPicture("Pictures/Environments/Forest.png");
+		Lake::SetPicture("Pictures/Environments/Lake.png");
+		River::SetPicture("Pictures/Environments/River.png");
 
 		//Make elements inactive
 		StartFireContainer->setVisible(false);
-		StayAtFireContainer->setVisible(false);
+		//StayAtFireContainer->setVisible(false);
 		OpenInventoryContainer->setVisible(false);
 		HuntContainer->setVisible(false);
 		FishContainer->setActive(false);
@@ -1616,7 +1616,7 @@ int main()
 				// Stay at fire action 
 			if (StayAtFire->isContains())
 			{
-				changeCharacteristicStayAtFire->SetPosition(Vector2f(StayAtFire->getRealPosition().x * 1.018, StayAtFire->getRealPosition().y + StayAtFire->getHeight() / 6));
+				changeCharacteristicStayAtFire->SetPosition(Vector2f(StayAtFire->getRealPosition().x * 0.9, StayAtFire->getRealPosition().y + StayAtFire->getHeight() / 6));
 				changeCharacteristicStayAtFire->SetDistanceBetweenObjects(Vector2f(65, 0), changeCharacteristicStayAtFire, 5);
 				changeCharacteristicStayAtFire[4].SetPosition(changeCharacteristicStayAtFire[4].GetPosition().x + 15, StayAtFire->getRealPosition().y + StayAtFire->getHeight() / 4.5);
 				changeCharacteristicStayAtFire[4].SetTexPosition(Vector2f(changeCharacteristicStayAtFire[4].GetTextPosition().x, StayAtFire->getRealPosition().y + StayAtFire->getHeight() / 3.8));

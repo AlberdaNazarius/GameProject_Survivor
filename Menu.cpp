@@ -93,9 +93,9 @@ Menu::~Menu()
 }
 void Menu::Draw()
 {
-	Forest::SetPicture("Pictures/Environment.jpg");
-	Lake::SetPicture("Pictures/Lake.png");
-	River::SetPicture("Pictures/River.jpg");
+	Forest::SetPicture("Pictures/Environments/Forest.png");
+	Lake::SetPicture("Pictures/Environments/Lake.png");
+	River::SetPicture("Pictures/Environments/River.png");
 	while (MenuWindow.isOpen())
 	{
 		while (MenuWindow.pollEvent(event))

@@ -10,7 +10,7 @@ int GeneralTime::hours;
 int GeneralTime::days;
 sf::Sprite Location::Sprite;
 sf::Texture Location::texture;
-
+sf::Image Location::image;
 
 std::string picture;
 int Location::LocationCurrent;
@@ -25,26 +25,27 @@ void Location::CheckWhatEnvironment(int environmentIndex)
 	if (environmentIndex == 1)
 	{
 		auto forest = (Forest*)Location::CurrentLocation;
-		forest->SetBackground(Sprite, texture, Forest::GetPicture(), windowWidth, windowHeight);
+		Location::SetBackground(Forest::GetPicture());
 	}
 	if (environmentIndex == 2)
 	{
 		auto lake = (Lake*)Location::CurrentLocation;
-		lake->SetBackground(Sprite, texture, Lake::GetPicture(), windowWidth, windowHeight);
+		Location::SetBackground(Lake::GetPicture());
 	}
 	if (environmentIndex == 3)
 	{
 		auto river = (River*)Location::CurrentLocation;
-		river->SetBackground(Sprite, texture, River::GetPicture(), windowWidth, windowHeight);
+		Location::SetBackground(River::GetPicture());
 	}
 }
 
-void Environment::SetBackground(sf::Sprite& sprite, sf::Texture& texture, string picture, int windowWidth, int windowHeight)
+void Location::SetBackground(string picture)
 {
 	if (picture.size() >= 1)
 	{
-		texture.loadFromFile(picture, sf::IntRect(0, 0, windowWidth, windowHeight));
-		sprite.setTexture(texture);
+		Location::image.loadFromFile(picture);
+		Location::texture.loadFromImage(image, sf::IntRect(sf::Vector2i(0, 0), (sf::Vector2i)image.getSize()));
+		Location::Sprite.setTexture(texture);
 	}
 	else
 		cout << "Picture isn't loaded!";

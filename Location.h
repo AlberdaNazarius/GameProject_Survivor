@@ -4,7 +4,7 @@
 #include <map>
 #include "Data.h"
 #include "Interfaces.h"
-
+using namespace sf;
 using namespace std;
 class Environment
 {
@@ -58,6 +58,7 @@ public:
 	static Environment* CurrentLocation;
 	static int LocationCurrent;
 	static void CheckWhatEnvironment(int environmentIndex);
+	static void SetBackground(string picture);
 
 	static sf::Sprite Sprite;
 	static int GetTemperature();
@@ -71,6 +72,7 @@ public:
 
 	~Location() { delete[] CurrentLocation; }
 private:
+	static sf::Image image;
 	static sf::Texture texture;
 	static int temperature;
 	static int windowWidth;

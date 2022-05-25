@@ -132,7 +132,7 @@ void Character::DisplayStats()
 	cout << "Warmth: " << warmth << endl;
 	cout << "Energy: " << energy << endl;
 	cout << "Condition: " << condition << endl;
-	cout << "SsStayAtFire: " << isStayAtFire << endl;
+	cout << "IsStayAtFire: " << isStayAtFire << endl;
 
 }
 
