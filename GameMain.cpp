@@ -1352,7 +1352,7 @@ int main()
 					int condition = Character::GetConditionLevel();
 					int warmth = Character::GetWarmthLevel();
 					Character::ChangeWarmthLevel(-5);
-					if (Character::GetWarmthLevel() - warmth) warmthAndConditionDuringGame.setString("Condition" + to_string(condition - Character::GetConditionLevel()) + "\nWarmth" + to_string(warmth - Character::GetWarmthLevel()));
+					if (Character::GetWarmthLevel() - warmth) warmthAndConditionDuringGame.setString("Condition" + to_string(Character::GetConditionLevel() - condition) + "\nWarmth" + to_string(Character::GetWarmthLevel() - warmth));
 				}
 			}
 
@@ -1392,6 +1392,10 @@ int main()
 			MainContainer->render(window, Vector2f(0, 0)); // render themself and all ui that contain
 
 #pragma region Hunt	
+
+			if (Inventory::Check_Tool("fall trap")) FallTrap->setVisible(true);
+			if (Inventory::Check_Tool("spring trap")) SpringTrap->setVisible(true);
+			if (Inventory::Check_Tool("bird trap")) BirdTrap->setVisible(true);
 
 			HuntContainer->render(window, Vector2f(0, 0));
 			FishContainer->render(window, Vector2f(0, 0));

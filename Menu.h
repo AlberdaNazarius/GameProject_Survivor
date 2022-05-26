@@ -11,22 +11,18 @@ public:
 	Menu();
 	~Menu();
 	void Draw();
-	static bool OpenMainWindow() { return openMainWindow; }	
-	static bool openMainWindow;	
+	static bool OpenMainWindow() { return openMainWindow; }
+	static bool openMainWindow;
 	static RenderWindow MenuWindow;
 private:
 	const int windowWidth = VideoMode::getDesktopMode().width;
 	const int windowHeight = VideoMode::getDesktopMode().height;
 	Container* MenuContainer;
 	Panel* MenuPanel;
-	Container* OptionsContainer;
-	Panel* OptionsPanel;
 	Event event;
 	Location location;
 	Button<void(*)(bool)>* LoadSavedGame;
 	Button<void(*)(bool)>* NewGame;
-	Button<void(*)(Container*, Container*, bool)>* OpenOptions;
 	Button<void(*)(RenderWindow&)>* Quit;
-	Button<void(*)(Container*, Container*, bool)>* CloseOptions;
 };
 
