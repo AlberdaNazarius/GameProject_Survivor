@@ -195,7 +195,7 @@ int main()
 #pragma region Character
 
 		Container* CharacterContainer = new Container;
-		Panel* Character = new Panel("Pictures/Character.png", Vector2f((float)windowWidth / 4, (float)windowHeight / 2.5), windowWidth / 7.5, windowHeight / 3);
+		Panel* Character = new Panel("Pictures/Character.png", Vector2f((float)windowWidth / 4, (float)windowHeight / 2.85), windowWidth / 5.8, windowHeight / 2.4);
 
 		CharacterContainer->addChild(Character);
 
@@ -260,7 +260,7 @@ int main()
 		StartFire->setDelegate(ContainerSetVisible);
 
 		Container* StayAtFireContainer = new Container;
-		Panel* StayAtFirePanel = new Panel("Pictures/transparent.png", Vector2f((float)windowWidth / 2.5, (float)windowHeight / 1.7), windowWidth * 0.08, windowHeight * 0.15);
+		Panel* StayAtFirePanel = new Panel("Pictures/transparent.png", Vector2f((float)windowWidth / 2.5, (float)windowHeight / 1.7), windowWidth / 10.5, windowHeight / 5.6);
 
 		if (Character::IsStayAtFire())
 		{
@@ -552,7 +552,7 @@ int main()
 #pragma region Shelter
 
 		Container* ShelterContainer = new Container;
-		Panel* Shelter = new Panel("Pictures/Shelter.png", Vector2f((float)windowWidth / 2, (float)windowHeight / 2), windowWidth / 3.3, windowHeight / 3.2);
+		Panel* Shelter = new Panel("Pictures/Shelter.png", Vector2f((float)windowWidth / 2.23, (float)windowHeight / 2.45), windowWidth / 2.56, windowHeight / 2.4);
 
 		ShelterContainer->addChild(Shelter);
 
