@@ -610,7 +610,6 @@ int main()
 
 		for (int i = 0; i < 5; i++)
 			bars[i].SetPosition(windowWidth / characteristicsCoefficient[0], windowHeight / characteristicsCoefficient[1] + i * distance);
-
 		DisplayContainer->addChild(TimeLabel);
 		MainContainer->addChild(DisplayContainer);
 #pragma endregion
@@ -631,12 +630,10 @@ int main()
 
 		//Make elements inactive
 		StartFireContainer->setVisible(false);
-		//StayAtFireContainer->setVisible(false);
 		OpenInventoryContainer->setVisible(false);
 		HuntContainer->setVisible(false);
 		FishContainer->setActive(false);
 		IsUsedAxeContainer->setVisible(false);
-		
 
 		//Main cycle
 		while (window.isOpen())
@@ -1072,6 +1069,10 @@ int main()
 							StartFireContainer->setActive(false);
 							IsUsedAxeContainer->setActive(false);
 							OpenInventoryContainer->setVisible(false);
+
+							Generator::GenerateEnvironments(3, 3);
+							Location::LocationCurrent = Data::GetEnvironment(0);
+							Location::CheckWhatEnvironment(Location::LocationCurrent);
 
 							hours = GeneralTime::GetHours();
 							days = GeneralTime::GetDay();
