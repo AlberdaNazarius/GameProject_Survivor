@@ -900,6 +900,7 @@ int main()
 
 						if (HuntButton->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							eventsDescription.setString("Max costs:\nEnergy-5\nHunger-25\nThirst-35");
 							HuntButton->Action(HuntContainer, !HuntContainer->getVisible());
 							StayAtFireContainer->setVisible(!HuntContainer->getVisible());
 							IsUsedAxeContainer->setVisible(false);
@@ -929,6 +930,7 @@ int main()
 						}
 						if (FishButton->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							eventsDescription.setString("Max costs:\nEnergy-10\nHunger-25\nThirst-35");
 							FishButton->Action(FishContainer, !FishContainer->getVisible());
 							StayAtFireContainer->setVisible(!FishContainer->getVisible());
 							IsUsedAxeContainer->setVisible(false);
