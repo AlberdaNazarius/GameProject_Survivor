@@ -235,10 +235,10 @@ int main()
 
 		SpriteWithText changeCharacteristicStayAtFire[] =
 		{
-			SpriteWithText("Pictures/Characteristics/Energy.png", "???", Color::White, Vector2f(20, 40)),
-			SpriteWithText("Pictures/Characteristics/Hunger.png", "???", Color::White, Vector2f(25, 40)),
-			SpriteWithText("Pictures/Characteristics/Thirst.png", "???", Color::White, Vector2f(15, 43)),
-			SpriteWithText("Pictures/Characteristics/Warmth.png", "???", Color::White, Vector2f(30, 40)),
+			SpriteWithText("Pictures/Characteristics/Energy.png", "+10", Color::White, Vector2f(20, 40)),
+			SpriteWithText("Pictures/Characteristics/Hunger.png", " -5", Color::White, Vector2f(25, 40)),
+			SpriteWithText("Pictures/Characteristics/Thirst.png", " -7", Color::White, Vector2f(15, 43)),
+			SpriteWithText("Pictures/Characteristics/Warmth.png", "+60", Color::White, Vector2f(30, 40)),
 			SpriteWithText("Pictures/Characteristics/Condition.png", "???", Color::White, Vector2f(35, 35)),
 		};
 
@@ -380,7 +380,7 @@ int main()
 
 		SpriteWithText changeCharacteristicsHunt[] =
 		{
-			SpriteWithText("Pictures/Characteristics/Energy.png", "???", Color::White, energyIcoSize),
+			SpriteWithText("Pictures/Characteristics/Energy.png", "  -5", Color::White, energyIcoSize),
 			SpriteWithText("Pictures/Characteristics/Hunger.png", "???", Color::White, hungerIcoSize),
 			SpriteWithText("Pictures/Characteristics/Thirst.png", "???", Color::White, thirstIcoSize),
 		};
@@ -449,6 +449,14 @@ int main()
 #pragma endregion
 
 #pragma region Rest
+		SpriteWithText changeCharacteristicsRest[] =
+		{
+			SpriteWithText("Pictures/Characteristics/Energy.png", "???", Color::White, Vector2f(20, 40)),
+			SpriteWithText("Pictures/Characteristics/Hunger.png", "???", Color::White, Vector2f(25, 40)),
+			SpriteWithText("Pictures/Characteristics/Thirst.png", "???", Color::White, Vector2f(15, 43)),
+			SpriteWithText("Pictures/Characteristics/Warmth.png", "???", Color::White, Vector2f(30, 40)),
+			SpriteWithText("Pictures/Characteristics/Condition.png", " ?", Color::White, Vector2f(35, 35)),
+		};
 
 		Button<void(*)(Container*, bool)>* RestButton = new Button<void(*)(Container*, bool)>(Vector2f((float)MainPanel->getWidth() / 1.5, (float)MainPanel->getHeight() / 54), Vector2f((float)MainPanel->getWidth() / 6.4, (float)MainPanel->getHeight() / 2.16), "Rest");
 		RestButton->setDelegate(ContainerSetVisible);
@@ -1557,11 +1565,13 @@ int main()
 				changeCharacteristicsFish->SetDistanceBetweenObjects(Vector2f(100, 0), changeCharacteristicsFish, 3);
 				if (FishingRod->isContains())
 				{
+					changeCharacteristicsFish[0].SetText("  -7");
 					changeCharacteristicsFish->SetPosition(Vector2f(FishingRod->getRealPosition().x * 1.038, FishingRod->getRealPosition().y + FishingRod->getHeight() / 6));
 					FishingRod->setTextRender(false);
 				}
 				else
 				{
+					changeCharacteristicsFish[0].SetText(" -10");
 					changeCharacteristicsFish->SetPosition(Vector2f(SpearFishing->getRealPosition().x * 1.021, SpearFishing->getRealPosition().y + SpearFishing->getHeight() / 6));
 					SpearFishing->setTextRender(false);
 				}
@@ -1583,32 +1593,47 @@ int main()
 				changeCharacteristicsStayAtFire->SetDistanceBetweenObjects(Vector2f(100, 0), changeCharacteristicsStayAtFire, 3);
 				if (FireLighter->isContains())
 				{
+					changeCharacteristicsStayAtFire[0].SetText(" -3");
+					changeCharacteristicsStayAtFire[1].SetText("  0");
+					changeCharacteristicsStayAtFire[2].SetText(" -1");
 					changeCharacteristicsStayAtFire->SetPosition(Vector2f(FireLighter->getRealPosition().x * 1.038, FireLighter->getRealPosition().y + FireLighter->getHeight() / 6));
 					FireLighter->setTextRender(false);
 				}
 				else if (FireStone->isContains())
 				{
+					changeCharacteristicsStayAtFire[0].SetText("-20");
+					changeCharacteristicsStayAtFire[1].SetText(" -6");
+					changeCharacteristicsStayAtFire[2].SetText(" -9");
 					changeCharacteristicsStayAtFire->SetPosition(Vector2f(FireStone->getRealPosition().x * 1.021, FireStone->getRealPosition().y + FireStone->getHeight() / 6));
 					FireStone->setTextRender(false);
 				}
 				else if (FireMatches->isContains())
 				{
+					changeCharacteristicsStayAtFire[0].SetText(" -5");
+					changeCharacteristicsStayAtFire[1].SetText("  0");
+					changeCharacteristicsStayAtFire[2].SetText(" -1");
 					changeCharacteristicsStayAtFire->SetPosition(Vector2f(FireMatches->getRealPosition().x * 1.021, FireMatches->getRealPosition().y + FireMatches->getHeight() / 6));
 					FireMatches->setTextRender(false);
 				}
 				else if (FireBow->isContains())
 				{
+					changeCharacteristicsStayAtFire[0].SetText("-25");
+					changeCharacteristicsStayAtFire[1].SetText("-10");
+					changeCharacteristicsStayAtFire[2].SetText("-14");
 					changeCharacteristicsStayAtFire->SetPosition(Vector2f(FireBow->getRealPosition().x * 1.021, FireBow->getRealPosition().y + FireBow->getHeight() / 6));
 					FireBow->setTextRender(false);
 				}
 				else
 				{
+					changeCharacteristicsStayAtFire[0].SetText("-15");
+					changeCharacteristicsStayAtFire[1].SetText(" -5");
+					changeCharacteristicsStayAtFire[2].SetText(" -7");
 					changeCharacteristicsStayAtFire->SetPosition(Vector2f(FireLens->getRealPosition().x * 1.008, FireLens->getRealPosition().y + FireLens->getHeight() / 6));
 					FireLens->setTextRender(false);
 				}
 
-				changeCharacteristicsStayAtFire[0].Render(window);
-				changeCharacteristicsStayAtFire[1].Render(window);
+				changeCharacteristicsStayAtFire[0].Render(window);				
+				changeCharacteristicsStayAtFire[1].Render(window);				
 				changeCharacteristicsStayAtFire[2].Render(window);
 			}
 			else
@@ -1626,7 +1651,7 @@ int main()
 				changeCharacteristicStayAtFire->SetPosition(Vector2f(StayAtFire->getRealPosition().x * 0.9, StayAtFire->getRealPosition().y + StayAtFire->getHeight() / 6));
 				changeCharacteristicStayAtFire->SetDistanceBetweenObjects(Vector2f(65, 0), changeCharacteristicStayAtFire, 5);
 				changeCharacteristicStayAtFire[4].SetPosition(changeCharacteristicStayAtFire[4].GetPosition().x + 15, StayAtFire->getRealPosition().y + StayAtFire->getHeight() / 4.5);
-				changeCharacteristicStayAtFire[4].SetTexPosition(Vector2f(changeCharacteristicStayAtFire[4].GetTextPosition().x, StayAtFire->getRealPosition().y + StayAtFire->getHeight() / 3.8));
+				changeCharacteristicStayAtFire[4].SetTexPosition(Vector2f(changeCharacteristicStayAtFire[4].GetTextPosition().x, StayAtFire->getRealPosition().y + StayAtFire->getHeight() / 4.5));
 
 				StayAtFire->setTextRender(false);
 				changeCharacteristicStayAtFire[0].Render(window);
@@ -1637,6 +1662,58 @@ int main()
 			}
 			else
 				StayAtFire->setTextRender(true);
+
+			// Rest
+			if (RestThreeHours->isContains() || RestSixHours->isContains() || RestEightHours->isContains())
+			{
+				changeCharacteristicsRest[0].SetTextSize(16);
+				changeCharacteristicsRest[3].SetTextSize(16);
+
+				changeCharacteristicsRest->SetDistanceBetweenObjects(Vector2f(60, 0), changeCharacteristicsRest, 5);
+				changeCharacteristicsRest[4].SetPosition(Vector2f(changeCharacteristicsRest[4].GetPosition().x, changeCharacteristicsRest[4].GetPosition().y + 6));
+				changeCharacteristicsRest[4].SetTexPosition(Vector2f(changeCharacteristicsRest[4].GetPosition().x, changeCharacteristicsRest[4].GetPosition().y + 3));
+
+				if (RestThreeHours->isContains())
+				{
+					changeCharacteristicsRest[0].SetText("+39");
+					changeCharacteristicsRest[1].SetText("-21");
+					changeCharacteristicsRest[2].SetText("-15");
+					changeCharacteristicsRest[3].SetText("-10");
+					changeCharacteristicsRest->SetPosition(Vector2f(RestThreeHours->getRealPosition().x * 1.018, RestThreeHours->getRealPosition().y + RestThreeHours->getHeight() / 6));
+					RestThreeHours->setTextRender(false);
+				}
+				else if (RestSixHours->isContains())
+				{
+					changeCharacteristicsRest[0].SetText("+78");
+					changeCharacteristicsRest[1].SetText("-42");
+					changeCharacteristicsRest[2].SetText("-30");
+					changeCharacteristicsRest[3].SetText("-20");
+					changeCharacteristicsRest->SetPosition(Vector2f(RestSixHours->getRealPosition().x * 1.009, RestSixHours->getRealPosition().y + RestSixHours->getHeight() / 6));
+					RestSixHours->setTextRender(false);
+				}
+				else
+				{
+					changeCharacteristicsRest[0].SetTextSize(13);
+					changeCharacteristicsRest[0].SetText("+100");
+					changeCharacteristicsRest[1].SetText("-56");
+					changeCharacteristicsRest[2].SetText("-40");
+					changeCharacteristicsRest[3].SetText("-30");
+					changeCharacteristicsRest->SetPosition(Vector2f(RestEightHours->getRealPosition().x * 1.005, RestEightHours->getRealPosition().y + RestEightHours->getHeight() / 6));
+					RestEightHours->setTextRender(false);
+				}
+
+				changeCharacteristicsRest[0].Render(window);
+				changeCharacteristicsRest[1].Render(window);
+				changeCharacteristicsRest[2].Render(window);
+				changeCharacteristicsRest[3].Render(window);
+				changeCharacteristicsRest[4].Render(window);
+			}
+			else
+			{
+				RestThreeHours->setTextRender(true);
+				RestSixHours->setTextRender(true);
+				RestEightHours->setTextRender(true);
+			}
 
 #pragma endregion
 
