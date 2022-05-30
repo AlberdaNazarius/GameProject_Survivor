@@ -2,7 +2,7 @@
 #include "Character.h"
 #include <ctime>
 
-RenderWindow Menu::MenuWindow(sf::VideoMode(VideoMode::getDesktopMode().width, VideoMode::getDesktopMode().height), "Menu", sf::Style::Fullscreen);
+RenderWindow Menu::MenuWindow(sf::VideoMode(VideoMode::getDesktopMode().width, VideoMode::getDesktopMode().height), "Menu"/*, sf::Style::Fullscreen*/);
 
 Texture BackgroundTexture;
 Sprite BackgroundPicture;
@@ -80,18 +80,24 @@ void Menu::Draw()
 				{
 					if (NewGame->checkClick((Vector2f)Mouse::getPosition(MenuWindow)))
 					{
+						cout << "NewGame->checkClick() == true" << endl;
 						srand(time(0));
 						Data::SetDeffaultCharacteristics();
 						Generator::GenerateEnvironments(3, 3);
 						Location::LocationCurrent = Data::GetEnvironment(0);
 						Location::CheckWhatEnvironment(Location::LocationCurrent);
 						NewGame->Action(true);
+						cout << "Data::SetDeffaultCharacteristics();\nGenerator::GenerateEnvironments(3, 3);" << endl;
+						cout << "________________________________________" << endl;
 					}
 					if (LoadSavedGame->checkClick((Vector2f)Mouse::getPosition(MenuWindow)))
 					{
+						cout << "LoadSavedGame->checkClick() == true" << endl;
 						Data::ReloadAllStaticData();
 						Location::CheckWhatEnvironment(Location::LocationCurrent);
 						LoadSavedGame->Action(true);
+						cout << "Data::ReloadAllStaticData();" << endl;
+						cout << "________________________________________" << endl;
 					}
 					if (Quit->checkClick((Vector2f)Mouse::getPosition(MenuWindow))) Quit->Action(MenuWindow);
 				}

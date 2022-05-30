@@ -57,9 +57,6 @@ void Character::Rest(int hours)
 	Character::ChangeEnergyLevel(13 * hours); // sleeping for 8 hours will fully restore energy
 	Character::ChangeThirstLevel(-5 * hours);
 	Character::ChangeHungerLevel(-7 * hours);
-
-	//test
-	DisplayCharacteristics();
 }
 void Character::DisplayCharacteristics()
 {

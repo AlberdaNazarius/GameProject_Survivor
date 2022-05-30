@@ -57,7 +57,7 @@ void HuntOveriwrite(int maxIndex, int spentEnergy, int indexOfEnvironment)
 	{
 		Character::ChangeConditionLevel(-5);
 		eventsDescription.setString("You were bitten by snake\nCondition-5\nEnergy" + to_string(spentEnergy) + "\nHunger" + to_string(-10 * minutes / 60) + "\nThirst" + to_string(-14* minutes / 60));
-
+		cout << "Character::ChangeConditionLevel(-5);" << endl;
 	}// because of beating by snake etc.
 	randValue = rand() % 3;
 	if (randValue)
@@ -67,6 +67,7 @@ void HuntOveriwrite(int maxIndex, int spentEnergy, int indexOfEnvironment)
 			Forest forest;
 			it = forest.Hunt(maxIndex);
 			Inventory::Change_Item("food", it->first);
+			cout << it->second << "\nInventory::Change_Item('food', " << it->first << ");" << endl;
 			eventsDescription.setString(it->second+"\nEnergy" + to_string(spentEnergy) + "\nHunger" + to_string(-10 * minutes / 60) + "\nThirst" + to_string(-14 * minutes / 60));
 		}
 		if (indexOfEnvironment == 2)
@@ -74,6 +75,7 @@ void HuntOveriwrite(int maxIndex, int spentEnergy, int indexOfEnvironment)
 			Lake lake;
 			it = lake.Hunt(maxIndex);
 			Inventory::Change_Item("food", it->first);
+			cout << it->second << "\nInventory::Change_Item('food', " << it->first << ");" << endl;
 			eventsDescription.setString(it->second + "\nEnergy" + to_string(spentEnergy) + "\nHunger" + to_string(-10 * minutes / 60) + "\nThirst" + to_string(-14 * minutes / 60));
 		}
 		if (indexOfEnvironment == 3)
@@ -81,11 +83,15 @@ void HuntOveriwrite(int maxIndex, int spentEnergy, int indexOfEnvironment)
 			River river;
 			it = river.Hunt(maxIndex);
 			Inventory::Change_Item("food",it->first);
+			cout << it->second << "\nInventory::Change_Item('food', " << it->first << ");" << endl;
 			eventsDescription.setString(it->second + "\nEnergy" + to_string(spentEnergy) + "\nHunger" + to_string(-10* minutes / 60) + "\nThirst" + to_string(-14 * minutes / 60));
 		}
 	}
-	else  eventsDescription.setString("It's nothing hunted\nEnergy" + to_string(spentEnergy) + "\nHunger" + to_string(-10 * minutes / 60) + "\nThirst" + to_string(-14 * minutes / 60));
-	Character::DisplayCharacteristics();
+	else
+	{
+		eventsDescription.setString("It's nothing hunted\nEnergy" + to_string(spentEnergy) + "\nHunger" + to_string(-10 * minutes / 60) + "\nThirst" + to_string(-14 * minutes / 60));
+		cout << "It's nothing hunted" << endl;
+	}
 }
 
 #pragma endregion
@@ -120,7 +126,6 @@ void StayAtFireSetVisible(Container* cont, bool value, int minutes, int takenEne
 	Character::ChangeEnergyLevel(takenEnergy);
 	Character::ChangeHungerLevel(-10 * minutes / 60);
 	Character::ChangeThirstLevel(-14 * minutes / 60);
-	Character::DisplayCharacteristics();
 	Character::SetStayAtFire(true);
 	if (-10 * minutes / 60) eventsDescription.setString("You have more than 2 hours until fire burns out\nEnergy" + to_string(takenEnergy) + "\nHunger" + to_string(-10*minutes/60) + "\nThirst" + to_string(-14*minutes/60));
 	else eventsDescription.setString("You have more than 2 hours until fire burns out\nEnergy" + to_string(takenEnergy) + "\nThirst" + to_string(-14 * minutes / 60));
@@ -145,7 +150,7 @@ void InventorySetVisible(Container* cont, bool value)
 
 void CallMenu(RenderWindow& window, Menu& obj)
 {
-	window.create(sf::VideoMode(VideoMode::getDesktopMode().width, VideoMode::getDesktopMode().height), "Menu", sf::Style::Fullscreen);
+	window.create(sf::VideoMode(VideoMode::getDesktopMode().width, VideoMode::getDesktopMode().height), "Menu"/*, sf::Style::Fullscreen*/);
 	obj.Draw();
 }
 
@@ -165,7 +170,7 @@ int main()
 	if (Menu::OpenMainWindow())
 	{
 		//RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Game");
-		RenderWindow window(sf::VideoMode(VideoMode::getDesktopMode().width, VideoMode::getDesktopMode().height), "Game", sf::Style::Fullscreen);
+		RenderWindow window(sf::VideoMode(VideoMode::getDesktopMode().width, VideoMode::getDesktopMode().height), "Game"/*, sf::Style::Fullscreen*/);
 		Event event;
 		Location location;
 
@@ -668,10 +673,12 @@ int main()
 
 						if (StartFire->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "StartFire->checkClick() == true" << endl;
 							if (Inventory::wood < 5) eventsDescription.setString("You need at  least 5 iteams of Wood to Start Fire");
 							else
 							{
 								StartFire->Action(StartFireContainer, !StartFireContainer->getVisible());
+								cout << "StartFireContainer->setVisible(true);" << endl;
 								Character::startedHour = GeneralTime::GetHours();
 								Character::startedDay = GeneralTime::GetDay();
 							}
@@ -682,39 +689,56 @@ int main()
 							OpenInventoryContainer->setVisible(false);
 							for (Panel* x : craftMenus)
 								x->setVisible(false);
+							cout << "________________________________________" << endl;
 						}
 						if (FireLighter->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "FireLighter->checkClick() == true" << endl;
 							FireLighter->Action(StayAtFireContainer, true, 5, -3);
 							Inventory::Change_Item("wood", -5);
+							cout << "StayAtFireContainer->setVisible(true);" << endl;
+							Character::DisplayCharacteristics();
 							StartFireContainer->setVisible(false);
 						}
 						if (FireStone->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "FireStone->checkClick() == true" << endl;
 							FireStone->Action(StayAtFireContainer, true, 40, -20);
 							Inventory::Change_Item("wood", -5);
+							cout << "StayAtFireContainer->setVisible(true);" << endl;
+							Character::DisplayCharacteristics();
 							StartFireContainer->setVisible(false);
 						}
 						if (FireMatches->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "FireMatches->checkClick() == true" << endl;
 							FireMatches->Action(StayAtFireContainer, true, 5, -5);
 							Inventory::Change_Item("wood", -5);
+							cout << "StayAtFireContainer->setVisible(true);" << endl;
+							Character::DisplayCharacteristics();
 							StartFireContainer->setVisible(false);
 						}
 						if (FireBow->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "FireBow->checkClick() == true" << endl;
 							FireBow->Action(StayAtFireContainer, true, 60, -25);
 							Inventory::Change_Item("wood", -5);
+							cout << "StayAtFireContainer->setVisible(true);" << endl;
+							Character::DisplayCharacteristics();
 							StartFireContainer->setVisible(false);
 						}
 						if (FireLens->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "FireLens->checkClick() == true" << endl;
 							FireLens->Action(StayAtFireContainer, true, 30, -15);
 							Inventory::Change_Item("wood", -5);
+							cout << "StayAtFireContainer->setVisible(true);" << endl;
+							Character::DisplayCharacteristics();
 							StartFireContainer->setVisible(false);
 						}
 						if (StayAtFire->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "StayAtFire->checkClick() == true" << endl;
 							eventsDescription.setString("Warmth+60\nEnergy+10\nHunger-5\nThirst-7");
 
 							int minutes = 60;
@@ -723,6 +747,7 @@ int main()
 							Character::ChangeThirstLevel(minutes / 60 * -14);
 							StayAtFire->Action(minutes);
 							Character::ChangeEnergyLevel(minutes / 6);
+							cout << "Character::ChangeWarmthLevel(60);" << endl;
 							Character::DisplayCharacteristics();
 						}
 #pragma endregion 
@@ -731,8 +756,13 @@ int main()
 
 						if (ExploreArea->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "ExploreArea->checkClick() == true" << endl;
 							if (IsUsedAxeContainer->getVisible() || !Inventory::Check_Tool("axe")) IsUsedAxeContainer->setVisible(false);
-							else IsUsedAxeContainer->setVisible(true);
+							else
+							{
+								IsUsedAxeContainer->setVisible(true);
+								cout << "IsUsedAxeContainer->setVisible(true);" << endl;
+							}
 							if (!Inventory::Check_Tool("axe"))
 							{
 								Inventory::checkClickExploreArea++;
@@ -747,6 +777,10 @@ int main()
 								FirstVariantToTravel->setText(CaptionOfButton(0));
 								SecondVariantToTravel->setText(CaptionOfButton(1));
 								ThirdVariantToTravel->setText(CaptionOfButton(2));
+								cout << "Inventory::checkClickExploreArea++;" << endl
+									<< "Inventory::ExploreArea(Inventory::checkClickExploreArea);" << endl
+									<< "FirstVariantToTravel->setText(CaptionOfButton(0));\nSecondVariantToTravel->setText(CaptionOfButton(1));\nThirdVariantToTravel->setText(CaptionOfButton(2)); " << endl;
+								Character::DisplayCharacteristics();
 							}
 							StartFireContainer->setVisible(false);
 							StayAtFireContainer->setVisible(!IsUsedAxeContainer->getVisible());
@@ -756,13 +790,20 @@ int main()
 							OpenInventoryContainer->setVisible(false);
 							for (Panel* x : craftMenus)
 								x->setVisible(false);
+							cout << "________________________________________" << endl;
 						}
 						if (UseAxeButton->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "UseAxeButton->checkClick() == true" << endl;
 							Inventory::checkClickExploreArea++;
 							int previousValue = Inventory::wood;
 							value = ExploreArea->Action(Inventory::checkClickExploreArea);
 							UseAxeButton->Action();
+							cout << "Inventory::checkClickExploreArea++;" << endl
+								<< "Inventory::ExploreArea(Inventory::checkClickExploreArea);" << endl
+								<< "Inventory::wood += 3 + rand() % 8" << endl
+								<< "FirstVariantToTravel->setText(CaptionOfButton(0));\nSecondVariantToTravel->setText(CaptionOfButton(1));\nThirdVariantToTravel->setText(CaptionOfButton(2)); " << endl;
+							Character::DisplayCharacteristics();
 							if (Inventory::wood - previousValue>0)
 							{
 								characteristics.setString("Energy-30\nHunger-10\nThirst-14");
@@ -781,6 +822,7 @@ int main()
 						}
 						if (DontUseAxeButton->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "DontUseAxeButton->checkClick() == true" << endl;
 							Inventory::checkClickExploreArea++;
 							value = ExploreArea->Action(Inventory::checkClickExploreArea);
 							FirstVariantToTravel->setText(CaptionOfButton(0));
@@ -788,6 +830,10 @@ int main()
 							ThirdVariantToTravel->setText(CaptionOfButton(2));
 							DontUseAxeButton->Action(IsUsedAxeContainer);
 							eventsDescription.setString(value);
+							cout << "Inventory::checkClickExploreArea++;" << endl
+								<< "Inventory::ExploreArea(Inventory::checkClickExploreArea);" << endl
+								<< "FirstVariantToTravel->setText(CaptionOfButton(0));\nSecondVariantToTravel->setText(CaptionOfButton(1));\nThirdVariantToTravel->setText(CaptionOfButton(2)); " << endl;
+							Character::DisplayCharacteristics();
 							if (eventsDescription.getString() != "") characteristics.setString("Energy-15\nHunger-5\nThirst-7\n");
 							else eventsDescription.setString("Energy-15\nHunger-5\nThirst-7");
 
@@ -799,6 +845,7 @@ int main()
 
 						if (FirstVariantToTravel->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "FirstVariantToTravel->checkClick() == true" << endl;
 							srand(time(0));
 							Inventory::checkClickExploreArea = 0;
 							int posibilityOfBeingHurted = rand() % 2;
@@ -810,6 +857,7 @@ int main()
 							Character::ChangeThirstLevel(-14);
 							string value = Inventory::LoseInventory();
 							eventsDescription.setString(value);
+							cout << "Inventory::checkClickExploreArea = 0;\nLocation::CheckWhatEnvironment(Data::GetEnvironment(0));\nLocation::LocationCurrent = Data::GetEnvironment(0);\nInventory::LoseInventory();" << endl;
 							if (eventsDescription.getString() != "") characteristics.setString("Energy-15\nHunger-10\nThirst-14");
 							else eventsDescription.setString("Energy-15\nHunger-10\nThirst-14");
 							if (posibilityOfBeingHurted)
@@ -818,6 +866,7 @@ int main()
 								eventsDescription.setString(value);
 								if (eventsDescription.getString() != "") characteristics.setString("Energy-15\nHunger-10\nThirst-14\nYou were hurted during travelling\nCondition-5");
 								else eventsDescription.setString("Energy-15\nHunger-10\nThirst-14\nYou were hurted during travelling\nCondition-5");
+								cout << "Character::ChangeConditionLevel(-5);" << endl;
 							}
 							Character::DisplayCharacteristics();
 							StartFireContainer->setVisible(false);
@@ -833,6 +882,7 @@ int main()
 						}
 						if (SecondVariantToTravel->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "SecondVariantToTravel->checkClick() == true" << endl;
 							srand(time(0));
 							Inventory::checkClickExploreArea = 0;
 							int posibilityOfBeingHurted = rand() % 2;
@@ -844,6 +894,7 @@ int main()
 							Character::ChangeThirstLevel(-14);
 							string value = Inventory::LoseInventory();
 							eventsDescription.setString(value);
+							cout << "Inventory::checkClickExploreArea = 0;\nLocation::CheckWhatEnvironment(Data::GetEnvironment(1));\nLocation::LocationCurrent = Data::GetEnvironment(1);\nInventory::LoseInventory();" << endl;
 							if (eventsDescription.getString() != "") characteristics.setString("Energy-15\nHunger-10\nThirst-14");
 							else eventsDescription.setString("Energy-15\nHunger-10\nThirst-14");
 							if (posibilityOfBeingHurted)
@@ -853,6 +904,7 @@ int main()
 								eventsDescription.setString(value);
 								if (eventsDescription.getString() != "") characteristics.setString("Energy-15\nHunger-10\nThirst-14\nYou were hurted during travelling\nCondition-5");
 								else eventsDescription.setString("Energy-15\nHunger-10\nThirst-14\nYou were hurted during travelling\nCondition-5");
+								cout << "Character::ChangeConditionLevel(-5);" << endl;
 							}
 							Character::DisplayCharacteristics();
 							StartFireContainer->setVisible(false);
@@ -868,6 +920,7 @@ int main()
 						}
 						if (ThirdVariantToTravel->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "ThirdVariantToTravel->checkClick() == true" << endl;
 							srand(time(0));
 							Inventory::checkClickExploreArea = 0;
 							int posibilityOfBeingHurted = rand() % 2;
@@ -879,6 +932,7 @@ int main()
 							Character::ChangeThirstLevel(-14);
 							string value = Inventory::LoseInventory();
 							eventsDescription.setString(value);
+							cout << "Inventory::checkClickExploreArea = 0;\nLocation::CheckWhatEnvironment(Data::GetEnvironment(2));\nLocation::LocationCurrent = Data::GetEnvironment(2);\nInventory::LoseInventory();" << endl;
 							if (eventsDescription.getString() != "") characteristics.setString("Energy-15\nHunger-10\nThirst-14");
 							else eventsDescription.setString("Energy-15\nHunger-10\nThirst-14");
 							if (posibilityOfBeingHurted)
@@ -888,6 +942,7 @@ int main()
 								eventsDescription.setString(value);
 								if (eventsDescription.getString() != "") characteristics.setString("Energy-15\nHunger-10\nThirst-14\nYou were hurted during travelling\nCondition-5");
 								else eventsDescription.setString("Energy-15\nHunger-10\nThirst-14\nYou were hurted during travelling\nCondition-5");
+								cout << "Character::ChangeConditionLevel(-5);" << endl;
 							}
 							Character::DisplayCharacteristics();
 							StartFireContainer->setVisible(false);
@@ -908,8 +963,10 @@ int main()
 
 						if (HuntButton->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "HuntButton->checkClick() == true" << endl;
 							eventsDescription.setString("Max costs:\nEnergy-5\nHunger-25\nThirst-35");
 							HuntButton->Action(HuntContainer, !HuntContainer->getVisible());
+							cout << "HuntContainer->setVisible(true);" << endl;
 							StayAtFireContainer->setVisible(!HuntContainer->getVisible());
 							IsUsedAxeContainer->setVisible(false);
 							StartFireContainer->setVisible(false);
@@ -917,29 +974,41 @@ int main()
 							OpenInventoryContainer->setVisible(false);
 							for (Panel* x : craftMenus)
 								x->setVisible(false);
+							cout << "________________________________________" << endl;
 						}
 						if (FallTrap->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "FallTrap->checkClick() == true" << endl;
+							cout << "Inventory::Change_Item('fall trap', 0);\nHuntOverwrite(3, -5, Location::LocationCurrent); " << endl;
 							Inventory::Change_Item("fall trap", 0);
 							FallTrap->Action(3, -5, Location::LocationCurrent);
+							Character::DisplayCharacteristics();
 							HuntContainer->setVisible(false);
 						}
 						if (SpringTrap->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "SpringTrap->checkClick() == true" << endl;
+							cout << "Inventory::Change_Item('spring trap', 0);\nHuntOverwrite(3, -5, Location::LocationCurrent); " << endl;
 							Inventory::Change_Item("spring trap", 0);
 							SpringTrap->Action(3, -5, Location::LocationCurrent);
+							Character::DisplayCharacteristics();
 							HuntContainer->setVisible(false);
 						}
 						if (BirdTrap->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "BirdTrap->checkClick() == true" << endl;
+							cout << "Inventory::Change_Item('bird trap', 0);\nHuntOverwrite(15, -5, Location::LocationCurrent); " << endl;
 							Inventory::Change_Item("bird trap", 0);
 							BirdTrap->Action(15, -5, Location::LocationCurrent);
+							Character::DisplayCharacteristics();
 							HuntContainer->setVisible(false);
 						}
 						if (FishButton->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "FishButton->checkClick() == true" << endl;
 							eventsDescription.setString("Max costs:\nEnergy-10\nHunger-25\nThirst-35");
 							FishButton->Action(FishContainer, !FishContainer->getVisible());
+							cout << "FishContainer->setVisible(true);" << endl;
 							StayAtFireContainer->setVisible(!FishContainer->getVisible());
 							IsUsedAxeContainer->setVisible(false);
 							StartFireContainer->setVisible(false);
@@ -947,15 +1016,22 @@ int main()
 							OpenInventoryContainer->setVisible(false);
 							for (Panel* x : craftMenus)
 								x->setVisible(false);
+							cout << "________________________________________" << endl;
 						}
 						if (FishingRod->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "FishingRod->checkClick() == true" << endl;
+							cout << "HuntOverwrite(5, -7, Location::LocationCurrent); " << endl;
 							FishingRod->Action(5, -7, Location::LocationCurrent);
+							Character::DisplayCharacteristics();
 							FishContainer->setVisible(false);
 						}
 						if (SpearFishing->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "SpearFishing->checkClick() == true" << endl;
+							cout << "HuntOverwrite(2, -10, Location::LocationCurrent); " << endl;
 							SpearFishing->Action(2, -10, Location::LocationCurrent);
+							Character::DisplayCharacteristics();
 							FishContainer->setVisible(false);
 						}
 
@@ -965,7 +1041,9 @@ int main()
 
 						if (RestButton->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "RestButton->checkClick() == true" << endl;
 							RestButton->Action(RestContainer, !RestContainer->getVisible());
+							cout << "RestContainer->setVisible(true);" << endl;
 							StayAtFireContainer->setVisible(!RestContainer->getVisible());
 							StartFireContainer->setVisible(false);     
 							HuntContainer->setVisible(false);
@@ -974,10 +1052,13 @@ int main()
 							OpenInventoryContainer->setVisible(false);
 							for (Panel* x : craftMenus)
 								x->setVisible(false);
+							cout << "________________________________________" << endl;
 						}
 						if (RestThreeHours->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "RestThreeHours->checkClick() == true" << endl;
 							RestThreeHours->Action(3);
+							cout << "Character::Rest(3);" <<  endl;
 							if (!Location::Shelter)
 							{
 								int condition = Character::GetConditionLevel();
@@ -986,13 +1067,16 @@ int main()
 								warmth = Character::GetWarmthLevel() - warmth;
 								condition = Character::GetConditionLevel() - condition;
 								eventsDescription.setString("Energy+39\nHunger-21\nThirst-15\nWarmth" + to_string(warmth) + "\nCondition" + to_string(condition));
-								Character::DisplayCharacteristics();
+								cout << "Location::Shelter == false;\nCharacter::ChangeWarmthLevel(-10);" << endl;
 							}
 							else eventsDescription.setString("Energy+39\nHunger-21\nThirst-15");
+							Character::DisplayCharacteristics();
 							RestContainer->setVisible(false);
 						}
 						if (RestSixHours->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "RestSixHours->checkClick() == true" << endl;
+							cout << "Character::Rest(6);" << endl;
 							RestSixHours->Action(6);
 							if (!Location::Shelter)
 							{
@@ -1002,12 +1086,16 @@ int main()
 								warmth = Character::GetWarmthLevel() - warmth;
 								condition = Character::GetConditionLevel() - condition;
 								eventsDescription.setString("Energy+78\nHunger-42\nThirst-30\nWarmth" + to_string( warmth) + "\nCondition" + to_string(condition));
+								cout << "Location::Shelter == false;\nCharacter::ChangeWarmthLevel(-20);" << endl;
 							}
 							else eventsDescription.setString("Energy+78\nHunger-42\nThirst-30");
+							Character::DisplayCharacteristics();
 							RestContainer->setVisible(false);
 						}
 						if (RestEightHours->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "RestEightHours->checkClick() == true" << endl;
+							cout << "Character::Rest(8);" << endl;
 							RestEightHours->Action(8);
 							if (!Location::Shelter)
 							{
@@ -1017,8 +1105,10 @@ int main()
 								warmth = Character::GetWarmthLevel() - warmth;
 								condition = Character::GetConditionLevel() - condition;
 								eventsDescription.setString("Energy+100\nHunger-56\nThirst-40\nWarmth" + to_string( warmth) + "\nCondition" + to_string(condition));
+								cout << "Location::Shelter == false;\nCharacter::ChangeWarmthLevel(-30);" << endl;
 							}
 							else eventsDescription.setString("Energy+100\nHunger-56\nThirst-40");
+							Character::DisplayCharacteristics();
 							RestContainer->setVisible(false);
 						}
 
@@ -1028,7 +1118,9 @@ int main()
 
 						if (OpenInventory->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "OpenInventory->checkClick() == true" << endl;
 							OpenInventory->Action(OpenInventoryContainer, !OpenInventoryContainer->getVisible());
+							cout << "OpenInventoryContainer->setVisible(true);" << endl;
 							StayAtFireContainer->setVisible(!OpenInventoryContainer->getVisible());
 							StartFireContainer->setVisible(false);
 							HuntContainer->setVisible(false);
@@ -1037,6 +1129,7 @@ int main()
 							RestContainer->setVisible(false);
 							for (Panel* x : craftMenus)
 								x->setVisible(false);
+							cout << "________________________________________" << endl;
 						}
 
 #pragma endregion
@@ -1045,21 +1138,30 @@ int main()
 
 						if (EatButton->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "EatButton->checkClick() == true" << endl;
 							EatButton->Action(5); 
 							eventsDescription.setString("Hunger+5");
 							Inventory::food -= 1;
+							cout << "Character::ChangeHungerLevel(5);\nInventory::food -= 1;" << endl;
+							Character::DisplayCharacteristics();
 						}
 						if (DrinkButton->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "DrinkButton->checkClick() == true" << endl;
 							DrinkButton->Action(5);
 							eventsDescription.setString("Thirst+5");
 							Inventory::water -= 1;
+							cout << "Character::ChangeThirstLevel(5);\nInventory::water -= 1;" << endl;
+							Character::DisplayCharacteristics();
 						}
 						if (CosumeMedicineButton->checkClick((Vector2f)Mouse::getPosition(window)))
 						{
+							cout << "CosumeMedicineButton->checkClick() == true" << endl;
 							CosumeMedicineButton->Action(5);
 							eventsDescription.setString("Condition+5");
 							Inventory::medicine -= 1;
+							cout << "Character::ChangeConditionLevel(5);\nInventory::medicine -= 1;" << endl;
+							Character::DisplayCharacteristics();
 						}
 
 #pragma endregion
@@ -1114,7 +1216,7 @@ int main()
 							Data::SaveAllStaticData();
 							window.close();
 							OpenMenu->Action(Menu::MenuWindow, menuObj);
-							if (Menu::OpenMainWindow()) window.create(sf::VideoMode(VideoMode::getDesktopMode().width, VideoMode::getDesktopMode().height), "Game", sf::Style::Fullscreen);
+							if (Menu::OpenMainWindow()) window.create(sf::VideoMode(VideoMode::getDesktopMode().width, VideoMode::getDesktopMode().height), "Game"/*, sf::Style::Fullscreen*/);
 						}
 
 #pragma endregion
@@ -1122,10 +1224,17 @@ int main()
 #pragma region Craft
 						if (openCraftBut->checkClick((Vector2f)Mouse::getPosition(window)))
 						{	
+							cout << "openCraftBut->checkClick() == true" << endl;
 							if (craftMenus[0]->getVisible())
+							{
 								openCraftBut->Action(&craftMenus, NULL);
+								cout << "openCraftBut->Action(&craftMenus, NULL);" << endl;
+							}
 							else
+							{
 								openCraftBut->Action(&craftMenus, craftMenus[0]);
+								cout << "openCraftBut->Action(&craftMenus, craftMenus[0]);" << endl;
+							}
 								
 							StayAtFireContainer->setVisible(!craftMenus[0]->getVisible());
 							StartFireContainer->setVisible(false);
@@ -1133,16 +1242,24 @@ int main()
 							FishContainer->setVisible(false);
 							IsUsedAxeContainer->setVisible(false);
 							OpenInventoryContainer->setVisible(false);
+							cout << "________________________________________" << endl;
 						}
 							
 						for (map<Button<bool(*)(string)>*, string>::iterator it = craftBut.begin(); it != craftBut.end(); ++it)
 						{
 							if (it->first->checkClick((Vector2f)Mouse::getPosition(window)))
 							{
+								cout << it->first << "->checkClick() == true" << endl;
 								if (it->first->Action(it->second))
+								{
 									eventsDescription.setString("Successfully crafted");
+									cout << "Craft::canCraft(" << it->second << ") == true;" << endl;
+								}
 								else
+								{
 									eventsDescription.setString("Not enough resources or this tool already exist");
+									cout << "Craft::canCraft(" << it->second << ") == false;" << endl;
+								}
 							}
 						}
 						for (map<Button<void(*)(vector<Panel*>*, Panel*)>*, Panel*>::iterator it = switchCraftBut.begin(); it != switchCraftBut.end(); ++it)
